@@ -14,13 +14,15 @@ public class ParserException : Exception {
     }
 
     
-    public ParserException(String msg) {
-        super(msg);
+    public ParserException(String msg) : base(msg)
+    {
+        
     }
 
     
-    public ParserException(String msg, Throwable cause) {
-        super(msg, cause);
+    public ParserException(String msg, Exception cause) : base(msg, cause)
+    {
+        
     }
 }
 }

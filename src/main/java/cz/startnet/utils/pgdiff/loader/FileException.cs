@@ -15,13 +15,9 @@ public class FileException : Exception {
     }
 
     
-    public FileException(String msg) {
-        super(msg);
-    }
+    public FileException(String msg): base(msg) { }
 
     
-    public FileException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
+    public FileException(String msg, Exception cause) : base(msg, cause) { }
 }
 }

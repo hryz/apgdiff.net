@@ -11,34 +11,34 @@ namespace cz.startnet.utils.pgdiff.parsers {
 public class Parser {
 
     
-    private String string;
+    private string _string;
     
     private int position;
 
     
-    public Parser(String string) {
-        this.string = string;
+    public Parser(string _string) {
+        this._string = _string;
         skipWhitespace();
     }
 
     
-    public void expect(String... words) {
-        foreach(String word in words) {
+    public void expect(params string[] words) {
+        foreach(string word in words) {
             expect(word, false);
         }
     }
 
-    public bool expect(String word, bool optional) {
-        int wordEnd = position + word.length();
+    public bool expect(string word, bool optional) {
+        int wordEnd = position + word.Length;
 
-        if (wordEnd <= string.length()
-                && string.substring(position, wordEnd).equalsIgnoreCase(word)
-                && (wordEnd == string.length()
-                || Character.isWhitespace(string.charAt(wordEnd))
-                || string.charAt(wordEnd) == ';'
-                || string.charAt(wordEnd) == ')'
-                || string.charAt(wordEnd) == ','
-                || string.charAt(wordEnd) == '['
+        if (wordEnd <= _string.Length
+                && _string.Substring(position, wordEnd).Equals(word, StringComparison.InvariantCultureIgnoreCase)
+                && (wordEnd == _string.Length
+                || Char.IsWhiteSpace(_string[wordEnd])
+                || _string[wordEnd] == ';'
+                || _string[wordEnd] == ')'
+                || _string[wordEnd] == ','
+                || _string[wordEnd] == '['
                 || "(".Equals(word) || ",".Equals(word) || "[".Equals(word)
                 || "]".Equals(word))) {
             position = wordEnd;
@@ -52,19 +52,19 @@ public class Parser {
         }
 
         throw new ParserException(String.Format(
-                Resources.getString("CannotParseStringExpectedWord"), string,
-                word, position + 1, string.substring(position, position + 20)));
+                Resources.getString("CannotParse_stringExpectedWord"), _string,
+                word, position + 1, _string.Substring(position, position + 20)));
     }
 
     
-    public bool expectOptional(String... words) {
+    public bool expectOptional(params string[] words) {
         bool found = expect(words[0], true);
 
         if (!found) {
             return false;
         }
 
-        for (int i = 1; i < words.length; i++) {
+        for (int i = 1; i < words.Length; i++) {
             skipWhitespace();
             expect(words[i]);
         }
@@ -74,18 +74,18 @@ public class Parser {
 
     
     public void skipWhitespace() {
-        for (; position < string.length(); position++) {
-            if (!Character.isWhitespace(string.charAt(position))) {
+        for (; position < _string.Length; position++) {
+            if (!Char.IsWhiteSpace(_string[position])) {
                 break;
             }
         }
     }
 
     
-    public String parseIdentifier() {
-        String identifier = parseIdentifierInternal();
+    public string parseIdentifier() {
+        string identifier = parseIdentifierInternal();
 
-        if (string.charAt(position) == '.') {
+        if (_string[position] == '.') {
             position++;
             identifier += '.' + parseIdentifierInternal();
         }
@@ -96,30 +96,29 @@ public class Parser {
     }
 
     
-    private String parseIdentifierInternal() {
-        bool quoted = string.charAt(position) == '"';
+    private string parseIdentifierInternal() {
+        bool quoted = _string[position] == '"';
 
         if (quoted) {
-            int endPos = string.indexOf('"', position + 1);
-            String result = string.substring(position, endPos + 1);
+            int endPos = _string.IndexOf('"', position + 1);
+            string result = _string.Substring(position, endPos + 1);
             position = endPos + 1;
 
             return result;
         } else {
             int endPos = position;
 
-            for (; endPos < string.length(); endPos++) {
-                char chr = string.charAt(endPos);
+            for (; endPos < _string.Length; endPos++) {
+                char chr = _string[endPos];
 
-                if (Character.isWhitespace(chr) || chr == ',' || chr == ')'
+                if (Char.IsWhiteSpace(chr) || chr == ',' || chr == ')'
                         || chr == '(' || chr == ';' || chr == '.') {
                     break;
                 }
             }
 
-            String result =
-                    string.substring(position, endPos).toLowerCase(
-                    Locale.ENGLISH);
+            string result =
+                    _string.Substring(position, endPos).ToLower();
 
             position = endPos;
 
@@ -128,20 +127,20 @@ public class Parser {
     }
 
     
-    public String getRest() {
-        String result;
+    public string getRest() {
+        string result;
 
-        if (string.charAt(string.length() - 1) == ';') {
-            if (position == string.length() - 1) {
+        if (_string[_string.Length - 1] == ';') {
+            if (position == _string.Length - 1) {
                 return null;
             } else {
-                result = string.substring(position, string.length() - 1);
+                result = _string.Substring(position, _string.Length - 1);
             }
         } else {
-            result = string.substring(position);
+            result = _string.Substring(position);
         }
 
-        position = string.length();
+        position = _string.Length;
 
         return result;
     }
@@ -150,44 +149,44 @@ public class Parser {
     public int parseInteger() {
         int endPos = position;
 
-        for (; endPos < string.length(); endPos++) {
-            if (!Character.isLetterOrDigit(string.charAt(endPos))) {
+        for (; endPos < _string.Length; endPos++) {
+            if (!Char.IsLetterOrDigit(_string[endPos])) {
                 break;
             }
         }
 
         try {
             int result =
-                    Integer.parseInt(string.substring(position, endPos));
+                    Int32.Parse(_string.Substring(position, endPos));
 
             position = endPos;
             skipWhitespace();
 
             return result;
-        } catch (NumberFormatException ex) {
+        } catch (FormatException ex) {
             throw new ParserException(String.Format(
-                    Resources.getString("CannotParseStringExpectedInteger"),
-                    string, position + 1,
-                    string.substring(position, position + 20)), ex);
+                    Resources.getString("CannotParse_stringExpectedInteger"),
+                    _string, position + 1,
+                    _string.Substring(position, position + 20)), ex);
         }
     }
 
     
-    public String parseString() {
-        bool quoted = string.charAt(position) == '\'';
+    public string parse_string() {
+        bool quoted = _string[position] == '\'';
 
         if (quoted) {
             bool escape = false;
             int endPos = position + 1;
 
-            for (; endPos < string.length(); endPos++) {
-                char chr = string.charAt(endPos);
+            for (; endPos < _string.Length; endPos++) {
+                char chr = _string[endPos];
 
                 if (chr == '\\') {
                     escape = !escape;
                 } else if (!escape && chr == '\'') {
-                    if (endPos + 1 < string.length()
-                            && string.charAt(endPos + 1) == '\'') {
+                    if (endPos + 1 < _string.Length
+                            && _string[endPos + 1] == '\'') {
                         endPos++;
                     } else {
                         break;
@@ -195,12 +194,12 @@ public class Parser {
                 }
             }
 
-            String result;
+            string result;
 
             try {
-                result = string.substring(position, endPos + 1);
-            } catch (Throwable ex) {
-                throw new Exception("Failed to get substring: " + string
+                result = _string.Substring(position, endPos + 1);
+            } catch (Exception ex) {
+                throw new Exception("Failed to get sub_string: " + _string
                         + " start pos: " + position + " end pos: "
                         + (endPos + 1), ex);
             }
@@ -212,10 +211,10 @@ public class Parser {
         } else {
             int endPos = position;
 
-            for (; endPos < string.length(); endPos++) {
-                char chr = string.charAt(endPos);
+            for (; endPos < _string.Length; endPos++) {
+                char chr = _string[endPos];
 
-                if (Character.isWhitespace(chr) || chr == ',' || chr == ')'
+                if (Char.IsWhiteSpace(chr) || chr == ',' || chr == ')'
                         || chr == ';') {
                     break;
                 }
@@ -223,11 +222,11 @@ public class Parser {
 
             if (position == endPos) {
                 throw new ParserException(String.Format(
-                        Resources.getString("CannotParseStringExpectedString"),
-                        string, position + 1));
+                        Resources.getString("CannotParse_stringExpected_string"),
+                        _string, position + 1));
             }
 
-            String result = string.substring(position, endPos);
+            string result = _string.Substring(position, endPos);
 
             position = endPos;
             skipWhitespace();
@@ -237,17 +236,17 @@ public class Parser {
     }
 
     
-    public String getExpression() {
+    public string getExpression() {
         int endPos = getExpressionEnd();
 
         if (position == endPos) {
             throw new ParserException(String.Format(
-                    Resources.getString("CannotParseStringExpectedExpression"),
-                    string, position + 1,
-                    string.substring(position, position + 20)));
+                    Resources.getString("CannotParse_stringExpectedExpression"),
+                    _string, position + 1,
+                    _string.Substring(position, position + 20)));
         }
 
-        String result = string.substring(position, endPos).trim();
+        string result = _string.Substring(position, endPos).Trim();
 
         position = endPos;
 
@@ -260,8 +259,8 @@ public class Parser {
         bool singleQuoteOn = false;
         int charPos = position;
 
-        for (; charPos < string.length(); charPos++) {
-            char chr = string.charAt(charPos);
+        for (; charPos < _string.Length; charPos++) {
+            char chr = _string[charPos];
 
             if (chr == '(') {
                 bracesCount++;
@@ -289,21 +288,21 @@ public class Parser {
     }
 
     
-    public String getString() {
-        return string;
+    public string get_string() {
+        return _string;
     }
 
     
     public void throwUnsupportedCommand() {
         throw new ParserException(String.Format(
-                Resources.getString("CannotParseStringUnsupportedCommand"),
-                string, position + 1,
-                string.substring(position, position + 20)));
+                Resources.getString("CannotParse_stringUnsupportedCommand"),
+                _string, position + 1,
+                _string.Substring(position, position + 20)));
     }
 
   
-    public String expectOptionalOneOf(String... words) {
-        foreach(String word in words) {
+    public string expectOptionalOneOf(params string[] words) {
+        foreach(string word in words) {
             if (expectOptional(word)) {
                 return word;
             }
@@ -313,8 +312,8 @@ public class Parser {
     }
 
     
-    public String getSubString(int startPos, int endPos) {
-        return string.substring(startPos, endPos);
+    public string getSub_string(int startPos, int endPos) {
+        return _string.Substring(startPos, endPos);
     }
 
     
@@ -323,41 +322,41 @@ public class Parser {
     }
 
     
-    public String parseDataType() {
+    public string parseDataType() {
         int endPos = position;
 
-        while (endPos < string.length()
-                && !Character.isWhitespace(string.charAt(endPos))
-                && string.charAt(endPos) != '('
-                && string.charAt(endPos) != ')'
-                && string.charAt(endPos) != ',') {
+        while (endPos < _string.Length
+                && !Char.IsWhiteSpace(_string[endPos])
+                && _string[endPos] != '('
+                && _string[endPos] != ')'
+                && _string[endPos] != ',') {
             endPos++;
         }
 
         if (endPos == position) {
             throw new ParserException(String.Format(
-                    Resources.getString("CannotParseStringExpectedDataType"),
-                    string, position + 1,
-                    string.substring(position, position + 20)));
+                    Resources.getString("CannotParse_stringExpectedDataType"),
+                    _string, position + 1,
+                    _string.Substring(position, position + 20)));
         }
 
-        String dataType = string.substring(position, endPos);
+        string dataType = _string.Substring(position, endPos);
 
         position = endPos;
         skipWhitespace();
 
-        if ("character".equalsIgnoreCase(dataType)
+        if ("character".Equals(dataType,StringComparison.InvariantCultureIgnoreCase)
                 && expectOptional("varying")) {
             dataType = "character varying";
-        } else if ("double".equalsIgnoreCase(dataType)
+        } else if ("double".Equals(dataType,StringComparison.InvariantCultureIgnoreCase)
                 && expectOptional("precision")) {
             dataType = "double precision";
         }
 
-        bool timestamp = "timestamp".equalsIgnoreCase(dataType)
-                || "time".equalsIgnoreCase(dataType);
+        bool timestamp = "timestamp".Equals(dataType,StringComparison.InvariantCultureIgnoreCase)
+                || "time".Equals(dataType,StringComparison.InvariantCultureIgnoreCase);
 
-        if (string.charAt(position) == '(') {
+        if (_string[position] == '(') {
             dataType += getExpression();
         }
 
@@ -379,9 +378,9 @@ public class Parser {
 
     
     public bool isConsumed() {
-        return position == string.length()
-                || position + 1 == string.length()
-                && string.charAt(position) == ';';
+        return position == _string.Length
+                || position + 1 == _string.Length
+                && _string[position] == ';';
     }
 }
 }
