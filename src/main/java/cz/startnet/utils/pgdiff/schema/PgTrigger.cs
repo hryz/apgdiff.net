@@ -29,14 +29,14 @@ public class PgTrigger {
     private boolean onTruncate;
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<String> updateColumns = new ArrayList<String>();
+    private List<String> updateColumns = new ArrayList<String>();
     
     private String when;
     
     private String comment;
 
     
-    public void setBefore(final boolean before) {
+    public void setBefore(boolean before) {
         this.before = before;
     }
 
@@ -51,13 +51,13 @@ public class PgTrigger {
     }
 
     
-    public void setComment(final String comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
     
     public String getCreationSQL() {
-        final StringBuilder sbSQL = new StringBuilder(100);
+        StringBuilder sbSQL = new StringBuilder(100);
         sbSQL.append("CREATE TRIGGER ");
         sbSQL.append(PgDiffUtils.getQuotedName(getName()));
         sbSQL.append("\n\t");
@@ -84,7 +84,7 @@ public class PgTrigger {
 
                 boolean first = true;
 
-                for (final String columnName : updateColumns) {
+                for (String columnName : updateColumns) {
                     if (first) {
                         first = false;
                     } else {
@@ -148,7 +148,7 @@ public class PgTrigger {
     }
 
     
-    public void setForEachRow(final boolean forEachRow) {
+    public void setForEachRow(boolean forEachRow) {
         this.forEachRow = forEachRow;
     }
 
@@ -158,7 +158,7 @@ public class PgTrigger {
     }
 
     
-    public void setFunction(final String function) {
+    public void setFunction(String function) {
         this.function = function;
     }
 
@@ -168,7 +168,7 @@ public class PgTrigger {
     }
 
     
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -178,7 +178,7 @@ public class PgTrigger {
     }
 
     
-    public void setOnDelete(final boolean onDelete) {
+    public void setOnDelete(boolean onDelete) {
         this.onDelete = onDelete;
     }
 
@@ -188,7 +188,7 @@ public class PgTrigger {
     }
 
     
-    public void setOnInsert(final boolean onInsert) {
+    public void setOnInsert(boolean onInsert) {
         this.onInsert = onInsert;
     }
 
@@ -198,7 +198,7 @@ public class PgTrigger {
     }
 
     
-    public void setOnUpdate(final boolean onUpdate) {
+    public void setOnUpdate(boolean onUpdate) {
         this.onUpdate = onUpdate;
     }
 
@@ -213,12 +213,12 @@ public class PgTrigger {
     }
 
     
-    public void setOnTruncate(final boolean onTruncate) {
+    public void setOnTruncate(boolean onTruncate) {
         this.onTruncate = onTruncate;
     }
 
     
-    public void setTableName(final String tableName) {
+    public void setTableName(String tableName) {
         this.tableName = tableName;
     }
 
@@ -233,7 +233,7 @@ public class PgTrigger {
     }
 
     
-    public void addUpdateColumn(final String columnName) {
+    public void addUpdateColumn(String columnName) {
         updateColumns.add(columnName);
     }
 
@@ -243,18 +243,18 @@ public class PgTrigger {
     }
 
     
-    public void setWhen(final String when) {
+    public void setWhen(String when) {
         this.when = when;
     }
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
         boolean equals = false;
 
         if (this == object) {
             equals = true;
         } else if (object instanceof PgTrigger) {
-            final PgTrigger trigger = (PgTrigger) object;
+            PgTrigger trigger = (PgTrigger) object;
             equals = (before == trigger.isBefore())
                     && (forEachRow == trigger.isForEachRow())
                     && function.equals(trigger.getFunction())
@@ -266,9 +266,9 @@ public class PgTrigger {
                     && tableName.equals(trigger.getTableName());
 
             if (equals) {
-                final List<String> sorted1 =
+                List<String> sorted1 =
                         new ArrayList<String>(updateColumns);
-                final List<String> sorted2 =
+                List<String> sorted2 =
                         new ArrayList<String>(trigger.getUpdateColumns());
                 Collections.sort(sorted1);
                 Collections.sort(sorted2);

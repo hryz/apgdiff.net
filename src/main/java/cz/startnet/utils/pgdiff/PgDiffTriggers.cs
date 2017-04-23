@@ -12,11 +12,11 @@ import java.util.List;
 public class PgDiffTriggers {
 
     
-    public static void createTriggers(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
-        for (final PgTable newTable : newSchema.getTables()) {
-            final PgTable oldTable;
+    public static void createTriggers(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
+        for (PgTable newTable : newSchema.getTables()) {
+            PgTable oldTable;
 
             if (oldSchema == null) {
                 oldTable = null;
@@ -25,7 +25,7 @@ public class PgDiffTriggers {
             }
 
             // Add new triggers
-            for (final PgTrigger trigger : getNewTriggers(oldTable, newTable)) {
+            for (PgTrigger trigger : getNewTriggers(oldTable, newTable)) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
                 writer.println(trigger.getCreationSQL());
@@ -34,11 +34,11 @@ public class PgDiffTriggers {
     }
 
     
-    public static void dropTriggers(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
-        for (final PgTable newTable : newSchema.getTables()) {
-            final PgTable oldTable;
+    public static void dropTriggers(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
+        for (PgTable newTable : newSchema.getTables()) {
+            PgTable oldTable;
 
             if (oldSchema == null) {
                 oldTable = null;
@@ -47,7 +47,7 @@ public class PgDiffTriggers {
             }
 
             // Drop triggers that no more exist or are modified
-            for (final PgTrigger trigger :
+            for (PgTrigger trigger :
                     getDropTriggers(oldTable, newTable)) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
@@ -57,15 +57,15 @@ public class PgDiffTriggers {
     }
 
     
-    private static List<PgTrigger> getDropTriggers(final PgTable oldTable,
-            final PgTable newTable) {
+    private static List<PgTrigger> getDropTriggers(PgTable oldTable,
+            PgTable newTable) {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
-        final List<PgTrigger> list = new ArrayList<PgTrigger>();
+        List<PgTrigger> list = new ArrayList<PgTrigger>();
 
         if (newTable != null && oldTable != null) {
-            final List<PgTrigger> newTriggers = newTable.getTriggers();
+            List<PgTrigger> newTriggers = newTable.getTriggers();
 
-            for (final PgTrigger oldTrigger : oldTable.getTriggers()) {
+            for (PgTrigger oldTrigger : oldTable.getTriggers()) {
                 if (!newTriggers.contains(oldTrigger)) {
                     list.add(oldTrigger);
                 }
@@ -76,16 +76,16 @@ public class PgDiffTriggers {
     }
 
     
-    private static List<PgTrigger> getNewTriggers(final PgTable oldTable,
-            final PgTable newTable) {
+    private static List<PgTrigger> getNewTriggers(PgTable oldTable,
+            PgTable newTable) {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
-        final List<PgTrigger> list = new ArrayList<PgTrigger>();
+        List<PgTrigger> list = new ArrayList<PgTrigger>();
 
         if (newTable != null) {
             if (oldTable == null) {
                 list.addAll(newTable.getTriggers());
             } else {
-                for (final PgTrigger newTrigger : newTable.getTriggers()) {
+                for (PgTrigger newTrigger : newTable.getTriggers()) {
                     if (!oldTable.getTriggers().contains(newTrigger)) {
                         list.add(newTrigger);
                     }
@@ -97,22 +97,22 @@ public class PgDiffTriggers {
     }
 
     
-    public static void alterComments(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
+    public static void alterComments(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
         for (PgTable oldTable : oldSchema.getTables()) {
-            final PgTable newTable = newSchema.getTable(oldTable.getName());
+            PgTable newTable = newSchema.getTable(oldTable.getName());
 
             if (newTable == null) {
                 continue;
             }
 
-            for (final PgTrigger oldTrigger : oldTable.getTriggers()) {
-                final PgTrigger newTrigger =
+            for (PgTrigger oldTrigger : oldTable.getTriggers()) {
+                PgTrigger newTrigger =
                         newTable.getTrigger(oldTrigger.getName());
 
                 if (newTrigger == null) {

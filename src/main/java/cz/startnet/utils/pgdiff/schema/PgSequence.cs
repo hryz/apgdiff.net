@@ -26,12 +26,12 @@ public class PgSequence {
     private String comment;
 
     
-    public PgSequence(final String name) {
+    public PgSequence(String name) {
         this.name = name;
     }
 
     
-    public void setCache(final String cache) {
+    public void setCache(String cache) {
         this.cache = cache;
     }
 
@@ -46,13 +46,13 @@ public class PgSequence {
     }
 
     
-    public void setComment(final String comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
     
     public String getCreationSQL() {
-        final StringBuilder sbSQL = new StringBuilder(100);
+        StringBuilder sbSQL = new StringBuilder(100);
         sbSQL.append("CREATE SEQUENCE ");
         sbSQL.append(PgDiffUtils.getQuotedName(name));
 
@@ -108,7 +108,7 @@ public class PgSequence {
 
     
     public String getOwnedBySQL() {
-        final StringBuilder sbSQL = new StringBuilder(100);
+        StringBuilder sbSQL = new StringBuilder(100);
 
         sbSQL.append("ALTER SEQUENCE ");
         sbSQL.append(PgDiffUtils.getQuotedName(name));
@@ -124,7 +124,7 @@ public class PgSequence {
     }
 
     
-    public void setCycle(final boolean cycle) {
+    public void setCycle(boolean cycle) {
         this.cycle = cycle;
     }
 
@@ -139,7 +139,7 @@ public class PgSequence {
     }
 
     
-    public void setIncrement(final String increment) {
+    public void setIncrement(String increment) {
         this.increment = increment;
     }
 
@@ -149,7 +149,7 @@ public class PgSequence {
     }
 
     
-    public void setMaxValue(final String maxValue) {
+    public void setMaxValue(String maxValue) {
         this.maxValue = maxValue;
     }
 
@@ -159,7 +159,7 @@ public class PgSequence {
     }
 
     
-    public void setMinValue(final String minValue) {
+    public void setMinValue(String minValue) {
         this.minValue = minValue;
     }
 
@@ -169,7 +169,7 @@ public class PgSequence {
     }
 
     
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -179,7 +179,7 @@ public class PgSequence {
     }
 
     
-    public void setStartWith(final String startWith) {
+    public void setStartWith(String startWith) {
         this.startWith = startWith;
     }
 
@@ -194,7 +194,7 @@ public class PgSequence {
     }
 
     
-    public void setOwnedBy(final String ownedBy) {
+    public void setOwnedBy(String ownedBy) {
         this.ownedBy = ownedBy;
     }
 }

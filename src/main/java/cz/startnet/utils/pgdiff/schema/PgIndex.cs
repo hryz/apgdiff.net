@@ -18,7 +18,7 @@ public class PgIndex {
     private String comment;
 
     
-    public PgIndex(final String name) {
+    public PgIndex(String name) {
         this.name = name;
     }
 
@@ -28,13 +28,13 @@ public class PgIndex {
     }
 
     
-    public void setComment(final String comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
     
     public String getCreationSQL() {
-        final StringBuilder sbSQL = new StringBuilder(100);
+        StringBuilder sbSQL = new StringBuilder(100);
         sbSQL.append("CREATE ");
 
         if (isUnique()) {
@@ -61,7 +61,7 @@ public class PgIndex {
     }
 
     
-    public void setDefinition(final String definition) {
+    public void setDefinition(String definition) {
         this.definition = definition;
     }
 
@@ -76,7 +76,7 @@ public class PgIndex {
     }
 
     
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -86,7 +86,7 @@ public class PgIndex {
     }
 
     
-    public void setTableName(final String tableName) {
+    public void setTableName(String tableName) {
         this.tableName = tableName;
     }
 
@@ -97,13 +97,13 @@ public class PgIndex {
 
     
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
         boolean equals = false;
 
         if (this == object) {
             equals = true;
         } else if (object instanceof PgIndex) {
-            final PgIndex index = (PgIndex) object;
+            PgIndex index = (PgIndex) object;
             equals = definition.equals(index.getDefinition())
                     && name.equals(index.getName())
                     && tableName.equals(index.getTableName())
@@ -126,7 +126,7 @@ public class PgIndex {
     }
 
     
-    public void setUnique(final boolean unique) {
+    public void setUnique(boolean unique) {
         this.unique = unique;
     }
 }

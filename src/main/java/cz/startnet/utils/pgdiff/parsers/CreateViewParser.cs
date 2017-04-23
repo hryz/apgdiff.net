@@ -13,17 +13,17 @@ import java.util.List;
 public class CreateViewParser {
 
     
-    public static void parse(final PgDatabase database,
-            final String statement) {
-        final Parser parser = new Parser(statement);
+    public static void parse(PgDatabase database,
+            String statement) {
+        Parser parser = new Parser(statement);
         parser.expect("CREATE");
         parser.expectOptional("OR", "REPLACE");
         parser.expect("VIEW");
 
-        final String viewName = parser.parseIdentifier();
+        String viewName = parser.parseIdentifier();
 
-        final boolean columnsExist = parser.expectOptional("(");
-        final List<String> columnNames = new ArrayList<String>(10);
+        boolean columnsExist = parser.expectOptional("(");
+        List<String> columnNames = new ArrayList<String>(10);
 
         if (columnsExist) {
             while (!parser.expectOptional(")")) {
@@ -35,14 +35,14 @@ public class CreateViewParser {
 
         parser.expect("AS");
 
-        final String query = parser.getRest();
+        String query = parser.getRest();
 
-        final PgView view = new PgView(ParserUtils.getObjectName(viewName));
+        PgView view = new PgView(ParserUtils.getObjectName(viewName));
         view.setColumnNames(columnNames);
         view.setQuery(query);
 
-        final String schemaName = ParserUtils.getSchemaName(viewName, database);
-        final PgSchema schema = database.getSchema(schemaName);
+        String schemaName = ParserUtils.getSchemaName(viewName, database);
+        PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
             throw new RuntimeException(MessageFormat.format(

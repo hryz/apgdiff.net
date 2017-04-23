@@ -34,7 +34,7 @@ public class PgDiffArguments {
     private boolean ignoreSlonyTriggers;
 
     
-    public void setAddDefaults(final boolean addDefaults) {
+    public void setAddDefaults(boolean addDefaults) {
         this.addDefaults = addDefaults;
     }
 
@@ -44,7 +44,7 @@ public class PgDiffArguments {
     }
 
     
-    public void setAddTransaction(final boolean addTransaction) {
+    public void setAddTransaction(boolean addTransaction) {
         this.addTransaction = addTransaction;
     }
 
@@ -55,7 +55,7 @@ public class PgDiffArguments {
 
     
     public void setIgnoreFunctionWhitespace(
-            final boolean ignoreFunctionWhitespace) {
+            boolean ignoreFunctionWhitespace) {
         this.ignoreFunctionWhitespace = ignoreFunctionWhitespace;
     }
 
@@ -65,7 +65,7 @@ public class PgDiffArguments {
     }
 
     
-    public void setIgnoreStartWith(final boolean ignoreStartWith) {
+    public void setIgnoreStartWith(boolean ignoreStartWith) {
         this.ignoreStartWith = ignoreStartWith;
     }
 
@@ -75,7 +75,7 @@ public class PgDiffArguments {
     }
 
     
-    public void setNewDumpFile(final String newDumpFile) {
+    public void setNewDumpFile(String newDumpFile) {
         this.newDumpFile = newDumpFile;
     }
 
@@ -85,7 +85,7 @@ public class PgDiffArguments {
     }
 
     
-    public void setOldDumpFile(final String oldDumpFile) {
+    public void setOldDumpFile(String oldDumpFile) {
         this.oldDumpFile = oldDumpFile;
     }
 
@@ -101,12 +101,12 @@ public class PgDiffArguments {
 
     
     public void setOutputIgnoredStatements(
-            final boolean outputIgnoredStatements) {
+            boolean outputIgnoredStatements) {
         this.outputIgnoredStatements = outputIgnoredStatements;
     }
 
     
-    public void setVersion(final boolean version) {
+    public void setVersion(boolean version) {
         this.version = version;
     }
 
@@ -117,9 +117,9 @@ public class PgDiffArguments {
 
     
     @SuppressWarnings("AssignmentToForLoopParameter")
-    public boolean parse(final PrintWriter writer, final String[] args) {
+    public boolean parse(PrintWriter writer, String[] args) {
         boolean success = true;
-        final int argsLength;
+        int argsLength;
 
         if (args.length >= 2) {
             argsLength = args.length - 2;
@@ -178,13 +178,13 @@ public class PgDiffArguments {
     }
 
     
-    private void printUsage(final PrintWriter writer) {
+    private void printUsage(PrintWriter writer) {
         writer.println(
                 Resources.getString("UsageHelp").replace("${tab}", "\t"));
     }
 
     
-    private void printVersion(final PrintWriter writer) {
+    private void printVersion(PrintWriter writer) {
         writer.print(Resources.getString("Version"));
         writer.print(": ");
         writer.println(Resources.getString("VersionNumber"));
@@ -196,7 +196,7 @@ public class PgDiffArguments {
     }
 
     
-    public void setInCharsetName(final String inCharsetName) {
+    public void setInCharsetName(String inCharsetName) {
         this.inCharsetName = inCharsetName;
     }
 
@@ -206,7 +206,7 @@ public class PgDiffArguments {
     }
 
     
-    public void setOutCharsetName(final String outCharsetName) {
+    public void setOutCharsetName(String outCharsetName) {
         this.outCharsetName = outCharsetName;
     }
 
@@ -216,15 +216,15 @@ public class PgDiffArguments {
     }
 
     
-    public void setListCharsets(final boolean listCharsets) {
+    public void setListCharsets(boolean listCharsets) {
         this.listCharsets = listCharsets;
     }
 
     
-    private void listCharsets(final PrintWriter writer) {
-        final SortedMap<String, Charset> charsets = Charset.availableCharsets();
+    private void listCharsets(PrintWriter writer) {
+        SortedMap<String, Charset> charsets = Charset.availableCharsets();
 
-        for (final String name : charsets.keySet()) {
+        for (String name : charsets.keySet()) {
             writer.println(name);
         }
     }
@@ -235,7 +235,7 @@ public class PgDiffArguments {
     }
 
     
-    public void setIgnoreSlonyTriggers(final boolean ignoreSlonyTriggers) {
+    public void setIgnoreSlonyTriggers(boolean ignoreSlonyTriggers) {
         this.ignoreSlonyTriggers = ignoreSlonyTriggers;
     }
 }

@@ -13,19 +13,19 @@ import java.text.MessageFormat;
 public class CreateTableParser {
 
     
-    public static void parse(final PgDatabase database,
-            final String statement) {
-        final Parser parser = new Parser(statement);
+    public static void parse(PgDatabase database,
+            String statement) {
+        Parser parser = new Parser(statement);
         parser.expect("CREATE", "TABLE");
 
         // Optional IF NOT EXISTS, irrelevant for our purposes
         parser.expectOptional("IF", "NOT", "EXISTS");
 
-        final String tableName = parser.parseIdentifier();
-        final PgTable table = new PgTable(ParserUtils.getObjectName(tableName));
-        final String schemaName =
+        String tableName = parser.parseIdentifier();
+        PgTable table = new PgTable(ParserUtils.getObjectName(tableName));
+        String schemaName =
                 ParserUtils.getSchemaName(tableName, database);
-        final PgSchema schema = database.getSchema(schemaName);
+        PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
             throw new RuntimeException(MessageFormat.format(
@@ -74,8 +74,8 @@ public class CreateTableParser {
     }
 
     
-    private static void parseInherits(final Parser parser,
-            final PgTable table) {
+    private static void parseInherits(Parser parser,
+            PgTable table) {
         parser.expect("(");
 
         while (!parser.expectOptional(")")) {
@@ -91,9 +91,9 @@ public class CreateTableParser {
     }
 
     
-    private static void parseConstraint(final Parser parser,
-            final PgTable table) {
-        final PgConstraint constraint = new PgConstraint(
+    private static void parseConstraint(Parser parser,
+            PgTable table) {
+        PgConstraint constraint = new PgConstraint(
                 ParserUtils.getObjectName(parser.parseIdentifier()));
         table.addConstraint(constraint);
         constraint.setDefinition(parser.getExpression());
@@ -101,8 +101,8 @@ public class CreateTableParser {
     }
 
     
-    private static void parseColumn(final Parser parser, final PgTable table) {
-        final PgColumn column = new PgColumn(
+    private static void parseColumn(Parser parser, PgTable table) {
+        PgColumn column = new PgColumn(
                 ParserUtils.getObjectName(parser.parseIdentifier()));
         table.addColumn(column);
         column.parseDefinition(parser.getExpression());

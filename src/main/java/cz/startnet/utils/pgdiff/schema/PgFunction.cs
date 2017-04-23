@@ -14,7 +14,7 @@ public class PgFunction {
     private String name;
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<Argument> arguments = new ArrayList<Argument>();
+    private List<Argument> arguments = new ArrayList<Argument>();
     
     private String body;
     
@@ -26,20 +26,20 @@ public class PgFunction {
     }
 
     
-    public void setComment(final String comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
     
     public String getCreationSQL() {
-        final StringBuilder sbSQL = new StringBuilder(500);
+        StringBuilder sbSQL = new StringBuilder(500);
         sbSQL.append("CREATE OR REPLACE FUNCTION ");
         sbSQL.append(PgDiffUtils.getQuotedName(name));
         sbSQL.append('(');
 
         boolean addComma = false;
 
-        for (final Argument argument : arguments) {
+        for (Argument argument : arguments) {
             if (addComma) {
                 sbSQL.append(", ");
             }
@@ -60,7 +60,7 @@ public class PgFunction {
 
             addComma = false;
 
-            for (final Argument argument : arguments) {
+            for (Argument argument : arguments) {
                 if (addComma) {
                     sbSQL.append(", ");
                 }
@@ -79,7 +79,7 @@ public class PgFunction {
     }
 
     
-    public void setBody(final String body) {
+    public void setBody(String body) {
         this.body = body;
     }
 
@@ -90,14 +90,14 @@ public class PgFunction {
 
     
     public String getDropSQL() {
-        final StringBuilder sbString = new StringBuilder(100);
+        StringBuilder sbString = new StringBuilder(100);
         sbString.append("DROP FUNCTION ");
         sbString.append(name);
         sbString.append('(');
 
         boolean addComma = false;
 
-        for (final Argument argument : arguments) {
+        for (Argument argument : arguments) {
             if ("OUT".equalsIgnoreCase(argument.getMode())) {
                 continue;
             }
@@ -117,7 +117,7 @@ public class PgFunction {
     }
 
     
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -132,19 +132,19 @@ public class PgFunction {
     }
 
     
-    public void addArgument(final Argument argument) {
+    public void addArgument(Argument argument) {
         arguments.add(argument);
     }
 
     
     public String getSignature() {
-        final StringBuilder sbString = new StringBuilder(100);
+        StringBuilder sbString = new StringBuilder(100);
         sbString.append(name);
         sbString.append('(');
 
         boolean addComma = false;
 
-        for (final Argument argument : arguments) {
+        for (Argument argument : arguments) {
             if ("OUT".equalsIgnoreCase(argument.getMode())) {
                 continue;
             }
@@ -164,7 +164,7 @@ public class PgFunction {
     }
 
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
         if (!(object instanceof PgFunction)) {
             return false;
         } else if (object == this) {
@@ -175,22 +175,22 @@ public class PgFunction {
     }
 
     
-    public boolean equals(final Object object,
-            final boolean ignoreFunctionWhitespace) {
+    public boolean equals(Object object,
+            boolean ignoreFunctionWhitespace) {
         boolean equals = false;
 
         if (this == object) {
             equals = true;
         } else if (object instanceof PgFunction) {
-            final PgFunction function = (PgFunction) object;
+            PgFunction function = (PgFunction) object;
 
             if (name == null && function.getName() != null
                     || name != null && !name.equals(function.getName())) {
                 return false;
             }
 
-            final String thisBody;
-            final String thatBody;
+            String thisBody;
+            String thatBody;
 
             if (ignoreFunctionWhitespace) {
                 thisBody = body.replaceAll("\\s+", " ");
@@ -224,12 +224,12 @@ public class PgFunction {
 
     @Override
     public int hashCode() {
-        final StringBuilder sbString = new StringBuilder(500);
+        StringBuilder sbString = new StringBuilder(500);
         sbString.append(body);
         sbString.append('|');
         sbString.append(name);
 
-        for (final Argument argument : arguments) {
+        for (Argument argument : arguments) {
             sbString.append('|');
             sbString.append(argument.getDeclaration(true));
         }
@@ -256,7 +256,7 @@ public class PgFunction {
         }
 
         
-        public void setDataType(final String dataType) {
+        public void setDataType(String dataType) {
             this.dataType = dataType;
         }
 
@@ -266,7 +266,7 @@ public class PgFunction {
         }
 
         
-        public void setDefaultExpression(final String defaultExpression) {
+        public void setDefaultExpression(String defaultExpression) {
             this.defaultExpression = defaultExpression;
         }
 
@@ -276,7 +276,7 @@ public class PgFunction {
         }
 
         
-        public void setMode(final String mode) {
+        public void setMode(String mode) {
             this.mode = mode == null || mode.isEmpty() ? "IN" : mode;
         }
 
@@ -286,13 +286,13 @@ public class PgFunction {
         }
 
         
-        public void setName(final String name) {
+        public void setName(String name) {
             this.name = name;
         }
 
         
-        public String getDeclaration(final boolean includeDefaultValue) {
-            final StringBuilder sbString = new StringBuilder(50);
+        public String getDeclaration(boolean includeDefaultValue) {
+            StringBuilder sbString = new StringBuilder(50);
 
             if (mode != null && !"IN".equalsIgnoreCase(mode)) {
                 sbString.append(mode);
@@ -316,14 +316,14 @@ public class PgFunction {
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals(Object obj) {
             if (!(obj instanceof Argument)) {
                 return false;
             } else if (this == obj) {
                 return true;
             }
 
-            final Argument argument = (Argument) obj;
+            Argument argument = (Argument) obj;
 
             return (dataType == null ? argument.getDataType() == null
                     : dataType.equalsIgnoreCase(argument.getDataType()))
@@ -338,7 +338,7 @@ public class PgFunction {
 
         @Override
         public int hashCode() {
-            final StringBuilder sbString = new StringBuilder(50);
+            StringBuilder sbString = new StringBuilder(50);
             sbString.append(
                     mode == null ? null : mode.toUpperCase(Locale.ENGLISH));
             sbString.append('|');

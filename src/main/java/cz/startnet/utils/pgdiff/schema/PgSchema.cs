@@ -11,25 +11,25 @@ public class PgSchema {
 
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<PgFunction> functions = new ArrayList<PgFunction>();
+    private List<PgFunction> functions = new ArrayList<PgFunction>();
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<PgSequence> sequences = new ArrayList<PgSequence>();
+    private List<PgSequence> sequences = new ArrayList<PgSequence>();
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<PgTable> tables = new ArrayList<PgTable>();
+    private List<PgTable> tables = new ArrayList<PgTable>();
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<PgView> views = new ArrayList<PgView>();
+    private List<PgView> views = new ArrayList<PgView>();
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<PgIndex> indexes = new ArrayList<PgIndex>();
+    private List<PgIndex> indexes = new ArrayList<PgIndex>();
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<PgConstraint> primaryKeys =
+    private List<PgConstraint> primaryKeys =
             new ArrayList<PgConstraint>();
     
-    private final String name;
+    private String name;
     
     private String authorization;
     
@@ -38,12 +38,12 @@ public class PgSchema {
     private String comment;
 
     
-    public PgSchema(final String name) {
+    public PgSchema(String name) {
         this.name = name;
     }
 
     
-    public void setAuthorization(final String authorization) {
+    public void setAuthorization(String authorization) {
         this.authorization = authorization;
     }
 
@@ -58,7 +58,7 @@ public class PgSchema {
     }
 
     
-    public void setComment(final String comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
@@ -68,13 +68,13 @@ public class PgSchema {
     }
 
     
-    public void setDefinition(final String definition) {
+    public void setDefinition(String definition) {
         this.definition = definition;
     }
 
     
     public String getCreationSQL() {
-        final StringBuilder sbSQL = new StringBuilder(50);
+        StringBuilder sbSQL = new StringBuilder(50);
         sbSQL.append("CREATE SCHEMA ");
         sbSQL.append(PgDiffUtils.getQuotedName(getName()));
 
@@ -97,7 +97,7 @@ public class PgSchema {
     }
 
     
-    public PgFunction getFunction(final String signature) {
+    public PgFunction getFunction(String signature) {
         for (PgFunction function : functions) {
             if (function.getSignature().equals(signature)) {
                 return function;
@@ -118,7 +118,7 @@ public class PgSchema {
     }
 
     
-    public PgIndex getIndex(final String name) {
+    public PgIndex getIndex(String name) {
         for (PgIndex index : indexes) {
             if (index.getName().equals(name)) {
                 return index;
@@ -129,7 +129,7 @@ public class PgSchema {
     }
 
     
-    public PgConstraint getPrimaryKey(final String name) {
+    public PgConstraint getPrimaryKey(String name) {
         for (PgConstraint constraint : primaryKeys) {
             if (constraint.getName().equals(name)) {
                 return constraint;
@@ -140,7 +140,7 @@ public class PgSchema {
     }
 
     
-    public PgSequence getSequence(final String name) {
+    public PgSequence getSequence(String name) {
         for (PgSequence sequence : sequences) {
             if (sequence.getName().equals(name)) {
                 return sequence;
@@ -166,7 +166,7 @@ public class PgSchema {
     }
 
     
-    public PgTable getTable(final String name) {
+    public PgTable getTable(String name) {
         for (PgTable table : tables) {
             if (table.getName().equals(name)) {
                 return table;
@@ -182,7 +182,7 @@ public class PgSchema {
     }
 
     
-    public PgView getView(final String name) {
+    public PgView getView(String name) {
         for (PgView view : views) {
             if (view.getName().equals(name)) {
                 return view;
@@ -198,37 +198,37 @@ public class PgSchema {
     }
 
     
-    public void addIndex(final PgIndex index) {
+    public void addIndex(PgIndex index) {
         indexes.add(index);
     }
 
     
-    public void addPrimaryKey(final PgConstraint primaryKey) {
+    public void addPrimaryKey(PgConstraint primaryKey) {
         primaryKeys.add(primaryKey);
     }
 
     
-    public void addFunction(final PgFunction function) {
+    public void addFunction(PgFunction function) {
         functions.add(function);
     }
 
     
-    public void addSequence(final PgSequence sequence) {
+    public void addSequence(PgSequence sequence) {
         sequences.add(sequence);
     }
 
     
-    public void addTable(final PgTable table) {
+    public void addTable(PgTable table) {
         tables.add(table);
     }
 
     
-    public void addView(final PgView view) {
+    public void addView(PgView view) {
         views.add(view);
     }
 
     
-    public boolean containsFunction(final String signature) {
+    public boolean containsFunction(String signature) {
         for (PgFunction function : functions) {
             if (function.getSignature().equals(signature)) {
                 return true;
@@ -239,7 +239,7 @@ public class PgSchema {
     }
 
     
-    public boolean containsSequence(final String name) {
+    public boolean containsSequence(String name) {
         for (PgSequence sequence : sequences) {
             if (sequence.getName().equals(name)) {
                 return true;
@@ -250,7 +250,7 @@ public class PgSchema {
     }
 
     
-    public boolean containsTable(final String name) {
+    public boolean containsTable(String name) {
         for (PgTable table : tables) {
             if (table.getName().equals(name)) {
                 return true;
@@ -261,7 +261,7 @@ public class PgSchema {
     }
 
     
-    public boolean containsView(final String name) {
+    public boolean containsView(String name) {
         for (PgView view : views) {
             if (view.getName().equals(name)) {
                 return true;

@@ -11,16 +11,16 @@ import java.text.MessageFormat;
 public class AlterSequenceParser {
 
     
-    public static void parse(final PgDatabase database,
-            final String statement, final boolean outputIgnoredStatements) {
-        final Parser parser = new Parser(statement);
+    public static void parse(PgDatabase database,
+            String statement, boolean outputIgnoredStatements) {
+        Parser parser = new Parser(statement);
 
         parser.expect("ALTER", "SEQUENCE");
 
-        final String sequenceName = parser.parseIdentifier();
-        final String schemaName =
+        String sequenceName = parser.parseIdentifier();
+        String schemaName =
                 ParserUtils.getSchemaName(sequenceName, database);
-        final PgSchema schema = database.getSchema(schemaName);
+        PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
             throw new RuntimeException(MessageFormat.format(
@@ -28,8 +28,8 @@ public class AlterSequenceParser {
                     statement));
         }
 
-        final String objectName = ParserUtils.getObjectName(sequenceName);
-        final PgSequence sequence = schema.getSequence(objectName);
+        String objectName = ParserUtils.getObjectName(sequenceName);
+        PgSequence sequence = schema.getSequence(objectName);
 
         if (sequence == null) {
             throw new RuntimeException(MessageFormat.format(

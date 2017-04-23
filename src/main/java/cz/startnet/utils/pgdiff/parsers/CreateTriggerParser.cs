@@ -9,15 +9,15 @@ import cz.startnet.utils.pgdiff.schema.PgTrigger;
 public class CreateTriggerParser {
 
     
-    public static void parse(final PgDatabase database,
-            final String statement, final boolean ignoreSlonyTriggers) {
-        final Parser parser = new Parser(statement);
+    public static void parse(PgDatabase database,
+            String statement, boolean ignoreSlonyTriggers) {
+        Parser parser = new Parser(statement);
         parser.expect("CREATE", "TRIGGER");
 
-        final String triggerName = parser.parseIdentifier();
-        final String objectName = ParserUtils.getObjectName(triggerName);
+        String triggerName = parser.parseIdentifier();
+        String objectName = ParserUtils.getObjectName(triggerName);
 
-        final PgTrigger trigger = new PgTrigger();
+        PgTrigger trigger = new PgTrigger();
         trigger.setName(objectName);
 
         if (parser.expectOptional("BEFORE")) {
@@ -56,7 +56,7 @@ public class CreateTriggerParser {
 
         parser.expect("ON");
 
-        final String tableName = parser.parseIdentifier();
+        String tableName = parser.parseIdentifier();
 
         trigger.setTableName(ParserUtils.getObjectName(tableName));
 
@@ -81,12 +81,12 @@ public class CreateTriggerParser {
         parser.expect("EXECUTE", "PROCEDURE");
         trigger.setFunction(parser.getRest());
 
-        final boolean ignoreSlonyTrigger = ignoreSlonyTriggers
+        boolean ignoreSlonyTrigger = ignoreSlonyTriggers
                 && ("_slony_logtrigger".equals(trigger.getName())
                 || "_slony_denyaccess".equals(trigger.getName()));
 
         if (!ignoreSlonyTrigger) {
-            final PgSchema tableSchema = database.getSchema(
+            PgSchema tableSchema = database.getSchema(
                     ParserUtils.getSchemaName(tableName, database));
             tableSchema.getTable(trigger.getTableName()).addTrigger(trigger);
         }

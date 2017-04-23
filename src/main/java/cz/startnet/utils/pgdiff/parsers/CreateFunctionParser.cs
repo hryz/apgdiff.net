@@ -11,17 +11,17 @@ import java.text.MessageFormat;
 public class CreateFunctionParser {
 
     
-    public static void parse(final PgDatabase database,
-            final String statement) {
-        final Parser parser = new Parser(statement);
+    public static void parse(PgDatabase database,
+            String statement) {
+        Parser parser = new Parser(statement);
         parser.expect("CREATE");
         parser.expectOptional("OR", "REPLACE");
         parser.expect("FUNCTION");
 
-        final String functionName = parser.parseIdentifier();
-        final String schemaName =
+        String functionName = parser.parseIdentifier();
+        String schemaName =
                 ParserUtils.getSchemaName(functionName, database);
-        final PgSchema schema = database.getSchema(schemaName);
+        PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
             throw new RuntimeException(MessageFormat.format(
@@ -29,14 +29,14 @@ public class CreateFunctionParser {
                     statement));
         }
 
-        final PgFunction function = new PgFunction();
+        PgFunction function = new PgFunction();
         function.setName(ParserUtils.getObjectName(functionName));
         schema.addFunction(function);
 
         parser.expect("(");
 
         while (!parser.expectOptional(")")) {
-            final String mode;
+            String mode;
 
             if (parser.expectOptional("IN")) {
                 mode = "IN";
@@ -50,11 +50,11 @@ public class CreateFunctionParser {
                 mode = null;
             }
 
-            final int position = parser.getPosition();
+            int position = parser.getPosition();
             String argumentName = null;
             String dataType = parser.parseDataType();
 
-            final int position2 = parser.getPosition();
+            int position2 = parser.getPosition();
 
             if (!parser.expectOptional(")") && !parser.expectOptional(",")
                     && !parser.expectOptional("=")
@@ -67,7 +67,7 @@ public class CreateFunctionParser {
                 parser.setPosition(position2);
             }
 
-            final String defaultExpression;
+            String defaultExpression;
 
             if (parser.expectOptional("=")
                     || parser.expectOptional("DEFAULT")) {
@@ -76,7 +76,7 @@ public class CreateFunctionParser {
                 defaultExpression = null;
             }
 
-            final PgFunction.Argument argument = new PgFunction.Argument();
+            PgFunction.Argument argument = new PgFunction.Argument();
             argument.setDataType(dataType);
             argument.setDefaultExpression(defaultExpression);
             argument.setMode(mode);

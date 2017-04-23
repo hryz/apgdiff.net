@@ -9,30 +9,30 @@ import java.util.List;
 public class ParserUtils {
 
     
-    public static String getObjectName(final String name) {
-        final String[] names = splitNames(name);
+    public static String getObjectName(String name) {
+        String[] names = splitNames(name);
 
         return names[names.length - 1];
     }
 
     
-    public static String getSecondObjectName(final String name) {
-        final String[] names = splitNames(name);
+    public static String getSecondObjectName(String name) {
+        String[] names = splitNames(name);
 
         return names[names.length - 2];
     }
 
     
-    public static String getThirdObjectName(final String name) {
-        final String[] names = splitNames(name);
+    public static String getThirdObjectName(String name) {
+        String[] names = splitNames(name);
 
         return names.length >= 3 ? names[names.length - 3] : null;
     }
 
     
-    public static String getSchemaName(final String name,
-            final PgDatabase database) {
-        final String[] names = splitNames(name);
+    public static String getSchemaName(String name,
+            PgDatabase database) {
+        String[] names = splitNames(name);
 
         if (names.length < 2) {
             return database.getDefaultSchema().getName();
@@ -42,16 +42,16 @@ public class ParserUtils {
     }
 
     
-    public static String generateName(final String prefix,
-            final List<String> names, final String postfix) {
-        final String adjName;
+    public static String generateName(String prefix,
+            List<String> names, String postfix) {
+        String adjName;
 
         if (names.size() == 1) {
             adjName = names.get(0);
         } else {
-            final StringBuilder sbString = new StringBuilder(names.size() * 15);
+            StringBuilder sbString = new StringBuilder(names.size() * 15);
 
-            for (final String name : names) {
+            for (String name : names) {
                 if (sbString.length() > 0) {
                     sbString.append(',');
                 }
@@ -62,7 +62,7 @@ public class ParserUtils {
             adjName = Integer.toHexString(sbString.toString().hashCode());
         }
 
-        final StringBuilder sbResult = new StringBuilder(30);
+        StringBuilder sbResult = new StringBuilder(30);
 
         if (prefix != null && !prefix.isEmpty()) {
             sbResult.append(prefix);
@@ -78,16 +78,16 @@ public class ParserUtils {
     }
 
     
-    private static String[] splitNames(final String string) {
+    private static String[] splitNames(String string) {
         if (string.indexOf('"') == -1) {
             return string.split("\\.");
         } else {
-            final List<String> strings = new ArrayList<String>(2);
+            List<String> strings = new ArrayList<String>(2);
             int startPos = 0;
 
             while (true) {
                 if (string.charAt(startPos) == '"') {
-                    final int endPos = string.indexOf('"', startPos + 1);
+                    int endPos = string.indexOf('"', startPos + 1);
                     strings.add(string.substring(startPos + 1, endPos));
 
                     if (endPos + 1 == string.length()) {
@@ -98,7 +98,7 @@ public class ParserUtils {
                         startPos = endPos + 1;
                     }
                 } else {
-                    final int endPos = string.indexOf('.', startPos);
+                    int endPos = string.indexOf('.', startPos);
 
                     if (endPos == -1) {
                         strings.add(string.substring(startPos));

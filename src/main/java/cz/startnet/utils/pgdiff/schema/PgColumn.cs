@@ -9,13 +9,13 @@ import java.util.regex.Pattern;
 public class PgColumn {
 
     
-    private static final Pattern PATTERN_NULL =
+    private static Pattern PATTERN_NULL =
             Pattern.compile("^(.+)[\\s]+NULL$", Pattern.CASE_INSENSITIVE);
     
-    private static final Pattern PATTERN_NOT_NULL = Pattern.compile(
+    private static Pattern PATTERN_NOT_NULL = Pattern.compile(
             "^(.+)[\\s]+NOT[\\s]+NULL$", Pattern.CASE_INSENSITIVE);
     
-    private static final Pattern PATTERN_DEFAULT = Pattern.compile(
+    private static Pattern PATTERN_DEFAULT = Pattern.compile(
             "^(.+)[\\s]+DEFAULT[\\s]+(.+)$", Pattern.CASE_INSENSITIVE);
     
     private Integer statistics;
@@ -33,7 +33,7 @@ public class PgColumn {
     private String comment;
 
     
-    public PgColumn(final String name) {
+    public PgColumn(String name) {
         this.name = name;
     }
 
@@ -43,12 +43,12 @@ public class PgColumn {
     }
 
     
-    public void setComment(final String comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
     
-    public void setDefaultValue(final String defaultValue) {
+    public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
     }
 
@@ -58,8 +58,8 @@ public class PgColumn {
     }
 
     
-    public String getFullDefinition(final boolean addDefaults) {
-        final StringBuilder sbDefinition = new StringBuilder(100);
+    public String getFullDefinition(boolean addDefaults) {
+        StringBuilder sbDefinition = new StringBuilder(100);
         sbDefinition.append(PgDiffUtils.getQuotedName(name));
         sbDefinition.append(' ');
         sbDefinition.append(type);
@@ -68,7 +68,7 @@ public class PgColumn {
             sbDefinition.append(" DEFAULT ");
             sbDefinition.append(defaultValue);
         } else if (!nullValue && addDefaults) {
-            final String defaultColValue = PgColumnUtils.getDefaultValue(type);
+            String defaultColValue = PgColumnUtils.getDefaultValue(type);
 
             if (defaultColValue != null) {
                 sbDefinition.append(" DEFAULT ");
@@ -84,7 +84,7 @@ public class PgColumn {
     }
 
     
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -94,7 +94,7 @@ public class PgColumn {
     }
 
     
-    public void setNullValue(final boolean nullValue) {
+    public void setNullValue(boolean nullValue) {
         this.nullValue = nullValue;
     }
 
@@ -104,7 +104,7 @@ public class PgColumn {
     }
 
     
-    public void setStatistics(final Integer statistics) {
+    public void setStatistics(Integer statistics) {
         this.statistics = statistics;
     }
 
@@ -119,12 +119,12 @@ public class PgColumn {
     }
 
     
-    public void setStorage(final String storage) {
+    public void setStorage(String storage) {
         this.storage = storage;
     }
 
     
-    public void setType(final String type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -134,7 +134,7 @@ public class PgColumn {
     }
 
     
-    public void parseDefinition(final String definition) {
+    public void parseDefinition(String definition) {
         String string = definition;
 
         Matcher matcher = PATTERN_NOT_NULL.matcher(string);

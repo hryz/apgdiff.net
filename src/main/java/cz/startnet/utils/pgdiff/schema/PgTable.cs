@@ -11,22 +11,22 @@ public class PgTable {
 
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<PgColumn> columns = new ArrayList<PgColumn>();
+    private List<PgColumn> columns = new ArrayList<PgColumn>();
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<PgConstraint> constraints =
+    private List<PgConstraint> constraints =
             new ArrayList<PgConstraint>();
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<PgIndex> indexes = new ArrayList<PgIndex>();
+    private List<PgIndex> indexes = new ArrayList<PgIndex>();
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<PgTrigger> triggers = new ArrayList<PgTrigger>();
+    private List<PgTrigger> triggers = new ArrayList<PgTrigger>();
     
     private String clusterIndexName;
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<String> inherits = new ArrayList<String>();
+    private List<String> inherits = new ArrayList<String>();
     
     private String name;
     
@@ -37,12 +37,12 @@ public class PgTable {
     private String comment;
 
     
-    public PgTable(final String name) {
+    public PgTable(String name) {
         this.name = name;
     }
 
     
-    public void setClusterIndexName(final String name) {
+    public void setClusterIndexName(String name) {
         clusterIndexName = name;
     }
 
@@ -52,7 +52,7 @@ public class PgTable {
     }
 
     
-    public PgColumn getColumn(final String name) {
+    public PgColumn getColumn(String name) {
         for (PgColumn column : columns) {
             if (column.getName().equals(name)) {
                 return column;
@@ -73,12 +73,12 @@ public class PgTable {
     }
 
     
-    public void setComment(final String comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
     
-    public PgConstraint getConstraint(final String name) {
+    public PgConstraint getConstraint(String name) {
         for (PgConstraint constraint : constraints) {
             if (constraint.getName().equals(name)) {
                 return constraint;
@@ -95,7 +95,7 @@ public class PgTable {
 
     
     public String getCreationSQL() {
-        final StringBuilder sbSQL = new StringBuilder(1000);
+        StringBuilder sbSQL = new StringBuilder(1000);
         sbSQL.append("CREATE TABLE ");
         sbSQL.append(PgDiffUtils.getQuotedName(name));
         sbSQL.append(" (\n");
@@ -124,7 +124,7 @@ public class PgTable {
 
             first = true;
 
-            for (final String tableName : inherits) {
+            for (String tableName : inherits) {
                 if (first) {
                     first = false;
                 } else {
@@ -180,7 +180,7 @@ public class PgTable {
             sbSQL.append(';');
         }
 
-        for (final PgColumn column : columns) {
+        for (PgColumn column : columns) {
             if (column.getComment() != null && !column.getComment().isEmpty()) {
                 sbSQL.append("\n\nCOMMENT ON COLUMN ");
                 sbSQL.append(PgDiffUtils.getQuotedName(name));
@@ -201,7 +201,7 @@ public class PgTable {
     }
 
     
-    public PgIndex getIndex(final String name) {
+    public PgIndex getIndex(String name) {
         for (PgIndex index : indexes) {
             if (index.getName().equals(name)) {
                 return index;
@@ -212,7 +212,7 @@ public class PgTable {
     }
 
     
-    public PgTrigger getTrigger(final String name) {
+    public PgTrigger getTrigger(String name) {
         for (PgTrigger trigger : triggers) {
             if (trigger.getName().equals(name)) {
                 return trigger;
@@ -228,7 +228,7 @@ public class PgTable {
     }
 
     
-    public void addInherits(final String tableName) {
+    public void addInherits(String tableName) {
         inherits.add(tableName);
     }
 
@@ -238,7 +238,7 @@ public class PgTable {
     }
 
     
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -253,7 +253,7 @@ public class PgTable {
     }
 
     
-    public void setWith(final String with) {
+    public void setWith(String with) {
         this.with = with;
     }
 
@@ -268,32 +268,32 @@ public class PgTable {
     }
 
     
-    public void setTablespace(final String tablespace) {
+    public void setTablespace(String tablespace) {
         this.tablespace = tablespace;
     }
 
     
-    public void addColumn(final PgColumn column) {
+    public void addColumn(PgColumn column) {
         columns.add(column);
     }
 
     
-    public void addConstraint(final PgConstraint constraint) {
+    public void addConstraint(PgConstraint constraint) {
         constraints.add(constraint);
     }
 
     
-    public void addIndex(final PgIndex index) {
+    public void addIndex(PgIndex index) {
         indexes.add(index);
     }
 
     
-    public void addTrigger(final PgTrigger trigger) {
+    public void addTrigger(PgTrigger trigger) {
         triggers.add(trigger);
     }
 
     
-    public boolean containsColumn(final String name) {
+    public boolean containsColumn(String name) {
         for (PgColumn column : columns) {
             if (column.getName().equals(name)) {
                 return true;
@@ -304,7 +304,7 @@ public class PgTable {
     }
 
     
-    public boolean containsConstraint(final String name) {
+    public boolean containsConstraint(String name) {
         for (PgConstraint constraint : constraints) {
             if (constraint.getName().equals(name)) {
                 return true;
@@ -315,7 +315,7 @@ public class PgTable {
     }
 
     
-    public boolean containsIndex(final String name) {
+    public boolean containsIndex(String name) {
         for (PgIndex index : indexes) {
             if (index.getName().equals(name)) {
                 return true;
@@ -328,7 +328,7 @@ public class PgTable {
     
     private List<PgColumn> getColumnsWithStatistics() {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
-        final List<PgColumn> list = new ArrayList<PgColumn>();
+        List<PgColumn> list = new ArrayList<PgColumn>();
 
         for (PgColumn column : columns) {
             if (column.getStatistics() != null) {

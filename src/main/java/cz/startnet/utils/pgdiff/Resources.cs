@@ -7,11 +7,11 @@ import java.util.ResourceBundle;
 public class Resources {
 
     
-    private static final ResourceBundle RESOURCE_BUNDLE =
+    private static ResourceBundle RESOURCE_BUNDLE =
             ResourceBundle.getBundle("cz/startnet/utils/pgdiff/Resources");
 
     
-    public static String getString(final String key) {
+    public static String getString(String key) {
         return RESOURCE_BUNDLE.getString(key);
     }
 

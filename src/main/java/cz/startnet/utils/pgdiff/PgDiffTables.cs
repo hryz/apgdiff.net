@@ -16,11 +16,11 @@ import java.util.Map;
 public class PgDiffTables {
 
     
-    public static void dropClusters(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
-        for (final PgTable newTable : newSchema.getTables()) {
-            final PgTable oldTable;
+    public static void dropClusters(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
+        for (PgTable newTable : newSchema.getTables()) {
+            PgTable oldTable;
 
             if (oldSchema == null) {
                 oldTable = null;
@@ -28,7 +28,7 @@ public class PgDiffTables {
                 oldTable = oldSchema.getTable(newTable.getName());
             }
 
-            final String oldCluster;
+            String oldCluster;
 
             if (oldTable == null) {
                 oldCluster = null;
@@ -36,7 +36,7 @@ public class PgDiffTables {
                 oldCluster = oldTable.getClusterIndexName();
             }
 
-            final String newCluster = newTable.getClusterIndexName();
+            String newCluster = newTable.getClusterIndexName();
 
             if (oldCluster != null && newCluster == null
                     && newTable.containsIndex(oldCluster)) {
@@ -50,11 +50,11 @@ public class PgDiffTables {
     }
 
     
-    public static void createClusters(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
-        for (final PgTable newTable : newSchema.getTables()) {
-            final PgTable oldTable;
+    public static void createClusters(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
+        for (PgTable newTable : newSchema.getTables()) {
+            PgTable oldTable;
 
             if (oldSchema == null) {
                 oldTable = null;
@@ -62,7 +62,7 @@ public class PgDiffTables {
                 oldTable = oldSchema.getTable(newTable.getName());
             }
 
-            final String oldCluster;
+            String oldCluster;
 
             if (oldTable == null) {
                 oldCluster = null;
@@ -70,7 +70,7 @@ public class PgDiffTables {
                 oldCluster = oldTable.getClusterIndexName();
             }
 
-            final String newCluster = newTable.getClusterIndexName();
+            String newCluster = newTable.getClusterIndexName();
 
             if ((oldCluster == null && newCluster != null)
                     || (oldCluster != null && newCluster != null
@@ -87,16 +87,16 @@ public class PgDiffTables {
     }
 
     
-    public static void alterTables(final PrintWriter writer,
-            final PgDiffArguments arguments, final PgSchema oldSchema,
-            final PgSchema newSchema, final SearchPathHelper searchPathHelper) {
-        for (final PgTable newTable : newSchema.getTables()) {
+    public static void alterTables(PrintWriter writer,
+            PgDiffArguments arguments, PgSchema oldSchema,
+            PgSchema newSchema, SearchPathHelper searchPathHelper) {
+        for (PgTable newTable : newSchema.getTables()) {
             if (oldSchema == null
                     || !oldSchema.containsTable(newTable.getName())) {
                 continue;
             }
 
-            final PgTable oldTable = oldSchema.getTable(newTable.getName());
+            PgTable oldTable = oldSchema.getTable(newTable.getName());
             updateTableColumns(
                     writer, arguments, oldTable, newTable, searchPathHelper);
             checkWithOIDS(writer, oldTable, newTable, searchPathHelper);
@@ -109,18 +109,18 @@ public class PgDiffTables {
     }
 
     
-    private static void addAlterStatistics(final PrintWriter writer,
-            final PgTable oldTable, final PgTable newTable,
-            final SearchPathHelper searchPathHelper) {
+    private static void addAlterStatistics(PrintWriter writer,
+            PgTable oldTable, PgTable newTable,
+            SearchPathHelper searchPathHelper) {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
-        final Map<String, Integer> stats = new HashMap<String, Integer>();
+        Map<String, Integer> stats = new HashMap<String, Integer>();
 
-        for (final PgColumn newColumn : newTable.getColumns()) {
-            final PgColumn oldColumn = oldTable.getColumn(newColumn.getName());
+        for (PgColumn newColumn : newTable.getColumns()) {
+            PgColumn oldColumn = oldTable.getColumn(newColumn.getName());
 
             if (oldColumn != null) {
-                final Integer oldStat = oldColumn.getStatistics();
-                final Integer newStat = newColumn.getStatistics();
+                Integer oldStat = oldColumn.getStatistics();
+                Integer newStat = newColumn.getStatistics();
                 Integer newStatValue = null;
 
                 if (newStat != null && (oldStat == null
@@ -136,7 +136,7 @@ public class PgDiffTables {
             }
         }
 
-        for (final Map.Entry<String, Integer> entry : stats.entrySet()) {
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
             searchPathHelper.outputSearchPath(writer);
             writer.println();
             writer.print("ALTER TABLE ONLY ");
@@ -150,16 +150,16 @@ public class PgDiffTables {
     }
 
     
-    private static void addAlterStorage(final PrintWriter writer,
-            final PgTable oldTable, final PgTable newTable,
-            final SearchPathHelper searchPathHelper) {
-        for (final PgColumn newColumn : newTable.getColumns()) {
-            final PgColumn oldColumn = oldTable.getColumn(newColumn.getName());
-            final String oldStorage = (oldColumn == null
+    private static void addAlterStorage(PrintWriter writer,
+            PgTable oldTable, PgTable newTable,
+            SearchPathHelper searchPathHelper) {
+        for (PgColumn newColumn : newTable.getColumns()) {
+            PgColumn oldColumn = oldTable.getColumn(newColumn.getName());
+            String oldStorage = (oldColumn == null
                     || oldColumn.getStorage() == null
                     || oldColumn.getStorage().isEmpty()) ? null
                     : oldColumn.getStorage();
-            final String newStorage = (newColumn.getStorage() == null
+            String newStorage = (newColumn.getStorage() == null
                     || newColumn.getStorage().isEmpty()) ? null
                     : newColumn.getStorage();
 
@@ -190,10 +190,10 @@ public class PgDiffTables {
     }
 
     
-    private static void addCreateTableColumns(final List<String> statements,
-            final PgDiffArguments arguments, final PgTable oldTable,
-            final PgTable newTable, final List<PgColumn> dropDefaultsColumns) {
-        for (final PgColumn column : newTable.getColumns()) {
+    private static void addCreateTableColumns(List<String> statements,
+            PgDiffArguments arguments, PgTable oldTable,
+            PgTable newTable, List<PgColumn> dropDefaultsColumns) {
+        for (PgColumn column : newTable.getColumns()) {
             if (!oldTable.containsColumn(column.getName())) {
                 statements.add("\tADD COLUMN "
                         + column.getFullDefinition(arguments.isAddDefaults()));
@@ -208,9 +208,9 @@ public class PgDiffTables {
     }
 
     
-    private static void addDropTableColumns(final List<String> statements,
-            final PgTable oldTable, final PgTable newTable) {
-        for (final PgColumn column : oldTable.getColumns()) {
+    private static void addDropTableColumns(List<String> statements,
+            PgTable oldTable, PgTable newTable) {
+        for (PgColumn column : oldTable.getColumns()) {
             if (!newTable.containsColumn(column.getName())) {
                 statements.add("\tDROP COLUMN "
                         + PgDiffUtils.getQuotedName(column.getName()));
@@ -219,16 +219,16 @@ public class PgDiffTables {
     }
 
     
-    private static void addModifyTableColumns(final List<String> statements,
-            final PgDiffArguments arguments, final PgTable oldTable,
-            final PgTable newTable, final List<PgColumn> dropDefaultsColumns) {
-        for (final PgColumn newColumn : newTable.getColumns()) {
+    private static void addModifyTableColumns(List<String> statements,
+            PgDiffArguments arguments, PgTable oldTable,
+            PgTable newTable, List<PgColumn> dropDefaultsColumns) {
+        for (PgColumn newColumn : newTable.getColumns()) {
             if (!oldTable.containsColumn(newColumn.getName())) {
                 continue;
             }
 
-            final PgColumn oldColumn = oldTable.getColumn(newColumn.getName());
-            final String newColumnName =
+            PgColumn oldColumn = oldTable.getColumn(newColumn.getName());
+            String newColumnName =
                     PgDiffUtils.getQuotedName(newColumn.getName());
 
             if (!oldColumn.getType().equals(newColumn.getType())) {
@@ -240,9 +240,9 @@ public class PgDiffTables {
                         newColumn.getType()) + " */");
             }
 
-            final String oldDefault = (oldColumn.getDefaultValue() == null) ? ""
+            String oldDefault = (oldColumn.getDefaultValue() == null) ? ""
                     : oldColumn.getDefaultValue();
-            final String newDefault = (newColumn.getDefaultValue() == null) ? ""
+            String newDefault = (newColumn.getDefaultValue() == null) ? ""
                     : newColumn.getDefaultValue();
 
             if (!oldDefault.equals(newDefault)) {
@@ -261,7 +261,7 @@ public class PgDiffTables {
                             + " DROP NOT NULL");
                 } else {
                     if (arguments.isAddDefaults()) {
-                        final String defaultValue =
+                        String defaultValue =
                                 PgColumnUtils.getDefaultValue(
                                 newColumn.getType());
 
@@ -280,10 +280,10 @@ public class PgDiffTables {
     }
 
     
-    private static void checkInherits(final PrintWriter writer,
-            final PgTable oldTable, final PgTable newTable,
-            final SearchPathHelper searchPathHelper) {
-        for (final String tableName : oldTable.getInherits()) {
+    private static void checkInherits(PrintWriter writer,
+            PgTable oldTable, PgTable newTable,
+            SearchPathHelper searchPathHelper) {
+        for (String tableName : oldTable.getInherits()) {
             if (!newTable.getInherits().contains(tableName)) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
@@ -294,7 +294,7 @@ public class PgDiffTables {
             }
         }
 
-        for (final String tableName : newTable.getInherits()) {
+        for (String tableName : newTable.getInherits()) {
             if (!oldTable.getInherits().contains(tableName)) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
@@ -307,9 +307,9 @@ public class PgDiffTables {
     }
 
     
-    private static void checkWithOIDS(final PrintWriter writer,
-            final PgTable oldTable, final PgTable newTable,
-            final SearchPathHelper searchPathHelper) {
+    private static void checkWithOIDS(PrintWriter writer,
+            PgTable oldTable, PgTable newTable,
+            SearchPathHelper searchPathHelper) {
         if (oldTable.getWith() == null && newTable.getWith() == null
                 || oldTable.getWith() != null
                 && oldTable.getWith().equals(newTable.getWith())) {
@@ -333,9 +333,9 @@ public class PgDiffTables {
     }
 
     
-    private static void checkTablespace(final PrintWriter writer,
-            final PgTable oldTable, final PgTable newTable,
-            final SearchPathHelper searchPathHelper) {
+    private static void checkTablespace(PrintWriter writer,
+            PgTable oldTable, PgTable newTable,
+            SearchPathHelper searchPathHelper) {
         if (oldTable.getTablespace() == null && newTable.getTablespace() == null
                 || oldTable.getTablespace() != null
                 && oldTable.getTablespace().equals(newTable.getTablespace())) {
@@ -350,10 +350,10 @@ public class PgDiffTables {
     }
 
     
-    public static void createTables(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
-        for (final PgTable table : newSchema.getTables()) {
+    public static void createTables(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
+        for (PgTable table : newSchema.getTables()) {
             if (oldSchema == null
                     || !oldSchema.containsTable(table.getName())) {
                 searchPathHelper.outputSearchPath(writer);
@@ -364,14 +364,14 @@ public class PgDiffTables {
     }
 
     
-    public static void dropTables(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
+    public static void dropTables(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        for (final PgTable table : oldSchema.getTables()) {
+        for (PgTable table : oldSchema.getTables()) {
             if (!newSchema.containsTable(table.getName())) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
@@ -381,13 +381,13 @@ public class PgDiffTables {
     }
 
     
-    private static void updateTableColumns(final PrintWriter writer,
-            final PgDiffArguments arguments, final PgTable oldTable,
-            final PgTable newTable, final SearchPathHelper searchPathHelper) {
+    private static void updateTableColumns(PrintWriter writer,
+            PgDiffArguments arguments, PgTable oldTable,
+            PgTable newTable, SearchPathHelper searchPathHelper) {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
-        final List<String> statements = new ArrayList<String>();
+        List<String> statements = new ArrayList<String>();
         @SuppressWarnings("CollectionWithoutInitialCapacity")
-        final List<PgColumn> dropDefaultsColumns = new ArrayList<PgColumn>();
+        List<PgColumn> dropDefaultsColumns = new ArrayList<PgColumn>();
         addDropTableColumns(statements, oldTable, newTable);
         addCreateTableColumns(
                 statements, arguments, oldTable, newTable, dropDefaultsColumns);
@@ -395,7 +395,7 @@ public class PgDiffTables {
                 statements, arguments, oldTable, newTable, dropDefaultsColumns);
 
         if (!statements.isEmpty()) {
-            final String quotedTableName =
+            String quotedTableName =
                     PgDiffUtils.getQuotedName(newTable.getName());
             searchPathHelper.outputSearchPath(writer);
             writer.println();
@@ -423,9 +423,9 @@ public class PgDiffTables {
     }
 
     
-    private static void alterComments(final PrintWriter writer,
-            final PgTable oldTable, final PgTable newTable,
-            final SearchPathHelper searchPathHelper) {
+    private static void alterComments(PrintWriter writer,
+            PgTable oldTable, PgTable newTable,
+            SearchPathHelper searchPathHelper) {
         if (oldTable.getComment() == null
                 && newTable.getComment() != null
                 || oldTable.getComment() != null
@@ -447,11 +447,11 @@ public class PgDiffTables {
             writer.println(" IS NULL;");
         }
 
-        for (final PgColumn newColumn : newTable.getColumns()) {
-            final PgColumn oldColumn = oldTable.getColumn(newColumn.getName());
-            final String oldComment =
+        for (PgColumn newColumn : newTable.getColumns()) {
+            PgColumn oldColumn = oldTable.getColumn(newColumn.getName());
+            String oldComment =
                     oldColumn == null ? null : oldColumn.getComment();
-            final String newComment = newColumn.getComment();
+            String newComment = newColumn.getComment();
 
             if (newComment != null && (oldComment == null ? newComment != null
                     : !oldComment.equals(newComment))) {

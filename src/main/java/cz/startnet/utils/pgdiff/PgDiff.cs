@@ -11,13 +11,13 @@ import java.io.PrintWriter;
 public class PgDiff {
 
     
-    public static void createDiff(final PrintWriter writer,
-            final PgDiffArguments arguments) {
-        final PgDatabase oldDatabase = PgDumpLoader.loadDatabaseSchema(
+    public static void createDiff(PrintWriter writer,
+            PgDiffArguments arguments) {
+        PgDatabase oldDatabase = PgDumpLoader.loadDatabaseSchema(
                 arguments.getOldDumpFile(), arguments.getInCharsetName(),
                 arguments.isOutputIgnoredStatements(),
                 arguments.isIgnoreSlonyTriggers());
-        final PgDatabase newDatabase = PgDumpLoader.loadDatabaseSchema(
+        PgDatabase newDatabase = PgDumpLoader.loadDatabaseSchema(
                 arguments.getNewDumpFile(), arguments.getInCharsetName(),
                 arguments.isOutputIgnoredStatements(),
                 arguments.isIgnoreSlonyTriggers());
@@ -26,14 +26,14 @@ public class PgDiff {
     }
 
     
-    public static void createDiff(final PrintWriter writer,
-            final PgDiffArguments arguments, final InputStream oldInputStream,
-            final InputStream newInputStream) {
-        final PgDatabase oldDatabase = PgDumpLoader.loadDatabaseSchema(
+    public static void createDiff(PrintWriter writer,
+            PgDiffArguments arguments, InputStream oldInputStream,
+            InputStream newInputStream) {
+        PgDatabase oldDatabase = PgDumpLoader.loadDatabaseSchema(
                 oldInputStream, arguments.getInCharsetName(),
                 arguments.isOutputIgnoredStatements(),
                 arguments.isIgnoreSlonyTriggers());
-        final PgDatabase newDatabase = PgDumpLoader.loadDatabaseSchema(
+        PgDatabase newDatabase = PgDumpLoader.loadDatabaseSchema(
                 newInputStream, arguments.getInCharsetName(),
                 arguments.isOutputIgnoredStatements(),
                 arguments.isIgnoreSlonyTriggers());
@@ -42,9 +42,9 @@ public class PgDiff {
     }
 
     
-    private static void createNewSchemas(final PrintWriter writer,
-            final PgDatabase oldDatabase, final PgDatabase newDatabase) {
-        for (final PgSchema newSchema : newDatabase.getSchemas()) {
+    private static void createNewSchemas(PrintWriter writer,
+            PgDatabase oldDatabase, PgDatabase newDatabase) {
+        for (PgSchema newSchema : newDatabase.getSchemas()) {
             if (oldDatabase.getSchema(newSchema.getName()) == null) {
                 writer.println();
                 writer.println(newSchema.getCreationSQL());
@@ -53,9 +53,9 @@ public class PgDiff {
     }
 
     
-    private static void diffDatabaseSchemas(final PrintWriter writer,
-            final PgDiffArguments arguments, final PgDatabase oldDatabase,
-            final PgDatabase newDatabase) {
+    private static void diffDatabaseSchemas(PrintWriter writer,
+            PgDiffArguments arguments, PgDatabase oldDatabase,
+            PgDatabase newDatabase) {
         if (arguments.isAddTransaction()) {
             writer.println("START TRANSACTION;");
         }
@@ -91,7 +91,7 @@ public class PgDiff {
                 writer.println(Resources.getString(
                         "OriginalDatabaseIgnoredStatements"));
 
-                for (final String statement :
+                for (String statement :
                         oldDatabase.getIgnoredStatements()) {
                     writer.println();
                     writer.println(statement);
@@ -106,7 +106,7 @@ public class PgDiff {
                 writer.println(
                         Resources.getString("NewDatabaseIgnoredStatements"));
 
-                for (final String statement :
+                for (String statement :
                         newDatabase.getIgnoredStatements()) {
                     writer.println();
                     writer.println(statement);
@@ -118,9 +118,9 @@ public class PgDiff {
     }
 
     
-    private static void dropOldSchemas(final PrintWriter writer,
-            final PgDatabase oldDatabase, final PgDatabase newDatabase) {
-        for (final PgSchema oldSchema : oldDatabase.getSchemas()) {
+    private static void dropOldSchemas(PrintWriter writer,
+            PgDatabase oldDatabase, PgDatabase newDatabase) {
+        for (PgSchema oldSchema : oldDatabase.getSchemas()) {
             if (newDatabase.getSchema(oldSchema.getName()) == null) {
                 writer.println();
                 writer.println("DROP SCHEMA "
@@ -131,14 +131,14 @@ public class PgDiff {
     }
 
     
-    private static void updateSchemas(final PrintWriter writer,
-            final PgDiffArguments arguments, final PgDatabase oldDatabase,
-            final PgDatabase newDatabase) {
-        final boolean setSearchPath = newDatabase.getSchemas().size() > 1
+    private static void updateSchemas(PrintWriter writer,
+            PgDiffArguments arguments, PgDatabase oldDatabase,
+            PgDatabase newDatabase) {
+        boolean setSearchPath = newDatabase.getSchemas().size() > 1
                 || !newDatabase.getSchemas().get(0).getName().equals("public");
 
-        for (final PgSchema newSchema : newDatabase.getSchemas()) {
-            final SearchPathHelper searchPathHelper;
+        for (PgSchema newSchema : newDatabase.getSchemas()) {
+            SearchPathHelper searchPathHelper;
 
             if (setSearchPath) {
                 searchPathHelper = new SearchPathHelper("SET search_path = "
@@ -148,7 +148,7 @@ public class PgDiff {
                 searchPathHelper = new SearchPathHelper(null);
             }
 
-            final PgSchema oldSchema =
+            PgSchema oldSchema =
                     oldDatabase.getSchema(newSchema.getName());
 
             if (oldSchema != null) {

@@ -12,11 +12,11 @@ import java.util.List;
 public class PgDiffConstraints {
 
     
-    public static void createConstraints(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final boolean primaryKey, final SearchPathHelper searchPathHelper) {
-        for (final PgTable newTable : newSchema.getTables()) {
-            final PgTable oldTable;
+    public static void createConstraints(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            boolean primaryKey, SearchPathHelper searchPathHelper) {
+        for (PgTable newTable : newSchema.getTables()) {
+            PgTable oldTable;
 
             if (oldSchema == null) {
                 oldTable = null;
@@ -25,7 +25,7 @@ public class PgDiffConstraints {
             }
 
             // Add new constraints
-            for (final PgConstraint constraint :
+            for (PgConstraint constraint :
                     getNewConstraints(oldTable, newTable, primaryKey)) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
@@ -34,11 +34,11 @@ public class PgDiffConstraints {
         }
     }
 
-    public static void dropConstraints(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final boolean primaryKey, final SearchPathHelper searchPathHelper) {
-        for (final PgTable newTable : newSchema.getTables()) {
-            final PgTable oldTable;
+    public static void dropConstraints(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            boolean primaryKey, SearchPathHelper searchPathHelper) {
+        for (PgTable newTable : newSchema.getTables()) {
+            PgTable oldTable;
 
             if (oldSchema == null) {
                 oldTable = null;
@@ -47,7 +47,7 @@ public class PgDiffConstraints {
             }
 
             // Drop constraints that no more exist or are modified
-            for (final PgConstraint constraint :
+            for (PgConstraint constraint :
                     getDropConstraints(oldTable, newTable, primaryKey)) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
@@ -57,13 +57,13 @@ public class PgDiffConstraints {
     }
 
     
-    private static List<PgConstraint> getDropConstraints(final PgTable oldTable,
-            final PgTable newTable, final boolean primaryKey) {
+    private static List<PgConstraint> getDropConstraints(PgTable oldTable,
+            PgTable newTable, boolean primaryKey) {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
-        final List<PgConstraint> list = new ArrayList<PgConstraint>();
+        List<PgConstraint> list = new ArrayList<PgConstraint>();
 
         if (newTable != null && oldTable != null) {
-            for (final PgConstraint constraint : oldTable.getConstraints()) {
+            for (PgConstraint constraint : oldTable.getConstraints()) {
                 if (constraint.isPrimaryKeyConstraint() == primaryKey
                         && (!newTable.containsConstraint(constraint.getName())
                         || !newTable.getConstraint(constraint.getName()).equals(
@@ -77,21 +77,21 @@ public class PgDiffConstraints {
     }
 
     
-    private static List<PgConstraint> getNewConstraints(final PgTable oldTable,
-            final PgTable newTable, final boolean primaryKey) {
+    private static List<PgConstraint> getNewConstraints(PgTable oldTable,
+            PgTable newTable, boolean primaryKey) {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
-        final List<PgConstraint> list = new ArrayList<PgConstraint>();
+        List<PgConstraint> list = new ArrayList<PgConstraint>();
 
         if (newTable != null) {
             if (oldTable == null) {
-                for (final PgConstraint constraint :
+                for (PgConstraint constraint :
                         newTable.getConstraints()) {
                     if (constraint.isPrimaryKeyConstraint() == primaryKey) {
                         list.add(constraint);
                     }
                 }
             } else {
-                for (final PgConstraint constraint :
+                for (PgConstraint constraint :
                         newTable.getConstraints()) {
                     if ((constraint.isPrimaryKeyConstraint() == primaryKey)
                             && (!oldTable.containsConstraint(
@@ -108,22 +108,22 @@ public class PgDiffConstraints {
     }
 
     
-    public static void alterComments(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
+    public static void alterComments(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
         for (PgTable oldTable : oldSchema.getTables()) {
-            final PgTable newTable = newSchema.getTable(oldTable.getName());
+            PgTable newTable = newSchema.getTable(oldTable.getName());
 
             if (newTable == null) {
                 continue;
             }
 
-            for (final PgConstraint oldConstraint : oldTable.getConstraints()) {
-                final PgConstraint newConstraint =
+            for (PgConstraint oldConstraint : oldTable.getConstraints()) {
+                PgConstraint newConstraint =
                         newTable.getConstraint(oldConstraint.getName());
 
                 if (newConstraint == null) {

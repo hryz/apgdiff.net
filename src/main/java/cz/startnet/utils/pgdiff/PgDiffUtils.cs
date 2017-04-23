@@ -6,7 +6,7 @@ import java.util.Locale;
 
 public class PgDiffUtils {
 
-    private static final String[] KEYWORDS = new String[]{
+    private static String[] KEYWORDS = new String[]{
         "ABS",
         "ABSOLUTE",
         "ACTION",
@@ -465,14 +465,14 @@ public class PgDiffUtils {
         "ZONE"};
 
     
-    public static String getQuotedName(final String name,
-            final boolean excludeKeywords) {
+    public static String getQuotedName(String name,
+            boolean excludeKeywords) {
         if (name.indexOf('-') != -1 || name.indexOf('.') != -1) {
             return '"' + name + '"';
         }
 
         for (int i = 0; i < name.length(); i++) {
-            final char chr = name.charAt(i);
+            char chr = name.charAt(i);
 
             if (Character.isUpperCase(chr)) {
                 return '"' + name + '"';
@@ -483,9 +483,9 @@ public class PgDiffUtils {
             return name;
         }
 
-        final String upperName = name.toUpperCase(Locale.ENGLISH);
+        String upperName = name.toUpperCase(Locale.ENGLISH);
 
-        for (final String keyword : KEYWORDS) {
+        for (String keyword : KEYWORDS) {
             if (keyword.equals(upperName)) {
                 return '"' + name + '"';
             }
@@ -495,7 +495,7 @@ public class PgDiffUtils {
     }
 
     
-    public static String getQuotedName(final String name) {
+    public static String getQuotedName(String name) {
         return getQuotedName(name, false);
     }
 

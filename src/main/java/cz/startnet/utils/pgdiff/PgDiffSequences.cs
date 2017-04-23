@@ -9,11 +9,11 @@ import java.io.PrintWriter;
 public class PgDiffSequences {
 
     
-    public static void createSequences(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
+    public static void createSequences(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
         // Add new sequences
-        for (final PgSequence sequence : newSchema.getSequences()) {
+        for (PgSequence sequence : newSchema.getSequences()) {
             if (oldSchema == null
                     || !oldSchema.containsSequence(sequence.getName())) {
                 searchPathHelper.outputSearchPath(writer);
@@ -24,11 +24,11 @@ public class PgDiffSequences {
     }
 
     
-    public static void alterCreatedSequences(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
+    public static void alterCreatedSequences(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
         // Alter created sequences
-        for (final PgSequence sequence : newSchema.getSequences()) {
+        for (PgSequence sequence : newSchema.getSequences()) {
             if ((oldSchema == null
                     || !oldSchema.containsSequence(sequence.getName()))
                     && sequence.getOwnedBy() != null
@@ -41,15 +41,15 @@ public class PgDiffSequences {
     }
 
     
-    public static void dropSequences(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
+    public static void dropSequences(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
         // Drop sequences that do not exist in new schema
-        for (final PgSequence sequence : oldSchema.getSequences()) {
+        for (PgSequence sequence : oldSchema.getSequences()) {
             if (!newSchema.containsSequence(sequence.getName())) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
@@ -59,17 +59,17 @@ public class PgDiffSequences {
     }
 
     
-    public static void alterSequences(final PrintWriter writer,
-            final PgDiffArguments arguments, final PgSchema oldSchema,
-            final PgSchema newSchema, final SearchPathHelper searchPathHelper) {
+    public static void alterSequences(PrintWriter writer,
+            PgDiffArguments arguments, PgSchema oldSchema,
+            PgSchema newSchema, SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        final StringBuilder sbSQL = new StringBuilder(100);
+        StringBuilder sbSQL = new StringBuilder(100);
 
-        for (final PgSequence newSequence : newSchema.getSequences()) {
-            final PgSequence oldSequence =
+        for (PgSequence newSequence : newSchema.getSequences()) {
+            PgSequence oldSequence =
                     oldSchema.getSequence(newSequence.getName());
 
             if (oldSequence == null) {
@@ -78,8 +78,8 @@ public class PgDiffSequences {
 
             sbSQL.setLength(0);
 
-            final String oldIncrement = oldSequence.getIncrement();
-            final String newIncrement = newSequence.getIncrement();
+            String oldIncrement = oldSequence.getIncrement();
+            String newIncrement = newSequence.getIncrement();
 
             if (newIncrement != null
                     && !newIncrement.equals(oldIncrement)) {
@@ -87,8 +87,8 @@ public class PgDiffSequences {
                 sbSQL.append(newIncrement);
             }
 
-            final String oldMinValue = oldSequence.getMinValue();
-            final String newMinValue = newSequence.getMinValue();
+            String oldMinValue = oldSequence.getMinValue();
+            String newMinValue = newSequence.getMinValue();
 
             if (newMinValue == null && oldMinValue != null) {
                 sbSQL.append("\n\tNO MINVALUE");
@@ -98,8 +98,8 @@ public class PgDiffSequences {
                 sbSQL.append(newMinValue);
             }
 
-            final String oldMaxValue = oldSequence.getMaxValue();
-            final String newMaxValue = newSequence.getMaxValue();
+            String oldMaxValue = oldSequence.getMaxValue();
+            String newMaxValue = newSequence.getMaxValue();
 
             if (newMaxValue == null && oldMaxValue != null) {
                 sbSQL.append("\n\tNO MAXVALUE");
@@ -110,8 +110,8 @@ public class PgDiffSequences {
             }
 
             if (!arguments.isIgnoreStartWith()) {
-                final String oldStart = oldSequence.getStartWith();
-                final String newStart = newSequence.getStartWith();
+                String oldStart = oldSequence.getStartWith();
+                String newStart = newSequence.getStartWith();
 
                 if (newStart != null && !newStart.equals(oldStart)) {
                     sbSQL.append("\n\tRESTART WITH ");
@@ -119,16 +119,16 @@ public class PgDiffSequences {
                 }
             }
 
-            final String oldCache = oldSequence.getCache();
-            final String newCache = newSequence.getCache();
+            String oldCache = oldSequence.getCache();
+            String newCache = newSequence.getCache();
 
             if (newCache != null && !newCache.equals(oldCache)) {
                 sbSQL.append("\n\tCACHE ");
                 sbSQL.append(newCache);
             }
 
-            final boolean oldCycle = oldSequence.isCycle();
-            final boolean newCycle = newSequence.isCycle();
+            boolean oldCycle = oldSequence.isCycle();
+            boolean newCycle = newSequence.isCycle();
 
             if (oldCycle && !newCycle) {
                 sbSQL.append("\n\tNO CYCLE");
@@ -136,8 +136,8 @@ public class PgDiffSequences {
                 sbSQL.append("\n\tCYCLE");
             }
 
-            final String oldOwnedBy = oldSequence.getOwnedBy();
-            final String newOwnedBy = newSequence.getOwnedBy();
+            String oldOwnedBy = oldSequence.getOwnedBy();
+            String newOwnedBy = newSequence.getOwnedBy();
 
             if (newOwnedBy != null && !newOwnedBy.equals(oldOwnedBy)) {
                 sbSQL.append("\n\tOWNED BY ");

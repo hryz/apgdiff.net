@@ -29,82 +29,82 @@ import java.util.regex.Pattern;
 public class PgDumpLoader { //NOPMD
 
     
-    private static final Pattern PATTERN_CREATE_SCHEMA = Pattern.compile(
+    private static Pattern PATTERN_CREATE_SCHEMA = Pattern.compile(
             "^CREATE[\\s]+SCHEMA[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
-    private static final Pattern PATTERN_DEFAULT_SCHEMA = Pattern.compile(
+    private static Pattern PATTERN_DEFAULT_SCHEMA = Pattern.compile(
             "^SET[\\s]+search_path[\\s]*=[\\s]*\"?([^,\\s\"]+)\"?"
             + "(?:,[\\s]+.*)?;$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_CREATE_TABLE = Pattern.compile(
+    private static Pattern PATTERN_CREATE_TABLE = Pattern.compile(
             "^CREATE[\\s]+TABLE[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_CREATE_VIEW = Pattern.compile(
+    private static Pattern PATTERN_CREATE_VIEW = Pattern.compile(
             "^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?VIEW[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_ALTER_TABLE =
+    private static Pattern PATTERN_ALTER_TABLE =
             Pattern.compile("^ALTER[\\s]+TABLE[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_CREATE_SEQUENCE = Pattern.compile(
+    private static Pattern PATTERN_CREATE_SEQUENCE = Pattern.compile(
             "^CREATE[\\s]+SEQUENCE[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_ALTER_SEQUENCE =
+    private static Pattern PATTERN_ALTER_SEQUENCE =
             Pattern.compile("^ALTER[\\s]+SEQUENCE[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_CREATE_INDEX = Pattern.compile(
+    private static Pattern PATTERN_CREATE_INDEX = Pattern.compile(
             "^CREATE[\\s]+(?:UNIQUE[\\s]+)?INDEX[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_SELECT = Pattern.compile(
+    private static Pattern PATTERN_SELECT = Pattern.compile(
             "^SELECT[\\s]+.*$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_INSERT_INTO = Pattern.compile(
+    private static Pattern PATTERN_INSERT_INTO = Pattern.compile(
             "^INSERT[\\s]+INTO[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_UPDATE = Pattern.compile(
+    private static Pattern PATTERN_UPDATE = Pattern.compile(
             "^UPDATE[\\s].*$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_DELETE_FROM = Pattern.compile(
+    private static Pattern PATTERN_DELETE_FROM = Pattern.compile(
             "^DELETE[\\s]+FROM[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_CREATE_TRIGGER = Pattern.compile(
+    private static Pattern PATTERN_CREATE_TRIGGER = Pattern.compile(
             "^CREATE[\\s]+TRIGGER[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_CREATE_FUNCTION = Pattern.compile(
+    private static Pattern PATTERN_CREATE_FUNCTION = Pattern.compile(
             "^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?FUNCTION[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_ALTER_VIEW = Pattern.compile(
+    private static Pattern PATTERN_ALTER_VIEW = Pattern.compile(
             "^ALTER[\\s]+VIEW[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
-    private static final Pattern PATTERN_COMMENT = Pattern.compile(
+    private static Pattern PATTERN_COMMENT = Pattern.compile(
             "^COMMENT[\\s]+ON[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     
     private static String lineBuffer;
 
     
-    public static PgDatabase loadDatabaseSchema(final InputStream inputStream,
-            final String charsetName, final boolean outputIgnoredStatements,
-            final boolean ignoreSlonyTriggers) {
+    public static PgDatabase loadDatabaseSchema(InputStream inputStream,
+            String charsetName, boolean outputIgnoredStatements,
+            boolean ignoreSlonyTriggers) {
 
-        final PgDatabase database = new PgDatabase();
+        PgDatabase database = new PgDatabase();
         BufferedReader reader = null;
 
         try {
             reader = new BufferedReader(
                     new InputStreamReader(inputStream, charsetName));
-        } catch (final UnsupportedEncodingException ex) {
+        } catch (UnsupportedEncodingException ex) {
             throw new UnsupportedOperationException(
                     Resources.getString("UnsupportedEncoding") + ": "
                     + charsetName, ex);
@@ -116,7 +116,7 @@ public class PgDumpLoader { //NOPMD
             if (PATTERN_CREATE_SCHEMA.matcher(statement).matches()) {
                 CreateSchemaParser.parse(database, statement);
             } else if (PATTERN_DEFAULT_SCHEMA.matcher(statement).matches()) {
-                final Matcher matcher =
+                Matcher matcher =
                         PATTERN_DEFAULT_SCHEMA.matcher(statement);
                 matcher.matches();
                 database.setDefaultSchema(matcher.group(1));
@@ -164,21 +164,21 @@ public class PgDumpLoader { //NOPMD
     }
 
     
-    public static PgDatabase loadDatabaseSchema(final String file,
-            final String charsetName, final boolean outputIgnoredStatements,
-            final boolean ignoreSlonyTriggers) {
+    public static PgDatabase loadDatabaseSchema(String file,
+            String charsetName, boolean outputIgnoredStatements,
+            boolean ignoreSlonyTriggers) {
         try {
             return loadDatabaseSchema(new FileInputStream(file), charsetName,
                     outputIgnoredStatements, ignoreSlonyTriggers);
-        } catch (final FileNotFoundException ex) {
+        } catch (FileNotFoundException ex) {
             throw new FileException(MessageFormat.format(
                     Resources.getString("FileNotFound"), file), ex);
         }
     }
 
 
-    private static String getWholeStatement(final BufferedReader reader) {
-        final StringBuilder sbStatement = new StringBuilder(1024);
+    private static String getWholeStatement(BufferedReader reader) {
+        StringBuilder sbStatement = new StringBuilder(1024);
 
         if (lineBuffer != null) {
             sbStatement.append(lineBuffer);
@@ -190,7 +190,7 @@ public class PgDumpLoader { //NOPMD
 
         while (true) {
             if (pos == -1) {
-                final String newLine;
+                String newLine;
 
                 try {
                     newLine = reader.readLine();
@@ -236,7 +236,7 @@ public class PgDumpLoader { //NOPMD
     }
 
     
-    private static void stripComment(final StringBuilder sbStatement) {
+    private static void stripComment(StringBuilder sbStatement) {
         int pos = sbStatement.indexOf("--");
 
         while (pos >= 0) {
@@ -258,8 +258,8 @@ public class PgDumpLoader { //NOPMD
 
     
     @SuppressWarnings("AssignmentToForLoopParameter")
-    private static boolean isQuoted(final StringBuilder sbString,
-            final int pos) {
+    private static boolean isQuoted(StringBuilder sbString,
+            int pos) {
         boolean isQuoted = false;
 
         for (int curPos = 0; curPos < pos; curPos++) {
@@ -271,14 +271,14 @@ public class PgDumpLoader { //NOPMD
                     isQuoted = !isQuoted;
                 }
             } else if (sbString.charAt(curPos) == '$' && !isQuoted) {
-                final int endPos = sbString.indexOf("$", curPos + 1);
+                int endPos = sbString.indexOf("$", curPos + 1);
 
                 if (endPos == -1) {
                     return true;
                 }
 
-                final String tag = sbString.substring(curPos, endPos + 1);
-                final int endTagPos = sbString.indexOf(tag, endPos + 1);
+                String tag = sbString.substring(curPos, endPos + 1);
+                int endTagPos = sbString.indexOf(tag, endPos + 1);
 
                 // if end tag was not found or it was found after the checked
                 // position, it's quoted

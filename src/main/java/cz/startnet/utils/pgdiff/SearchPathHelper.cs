@@ -7,17 +7,17 @@ import java.io.PrintWriter;
 public class SearchPathHelper {
 
     
-    private final String searchPath;
+    private String searchPath;
     
     private boolean wasOutput;
 
     
-    public SearchPathHelper(final String searchPath) {
+    public SearchPathHelper(String searchPath) {
         this.searchPath = searchPath;
     }
 
     
-    public void outputSearchPath(final PrintWriter writer) {
+    public void outputSearchPath(PrintWriter writer) {
         if (!wasOutput && searchPath != null && !searchPath.isEmpty()) {
             writer.println();
             writer.println(searchPath);

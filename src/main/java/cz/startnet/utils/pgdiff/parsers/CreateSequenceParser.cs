@@ -11,17 +11,17 @@ import java.text.MessageFormat;
 public class CreateSequenceParser {
 
     
-    public static void parse(final PgDatabase database,
-            final String statement) {
-        final Parser parser = new Parser(statement);
+    public static void parse(PgDatabase database,
+            String statement) {
+        Parser parser = new Parser(statement);
         parser.expect("CREATE", "SEQUENCE");
 
-        final String sequenceName = parser.parseIdentifier();
-        final PgSequence sequence =
+        String sequenceName = parser.parseIdentifier();
+        PgSequence sequence =
                 new PgSequence(ParserUtils.getObjectName(sequenceName));
-        final String schemaName =
+        String schemaName =
                 ParserUtils.getSchemaName(sequenceName, database);
-        final PgSchema schema = database.getSchema(schemaName);
+        PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
             throw new RuntimeException(MessageFormat.format(

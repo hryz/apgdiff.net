@@ -7,7 +7,7 @@ import java.util.Locale;
 
 
 @SuppressWarnings("FinalClass")
-public final class Parser {
+public class Parser {
 
     
     private String string;
@@ -15,20 +15,20 @@ public final class Parser {
     private int position;
 
     
-    public Parser(final String string) {
+    public Parser(String string) {
         this.string = string;
         skipWhitespace();
     }
 
     
-    public void expect(final String... words) {
-        for (final String word : words) {
+    public void expect(String... words) {
+        for (String word : words) {
             expect(word, false);
         }
     }
 
-    public boolean expect(final String word, final boolean optional) {
-        final int wordEnd = position + word.length();
+    public boolean expect(String word, boolean optional) {
+        int wordEnd = position + word.length();
 
         if (wordEnd <= string.length()
                 && string.substring(position, wordEnd).equalsIgnoreCase(word)
@@ -56,8 +56,8 @@ public final class Parser {
     }
 
     
-    public boolean expectOptional(final String... words) {
-        final boolean found = expect(words[0], true);
+    public boolean expectOptional(String... words) {
+        boolean found = expect(words[0], true);
 
         if (!found) {
             return false;
@@ -96,11 +96,11 @@ public final class Parser {
 
     
     private String parseIdentifierInternal() {
-        final boolean quoted = string.charAt(position) == '"';
+        boolean quoted = string.charAt(position) == '"';
 
         if (quoted) {
-            final int endPos = string.indexOf('"', position + 1);
-            final String result = string.substring(position, endPos + 1);
+            int endPos = string.indexOf('"', position + 1);
+            String result = string.substring(position, endPos + 1);
             position = endPos + 1;
 
             return result;
@@ -108,7 +108,7 @@ public final class Parser {
             int endPos = position;
 
             for (; endPos < string.length(); endPos++) {
-                final char chr = string.charAt(endPos);
+                char chr = string.charAt(endPos);
 
                 if (Character.isWhitespace(chr) || chr == ',' || chr == ')'
                         || chr == '(' || chr == ';' || chr == '.') {
@@ -116,7 +116,7 @@ public final class Parser {
                 }
             }
 
-            final String result =
+            String result =
                     string.substring(position, endPos).toLowerCase(
                     Locale.ENGLISH);
 
@@ -128,7 +128,7 @@ public final class Parser {
 
     
     public String getRest() {
-        final String result;
+        String result;
 
         if (string.charAt(string.length() - 1) == ';') {
             if (position == string.length() - 1) {
@@ -156,14 +156,14 @@ public final class Parser {
         }
 
         try {
-            final int result =
+            int result =
                     Integer.parseInt(string.substring(position, endPos));
 
             position = endPos;
             skipWhitespace();
 
             return result;
-        } catch (final NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             throw new ParserException(MessageFormat.format(
                     Resources.getString("CannotParseStringExpectedInteger"),
                     string, position + 1,
@@ -173,14 +173,14 @@ public final class Parser {
 
     
     public String parseString() {
-        final boolean quoted = string.charAt(position) == '\'';
+        boolean quoted = string.charAt(position) == '\'';
 
         if (quoted) {
             boolean escape = false;
             int endPos = position + 1;
 
             for (; endPos < string.length(); endPos++) {
-                final char chr = string.charAt(endPos);
+                char chr = string.charAt(endPos);
 
                 if (chr == '\\') {
                     escape = !escape;
@@ -194,11 +194,11 @@ public final class Parser {
                 }
             }
 
-            final String result;
+            String result;
 
             try {
                 result = string.substring(position, endPos + 1);
-            } catch (final Throwable ex) {
+            } catch (Throwable ex) {
                 throw new RuntimeException("Failed to get substring: " + string
                         + " start pos: " + position + " end pos: "
                         + (endPos + 1), ex);
@@ -212,7 +212,7 @@ public final class Parser {
             int endPos = position;
 
             for (; endPos < string.length(); endPos++) {
-                final char chr = string.charAt(endPos);
+                char chr = string.charAt(endPos);
 
                 if (Character.isWhitespace(chr) || chr == ',' || chr == ')'
                         || chr == ';') {
@@ -226,7 +226,7 @@ public final class Parser {
                         string, position + 1));
             }
 
-            final String result = string.substring(position, endPos);
+            String result = string.substring(position, endPos);
 
             position = endPos;
             skipWhitespace();
@@ -237,7 +237,7 @@ public final class Parser {
 
     
     public String getExpression() {
-        final int endPos = getExpressionEnd();
+        int endPos = getExpressionEnd();
 
         if (position == endPos) {
             throw new ParserException(MessageFormat.format(
@@ -246,7 +246,7 @@ public final class Parser {
                     string.substring(position, position + 20)));
         }
 
-        final String result = string.substring(position, endPos).trim();
+        String result = string.substring(position, endPos).trim();
 
         position = endPos;
 
@@ -260,7 +260,7 @@ public final class Parser {
         int charPos = position;
 
         for (; charPos < string.length(); charPos++) {
-            final char chr = string.charAt(charPos);
+            char chr = string.charAt(charPos);
 
             if (chr == '(') {
                 bracesCount++;
@@ -301,8 +301,8 @@ public final class Parser {
     }
 
   
-    public String expectOptionalOneOf(final String... words) {
-        for (final String word : words) {
+    public String expectOptionalOneOf(String... words) {
+        for (String word : words) {
             if (expectOptional(word)) {
                 return word;
             }
@@ -312,12 +312,12 @@ public final class Parser {
     }
 
     
-    public String getSubString(final int startPos, final int endPos) {
+    public String getSubString(int startPos, int endPos) {
         return string.substring(startPos, endPos);
     }
 
     
-    public void setPosition(final int position) {
+    public void setPosition(int position) {
         this.position = position;
     }
 
@@ -353,7 +353,7 @@ public final class Parser {
             dataType = "double precision";
         }
 
-        final boolean timestamp = "timestamp".equalsIgnoreCase(dataType)
+        boolean timestamp = "timestamp".equalsIgnoreCase(dataType)
                 || "time".equalsIgnoreCase(dataType);
 
         if (string.charAt(position) == '(') {

@@ -5,19 +5,19 @@ package cz.startnet.utils.pgdiff.loader;
 public class FileException extends RuntimeException {
 
     
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
 
     
     public FileException() {
     }
 
     
-    public FileException(final String msg) {
+    public FileException(String msg) {
         super(msg);
     }
 
     
-    public FileException(final String msg, final Throwable cause) {
+    public FileException(String msg, Throwable cause) {
         super(msg, cause);
     }
 }

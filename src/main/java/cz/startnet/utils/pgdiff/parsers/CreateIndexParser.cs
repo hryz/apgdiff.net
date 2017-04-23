@@ -12,26 +12,26 @@ import java.text.MessageFormat;
 public class CreateIndexParser {
 
     
-    public static void parse(final PgDatabase database,
-            final String statement) {
-        final Parser parser = new Parser(statement);
+    public static void parse(PgDatabase database,
+            String statement) {
+        Parser parser = new Parser(statement);
         parser.expect("CREATE");
 
-        final boolean unique = parser.expectOptional("UNIQUE");
+        boolean unique = parser.expectOptional("UNIQUE");
 
         parser.expect("INDEX");
         parser.expectOptional("CONCURRENTLY");
 
-        final String indexName =
+        String indexName =
                 ParserUtils.getObjectName(parser.parseIdentifier());
 
         parser.expect("ON");
 
-        final String tableName = parser.parseIdentifier();
-        final String definition = parser.getRest();
-        final String schemaName =
+        String tableName = parser.parseIdentifier();
+        String definition = parser.getRest();
+        String schemaName =
                 ParserUtils.getSchemaName(tableName, database);
-        final PgSchema schema = database.getSchema(schemaName);
+        PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
             throw new RuntimeException(MessageFormat.format(
@@ -39,8 +39,8 @@ public class CreateIndexParser {
                     statement));
         }
 
-        final String objectName = ParserUtils.getObjectName(tableName);
-        final PgTable table = schema.getTable(objectName);
+        String objectName = ParserUtils.getObjectName(tableName);
+        PgTable table = schema.getTable(objectName);
 
         if (table == null) {
             throw new RuntimeException(MessageFormat.format(
@@ -48,7 +48,7 @@ public class CreateIndexParser {
                     statement));
         }
 
-        final PgIndex index = new PgIndex(indexName);
+        PgIndex index = new PgIndex(indexName);
         table.addIndex(index);
         schema.addIndex(index);
         index.setDefinition(definition.trim());

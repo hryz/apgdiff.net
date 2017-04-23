@@ -12,11 +12,11 @@ import java.util.List;
 public class PgDiffIndexes {
 
     
-    public static void createIndexes(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
-        for (final PgTable newTable : newSchema.getTables()) {
-            final String newTableName = newTable.getName();
+    public static void createIndexes(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
+        for (PgTable newTable : newSchema.getTables()) {
+            String newTableName = newTable.getName();
 
             // Add new indexes
             if (oldSchema == null) {
@@ -37,12 +37,12 @@ public class PgDiffIndexes {
     }
 
     
-    public static void dropIndexes(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
-        for (final PgTable newTable : newSchema.getTables()) {
-            final String newTableName = newTable.getName();
-            final PgTable oldTable;
+    public static void dropIndexes(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
+        for (PgTable newTable : newSchema.getTables()) {
+            String newTableName = newTable.getName();
+            PgTable oldTable;
 
             if (oldSchema == null) {
                 oldTable = null;
@@ -51,7 +51,7 @@ public class PgDiffIndexes {
             }
 
             // Drop indexes that do not exist in new schema or are modified
-            for (final PgIndex index : getDropIndexes(oldTable, newTable)) {
+            for (PgIndex index : getDropIndexes(oldTable, newTable)) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
                 writer.println(index.getDropSQL());
@@ -60,13 +60,13 @@ public class PgDiffIndexes {
     }
 
     
-    private static List<PgIndex> getDropIndexes(final PgTable oldTable,
-            final PgTable newTable) {
+    private static List<PgIndex> getDropIndexes(PgTable oldTable,
+            PgTable newTable) {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
-        final List<PgIndex> list = new ArrayList<PgIndex>();
+        List<PgIndex> list = new ArrayList<PgIndex>();
 
         if (newTable != null && oldTable != null) {
-            for (final PgIndex index : oldTable.getIndexes()) {
+            for (PgIndex index : oldTable.getIndexes()) {
                 if (!newTable.containsIndex(index.getName())
                         || !newTable.getIndex(index.getName()).equals(index)) {
                     list.add(index);
@@ -78,18 +78,18 @@ public class PgDiffIndexes {
     }
 
     
-    private static List<PgIndex> getNewIndexes(final PgTable oldTable,
-            final PgTable newTable) {
+    private static List<PgIndex> getNewIndexes(PgTable oldTable,
+            PgTable newTable) {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
-        final List<PgIndex> list = new ArrayList<PgIndex>();
+        List<PgIndex> list = new ArrayList<PgIndex>();
 
         if (newTable != null) {
             if (oldTable == null) {
-                for (final PgIndex index : newTable.getIndexes()) {
+                for (PgIndex index : newTable.getIndexes()) {
                     list.add(index);
                 }
             } else {
-                for (final PgIndex index : newTable.getIndexes()) {
+                for (PgIndex index : newTable.getIndexes()) {
                     if (!oldTable.containsIndex(index.getName())
                             || !oldTable.getIndex(index.getName()).
                             equals(index)) {
@@ -103,15 +103,15 @@ public class PgDiffIndexes {
     }
 
     
-    public static void alterComments(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
+    public static void alterComments(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        for (final PgIndex oldIndex : oldSchema.getIndexes()) {
-            final PgIndex newIndex = newSchema.getIndex(oldIndex.getName());
+        for (PgIndex oldIndex : oldSchema.getIndexes()) {
+            PgIndex newIndex = newSchema.getIndex(oldIndex.getName());
 
             if (newIndex == null) {
                 continue;

@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class PgConstraint {
 
     
-    private static final Pattern PATTERN_PRIMARY_KEY =
+    private static Pattern PATTERN_PRIMARY_KEY =
             Pattern.compile(".*PRIMARY[\\s]+KEY.*", Pattern.CASE_INSENSITIVE);
     
     private String definition;
@@ -26,7 +26,7 @@ public class PgConstraint {
 
     
     public String getCreationSQL() {
-        final StringBuilder sbSQL = new StringBuilder(100);
+        StringBuilder sbSQL = new StringBuilder(100);
         sbSQL.append("ALTER TABLE ");
         sbSQL.append(PgDiffUtils.getQuotedName(getTableName()));
         sbSQL.append("\n\tADD CONSTRAINT ");
@@ -54,12 +54,12 @@ public class PgConstraint {
     }
 
     
-    public void setComment(final String comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
     
-    public void setDefinition(final String definition) {
+    public void setDefinition(String definition) {
         this.definition = definition;
     }
 
@@ -70,7 +70,7 @@ public class PgConstraint {
 
     
     public String getDropSQL() {
-        final StringBuilder sbSQL = new StringBuilder(100);
+        StringBuilder sbSQL = new StringBuilder(100);
         sbSQL.append("ALTER TABLE ");
         sbSQL.append(PgDiffUtils.getQuotedName(getTableName()));
         sbSQL.append("\n\tDROP CONSTRAINT ");
@@ -81,7 +81,7 @@ public class PgConstraint {
     }
 
     
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -96,7 +96,7 @@ public class PgConstraint {
     }
 
     
-    public void setTableName(final String tableName) {
+    public void setTableName(String tableName) {
         this.tableName = tableName;
     }
 
@@ -107,13 +107,13 @@ public class PgConstraint {
 
     
     @Override
-    public boolean equals(final Object object) {
+    public boolean equals(Object object) {
         boolean equals = false;
 
         if (this == object) {
             equals = true;
         } else if (object instanceof PgConstraint) {
-            final PgConstraint constraint = (PgConstraint) object;
+            PgConstraint constraint = (PgConstraint) object;
             equals = definition.equals(constraint.getDefinition())
                     && name.equals(constraint.getName())
                     && tableName.equals(constraint.getTableName());

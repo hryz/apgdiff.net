@@ -12,10 +12,10 @@ import java.util.List;
 public class PgDiffViews {
 
     
-    public static void createViews(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
-        for (final PgView newView : newSchema.getViews()) {
+    public static void createViews(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
+        for (PgView newView : newSchema.getViews()) {
             if (oldSchema == null
                     || !oldSchema.containsView(newView.getName())
                     || isViewModified(
@@ -28,15 +28,15 @@ public class PgDiffViews {
     }
 
     
-    public static void dropViews(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
+    public static void dropViews(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        for (final PgView oldView : oldSchema.getViews()) {
-            final PgView newView = newSchema.getView(oldView.getName());
+        for (PgView oldView : oldSchema.getViews()) {
+            PgView newView = newSchema.getView(oldView.getName());
 
             if (newView == null || isViewModified(oldView, newView)) {
                 searchPathHelper.outputSearchPath(writer);
@@ -47,9 +47,9 @@ public class PgDiffViews {
     }
 
     
-    private static boolean isViewModified(final PgView oldView,
-            final PgView newView) {
-        final String[] oldViewColumnNames;
+    private static boolean isViewModified(PgView oldView,
+            PgView newView) {
+        String[] oldViewColumnNames;
 
         if (oldView.getColumnNames() == null
                 || oldView.getColumnNames().isEmpty()) {
@@ -59,7 +59,7 @@ public class PgDiffViews {
                     new String[oldView.getColumnNames().size()]);
         }
 
-        final String[] newViewColumnNames;
+        String[] newViewColumnNames;
 
         if (newView.getColumnNames() == null
                 || newView.getColumnNames().isEmpty()) {
@@ -77,15 +77,15 @@ public class PgDiffViews {
     }
 
     
-    public static void alterViews(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
+    public static void alterViews(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        for (final PgView oldView : oldSchema.getViews()) {
-            final PgView newView = newSchema.getView(oldView.getName());
+        for (PgView oldView : oldSchema.getViews()) {
+            PgView newView = newSchema.getView(oldView.getName());
 
             if (newView == null) {
                 continue;
@@ -116,26 +116,26 @@ public class PgDiffViews {
                 writer.println(" IS NULL;");
             }
 
-            final List<String> columnNames =
+            List<String> columnNames =
                     new ArrayList<String>(newView.getColumnComments().size());
 
-            for (final PgView.ColumnComment columnComment :
+            for (PgView.ColumnComment columnComment :
                     newView.getColumnComments()) {
                 columnNames.add(columnComment.getColumnName());
             }
 
-            for (final PgView.ColumnComment columnComment :
+            for (PgView.ColumnComment columnComment :
                     oldView.getColumnComments()) {
                 if (!columnNames.contains(columnComment.getColumnName())) {
                     columnNames.add(columnComment.getColumnName());
                 }
             }
 
-            for (final String columnName : columnNames) {
+            for (String columnName : columnNames) {
                 PgView.ColumnComment oldColumnComment = null;
                 PgView.ColumnComment newColumnComment = null;
 
-                for (final PgView.ColumnComment columnComment :
+                for (PgView.ColumnComment columnComment :
                         oldView.getColumnComments()) {
                     if (columnName.equals(columnComment.getColumnName())) {
                         oldColumnComment = columnComment;
@@ -143,7 +143,7 @@ public class PgDiffViews {
                     }
                 }
 
-                for (final PgView.ColumnComment columnComment :
+                for (PgView.ColumnComment columnComment :
                         newView.getColumnComments()) {
                     if (columnName.equals(columnComment.getColumnName())) {
                         newColumnComment = columnComment;
@@ -181,19 +181,19 @@ public class PgDiffViews {
     }
 
     
-    private static void diffDefaultValues(final PrintWriter writer,
-            final PgView oldView, final PgView newView,
-            final SearchPathHelper searchPathHelper) {
-        final List<PgView.DefaultValue> oldValues =
+    private static void diffDefaultValues(PrintWriter writer,
+            PgView oldView, PgView newView,
+            SearchPathHelper searchPathHelper) {
+        List<PgView.DefaultValue> oldValues =
                 oldView.getDefaultValues();
-        final List<PgView.DefaultValue> newValues =
+        List<PgView.DefaultValue> newValues =
                 newView.getDefaultValues();
 
         // modify defaults that are in old view
-        for (final PgView.DefaultValue oldValue : oldValues) {
+        for (PgView.DefaultValue oldValue : oldValues) {
             boolean found = false;
 
-            for (final PgView.DefaultValue newValue : newValues) {
+            for (PgView.DefaultValue newValue : newValues) {
                 if (oldValue.getColumnName().equals(newValue.getColumnName())) {
                     found = true;
 
@@ -229,10 +229,10 @@ public class PgDiffViews {
         }
 
         // add new defaults
-        for (final PgView.DefaultValue newValue : newValues) {
+        for (PgView.DefaultValue newValue : newValues) {
             boolean found = false;
 
-            for (final PgView.DefaultValue oldValue : oldValues) {
+            for (PgView.DefaultValue oldValue : oldValues) {
                 if (newValue.getColumnName().equals(oldValue.getColumnName())) {
                     found = true;
                     break;

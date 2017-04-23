@@ -11,14 +11,14 @@ import java.text.MessageFormat;
 public class AlterViewParser {
 
     
-    public static void parse(final PgDatabase database,
-            final String statement, final boolean outputIgnoredStatements) {
-        final Parser parser = new Parser(statement);
+    public static void parse(PgDatabase database,
+            String statement, boolean outputIgnoredStatements) {
+        Parser parser = new Parser(statement);
         parser.expect("ALTER", "VIEW");
 
-        final String viewName = parser.parseIdentifier();
-        final String schemaName = ParserUtils.getSchemaName(viewName, database);
-        final PgSchema schema = database.getSchema(schemaName);
+        String viewName = parser.parseIdentifier();
+        String schemaName = ParserUtils.getSchemaName(viewName, database);
+        PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
             throw new RuntimeException(MessageFormat.format(
@@ -26,8 +26,8 @@ public class AlterViewParser {
                     statement));
         }
 
-        final String objectName = ParserUtils.getObjectName(viewName);
-        final PgView view = schema.getView(objectName);
+        String objectName = ParserUtils.getObjectName(viewName);
+        PgView view = schema.getView(objectName);
 
         if (view == null) {
             throw new RuntimeException(MessageFormat.format(
@@ -39,11 +39,11 @@ public class AlterViewParser {
             if (parser.expectOptional("ALTER")) {
                 parser.expectOptional("COLUMN");
 
-                final String columnName =
+                String columnName =
                         ParserUtils.getObjectName(parser.parseIdentifier());
 
                 if (parser.expectOptional("SET", "DEFAULT")) {
-                    final String expression = parser.getExpression();
+                    String expression = parser.getExpression();
                     view.addColumnDefaultValue(columnName, expression);
                 } else if (parser.expectOptional("DROP", "DEFAULT")) {
                     view.removeColumnDefaultValue(columnName);

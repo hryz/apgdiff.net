@@ -17,16 +17,16 @@ import java.util.List;
 public class AlterTableParser {
 
     
-    public static void parse(final PgDatabase database,
-            final String statement, final boolean outputIgnoredStatements) {
-        final Parser parser = new Parser(statement);
+    public static void parse(PgDatabase database,
+            String statement, boolean outputIgnoredStatements) {
+        Parser parser = new Parser(statement);
         parser.expect("ALTER", "TABLE");
         parser.expectOptional("ONLY");
 
-        final String tableName = parser.parseIdentifier();
-        final String schemaName =
+        String tableName = parser.parseIdentifier();
+        String schemaName =
                 ParserUtils.getSchemaName(tableName, database);
-        final PgSchema schema = database.getSchema(schemaName);
+        PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
             throw new RuntimeException(MessageFormat.format(
@@ -34,11 +34,11 @@ public class AlterTableParser {
                     statement));
         }
 
-        final String objectName = ParserUtils.getObjectName(tableName);
-        final PgTable table = schema.getTable(objectName);
+        String objectName = ParserUtils.getObjectName(tableName);
+        PgTable table = schema.getTable(objectName);
 
         if (table == null) {
-            final PgView view = schema.getView(objectName);
+            PgView view = schema.getView(objectName);
 
             if (view != null) {
                 parseView(parser, view, outputIgnoredStatements, tableName,
@@ -46,7 +46,7 @@ public class AlterTableParser {
                 return;
             }
 
-            final PgSequence sequence = schema.getSequence(objectName);
+            PgSequence sequence = schema.getSequence(objectName);
 
             if (sequence != null) {
                 parseSequence(parser, sequence, outputIgnoredStatements,
@@ -100,9 +100,9 @@ public class AlterTableParser {
     }
 
     
-    private static void parseEnable(final Parser parser,
-            final boolean outputIgnoredStatements, final String tableName,
-            final PgDatabase database) {
+    private static void parseEnable(Parser parser,
+            boolean outputIgnoredStatements, String tableName,
+            PgDatabase database) {
         if (parser.expectOptional("REPLICA")) {
             if (parser.expectOptional("TRIGGER")) {
                 if (outputIgnoredStatements) {
@@ -146,9 +146,9 @@ public class AlterTableParser {
     }
 
     
-    private static void parseDisable(final Parser parser,
-            final boolean outputIgnoredStatements, final String tableName,
-            final PgDatabase database) {
+    private static void parseDisable(Parser parser,
+            boolean outputIgnoredStatements, String tableName,
+            PgDatabase database) {
         if (parser.expectOptional("TRIGGER")) {
             if (outputIgnoredStatements) {
                 database.addIgnoredStatement("ALTER TABLE " + tableName
@@ -169,11 +169,11 @@ public class AlterTableParser {
     }
 
     
-    private static void parseAddConstraint(final Parser parser,
-            final PgTable table, final PgSchema schema) {
-        final String constraintName =
+    private static void parseAddConstraint(Parser parser,
+            PgTable table, PgSchema schema) {
+        String constraintName =
                 ParserUtils.getObjectName(parser.parseIdentifier());
-        final PgConstraint constraint = new PgConstraint(constraintName);
+        PgConstraint constraint = new PgConstraint(constraintName);
         constraint.setTableName(table.getName());
         table.addConstraint(constraint);
 
@@ -186,16 +186,16 @@ public class AlterTableParser {
     }
 
     
-    private static void parseAlterColumn(final Parser parser,
-            final PgTable table) {
+    private static void parseAlterColumn(Parser parser,
+            PgTable table) {
         parser.expectOptional("COLUMN");
 
-        final String columnName =
+        String columnName =
                 ParserUtils.getObjectName(parser.parseIdentifier());
 
         if (parser.expectOptional("SET")) {
             if (parser.expectOptional("STATISTICS")) {
-                final PgColumn column = table.getColumn(columnName);
+                PgColumn column = table.getColumn(columnName);
 
                 if (column == null) {
                     throw new RuntimeException(MessageFormat.format(
@@ -205,10 +205,10 @@ public class AlterTableParser {
 
                 column.setStatistics(parser.parseInteger());
             } else if (parser.expectOptional("DEFAULT")) {
-                final String defaultValue = parser.getExpression();
+                String defaultValue = parser.getExpression();
 
                 if (table.containsColumn(columnName)) {
-                    final PgColumn column = table.getColumn(columnName);
+                    PgColumn column = table.getColumn(columnName);
 
                     if (column == null) {
                         throw new RuntimeException(MessageFormat.format(
@@ -224,7 +224,7 @@ public class AlterTableParser {
                             columnName, table.getName()));
                 }
             } else if (parser.expectOptional("STORAGE")) {
-                final PgColumn column = table.getColumn(columnName);
+                PgColumn column = table.getColumn(columnName);
 
                 if (column == null) {
                     throw new RuntimeException(MessageFormat.format(
@@ -252,9 +252,9 @@ public class AlterTableParser {
     }
 
     
-    private static void parseAddForeignKey(final Parser parser,
-            final PgTable table) {
-        final List<String> columnNames = new ArrayList<String>(1);
+    private static void parseAddForeignKey(Parser parser,
+            PgTable table) {
+        List<String> columnNames = new ArrayList<String>(1);
         parser.expect("(");
 
         while (!parser.expectOptional(")")) {
@@ -268,9 +268,9 @@ public class AlterTableParser {
             }
         }
 
-        final String constraintName = ParserUtils.generateName(
+        String constraintName = ParserUtils.generateName(
                 table.getName() + "_", columnNames, "_fkey");
-        final PgConstraint constraint =
+        PgConstraint constraint =
                 new PgConstraint(constraintName);
         table.addConstraint(constraint);
         constraint.setDefinition(parser.getExpression());
@@ -278,18 +278,18 @@ public class AlterTableParser {
     }
 
     
-    private static void parseView(final Parser parser, final PgView view,
-            final boolean outputIgnoredStatements, final String viewName,
-            final PgDatabase database) {
+    private static void parseView(Parser parser, PgView view,
+            boolean outputIgnoredStatements, String viewName,
+            PgDatabase database) {
         while (!parser.expectOptional(";")) {
             if (parser.expectOptional("ALTER")) {
                 parser.expectOptional("COLUMN");
 
-                final String columnName =
+                String columnName =
                         ParserUtils.getObjectName(parser.parseIdentifier());
 
                 if (parser.expectOptional("SET", "DEFAULT")) {
-                    final String expression = parser.getExpression();
+                    String expression = parser.getExpression();
                     view.addColumnDefaultValue(columnName, expression);
                 } else if (parser.expectOptional("DROP", "DEFAULT")) {
                     view.removeColumnDefaultValue(columnName);
@@ -311,9 +311,9 @@ public class AlterTableParser {
     }
 
     
-    private static void parseSequence(final Parser parser,
-            final PgSequence sequence, final boolean outputIgnoredStatements,
-            final String sequenceName, final PgDatabase database) {
+    private static void parseSequence(Parser parser,
+            PgSequence sequence, boolean outputIgnoredStatements,
+            String sequenceName, PgDatabase database) {
         while (!parser.expectOptional(";")) {
             if (parser.expectOptional("OWNER", "TO")) {
                 // we do not parse this one so we just consume the identifier

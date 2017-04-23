@@ -9,12 +9,12 @@ import java.io.PrintWriter;
 public class PgDiffFunctions {
 
     
-    public static void createFunctions(final PrintWriter writer,
-            final PgDiffArguments arguments, final PgSchema oldSchema,
-            final PgSchema newSchema, final SearchPathHelper searchPathHelper) {
+    public static void createFunctions(PrintWriter writer,
+            PgDiffArguments arguments, PgSchema oldSchema,
+            PgSchema newSchema, SearchPathHelper searchPathHelper) {
         // Add new functions and replace modified functions
-        for (final PgFunction newFunction : newSchema.getFunctions()) {
-            final PgFunction oldFunction;
+        for (PgFunction newFunction : newSchema.getFunctions()) {
+            PgFunction oldFunction;
 
             if (oldSchema == null) {
                 oldFunction = null;
@@ -32,15 +32,15 @@ public class PgDiffFunctions {
     }
 
     
-    public static void dropFunctions(final PrintWriter writer,
-            final PgDiffArguments arguments, final PgSchema oldSchema,
-            final PgSchema newSchema, final SearchPathHelper searchPathHelper) {
+    public static void dropFunctions(PrintWriter writer,
+            PgDiffArguments arguments, PgSchema oldSchema,
+            PgSchema newSchema, SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
         // Drop functions that exist no more
-        for (final PgFunction oldFunction : oldSchema.getFunctions()) {
+        for (PgFunction oldFunction : oldSchema.getFunctions()) {
             if (!newSchema.containsFunction(oldFunction.getSignature())) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
@@ -50,15 +50,15 @@ public class PgDiffFunctions {
     }
 
     
-    public static void alterComments(final PrintWriter writer,
-            final PgSchema oldSchema, final PgSchema newSchema,
-            final SearchPathHelper searchPathHelper) {
+    public static void alterComments(PrintWriter writer,
+            PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        for (final PgFunction oldfunction : oldSchema.getFunctions()) {
-            final PgFunction newFunction =
+        for (PgFunction oldfunction : oldSchema.getFunctions()) {
+            PgFunction newFunction =
                     newSchema.getFunction(oldfunction.getSignature());
 
             if (newFunction == null) {
@@ -79,7 +79,7 @@ public class PgDiffFunctions {
 
                 boolean addComma = false;
 
-                for (final PgFunction.Argument argument :
+                for (PgFunction.Argument argument :
                         newFunction.getArguments()) {
                     if (addComma) {
                         writer.print(", ");
@@ -103,7 +103,7 @@ public class PgDiffFunctions {
 
                 boolean addComma = false;
 
-                for (final PgFunction.Argument argument :
+                for (PgFunction.Argument argument :
                         newFunction.getArguments()) {
                     if (addComma) {
                         writer.print(", ");

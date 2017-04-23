@@ -7,9 +7,9 @@ import java.util.Locale;
 public class PgColumnUtils {
 
     
-    public static String getDefaultValue(final String type) {
-        final String defaultValue;
-        final String adjType = type.toLowerCase(Locale.ENGLISH);
+    public static String getDefaultValue(String type) {
+        String defaultValue;
+        String adjType = type.toLowerCase(Locale.ENGLISH);
 
         if ("smallint".equals(adjType)
                 || "integer".equals(adjType)

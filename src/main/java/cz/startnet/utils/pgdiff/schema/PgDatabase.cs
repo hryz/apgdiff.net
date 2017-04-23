@@ -9,10 +9,10 @@ import java.util.List;
 public class PgDatabase {
 
     
-    private final List<PgSchema> schemas = new ArrayList<PgSchema>(1);
+    private List<PgSchema> schemas = new ArrayList<PgSchema>(1);
     
     @SuppressWarnings("CollectionWithoutInitialCapacity")
-    private final List<String> ignoredStatements = new ArrayList<String>();
+    private List<String> ignoredStatements = new ArrayList<String>();
     
     private PgSchema defaultSchema;
     
@@ -30,12 +30,12 @@ public class PgDatabase {
     }
 
     
-    public void setComment(final String comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
     
-    public void setDefaultSchema(final String name) {
+    public void setDefaultSchema(String name) {
         defaultSchema = getSchema(name);
     }
 
@@ -50,17 +50,17 @@ public class PgDatabase {
     }
 
     
-    public void addIgnoredStatement(final String ignoredStatement) {
+    public void addIgnoredStatement(String ignoredStatement) {
         ignoredStatements.add(ignoredStatement);
     }
 
     
-    public PgSchema getSchema(final String name) {
+    public PgSchema getSchema(String name) {
         if (name == null) {
             return getDefaultSchema();
         }
 
-        for (final PgSchema schema : schemas) {
+        for (PgSchema schema : schemas) {
             if (schema.getName().equals(name)) {
                 return schema;
             }
@@ -75,7 +75,7 @@ public class PgDatabase {
     }
 
     
-    public void addSchema(final PgSchema schema) {
+    public void addSchema(PgSchema schema) {
         schemas.add(schema);
     }
 }
