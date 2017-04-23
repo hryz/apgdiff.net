@@ -12,10 +12,10 @@ namespace cz.startnet.utils.pgdiff.schema {
 public class PgDatabase {
 
     
-    private List<PgSchema> schemas = new ArrayList<PgSchema>(1);
-    
-    
-    private List<String> ignoredStatements = new ArrayList<String>();
+    private List<PgSchema> schemas = new List<PgSchema>();
+
+
+    private List<String> ignoredStatements = new List<string>();
     
     private PgSchema defaultSchema;
     
@@ -23,8 +23,8 @@ public class PgDatabase {
 
     
     public PgDatabase() {
-        schemas.add(new PgSchema("public"));
-        defaultSchema = schemas.get(0);
+        schemas.Add(new PgSchema("public"));
+        defaultSchema = schemas[0];
     }
 
     
@@ -49,12 +49,12 @@ public class PgDatabase {
 
     
     public List<String> getIgnoredStatements() {
-        return Collections.unmodifiableList(ignoredStatements);
+        return new List<string>(ignoredStatements);
     }
 
     
     public void addIgnoredStatement(String ignoredStatement) {
-        ignoredStatements.add(ignoredStatement);
+        ignoredStatements.Add(ignoredStatement);
     }
 
     
@@ -74,12 +74,12 @@ public class PgDatabase {
 
     
     public List<PgSchema> getSchemas() {
-        return Collections.unmodifiableList(schemas);
+        return new List<PgSchema>(schemas);
     }
 
     
     public void addSchema(PgSchema schema) {
-        schemas.add(schema);
+        schemas.Add(schema);
     }
 }
 }

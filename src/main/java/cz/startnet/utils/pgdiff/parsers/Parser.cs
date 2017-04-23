@@ -172,7 +172,7 @@ public class Parser {
     }
 
     
-    public string parse_string() {
+    public string parseString() {
         bool quoted = _string[position] == '\'';
 
         if (quoted) {
@@ -288,7 +288,7 @@ public class Parser {
     }
 
     
-    public string get_string() {
+    public string getString() {
         return _string;
     }
 

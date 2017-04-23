@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace cz.startnet.utils.pgdiff.schema {
 
@@ -17,7 +18,7 @@ public class PgFunction {
     private String name;
     
     
-    private List<Argument> arguments = new ArrayList<Argument>();
+    private List<Argument> arguments = new List<Argument>();
     
     private String body;
     
@@ -36,49 +37,49 @@ public class PgFunction {
     
     public String getCreationSQL() {
         StringBuilder sbSQL = new StringBuilder(500);
-        sbSQL.append("CREATE OR REPLACE FUNCTION ");
-        sbSQL.append(PgDiffUtils.getQuotedName(name));
-        sbSQL.append('(');
+        sbSQL.Append("CREATE OR REPLACE FUNCTION ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(name));
+        sbSQL.Append('(');
 
         bool addComma = false;
 
         foreach(Argument argument in arguments) {
             if (addComma) {
-                sbSQL.append(", ");
+                sbSQL.Append(", ");
             }
 
-            sbSQL.append(argument.getDeclaration(true));
+            sbSQL.Append(argument.getDeclaration(true));
 
             addComma = true;
         }
 
-        sbSQL.append(") ");
-        sbSQL.append(body);
-        sbSQL.append(';');
+        sbSQL.Append(") ");
+        sbSQL.Append(body);
+        sbSQL.Append(';');
 
-        if (comment != null && !comment.isEmpty()) {
-            sbSQL.append("\n\nCOMMENT ON FUNCTION ");
-            sbSQL.append(PgDiffUtils.getQuotedName(name));
-            sbSQL.append('(');
+        if (comment != null && ! String.IsNullOrEmpty(comment)) {
+            sbSQL.Append("\n\nCOMMENT ON FUNCTION ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(name));
+            sbSQL.Append('(');
 
             addComma = false;
 
             foreach(Argument argument in arguments) {
                 if (addComma) {
-                    sbSQL.append(", ");
+                    sbSQL.Append(", ");
                 }
 
-                sbSQL.append(argument.getDeclaration(false));
+                sbSQL.Append(argument.getDeclaration(false));
 
                 addComma = true;
             }
 
-            sbSQL.append(") IS ");
-            sbSQL.append(comment);
-            sbSQL.append(';');
+            sbSQL.Append(") IS ");
+            sbSQL.Append(comment);
+            sbSQL.Append(';');
         }
 
-        return sbSQL.toString();
+        return sbSQL.ToString();
     }
 
     
@@ -94,29 +95,29 @@ public class PgFunction {
     
     public String getDropSQL() {
         StringBuilder sbString = new StringBuilder(100);
-        sbString.append("DROP FUNCTION ");
-        sbString.append(name);
-        sbString.append('(');
+        sbString.Append("DROP FUNCTION ");
+        sbString.Append(name);
+        sbString.Append('(');
 
         bool addComma = false;
 
         foreach(Argument argument in arguments) {
-            if ("OUT".equalsIgnoreCase(argument.getMode())) {
+            if ("OUT".Equals(argument.getMode(),StringComparison.InvariantCultureIgnoreCase)) {
                 continue;
             }
 
             if (addComma) {
-                sbString.append(", ");
+                sbString.Append(", ");
             }
 
-            sbString.append(argument.getDeclaration(false));
+            sbString.Append(argument.getDeclaration(false));
 
             addComma = true;
         }
 
-        sbString.append(");");
+        sbString.Append(");");
 
-        return sbString.toString();
+        return sbString.ToString();
     }
 
     
@@ -131,61 +132,60 @@ public class PgFunction {
 
     
     public List<Argument> getArguments() {
-        return Collections.unmodifiableList(arguments);
+        return new List<Argument>(arguments);
     }
 
     
     public void addArgument(Argument argument) {
-        arguments.add(argument);
+        arguments.Add(argument);
     }
 
     
     public String getSignature() {
         StringBuilder sbString = new StringBuilder(100);
-        sbString.append(name);
-        sbString.append('(');
+        sbString.Append(name);
+        sbString.Append('(');
 
         bool addComma = false;
 
         foreach(Argument argument in arguments) {
-            if ("OUT".equalsIgnoreCase(argument.getMode())) {
+            if ("OUT".Equals(argument.getMode(), StringComparison.InvariantCultureIgnoreCase)) {
                 continue;
             }
 
             if (addComma) {
-                sbString.append(',');
+                sbString.Append(',');
             }
 
-            sbString.append(argument.getDataType().toLowerCase(Locale.ENGLISH));
+            sbString.Append(argument.getDataType().ToLower());
 
             addComma = true;
         }
 
-        sbString.append(')');
+        sbString.Append(')');
 
-        return sbString.toString();
-    }
-
-    @Override
-    public bool Equals(Object object) {
-        if (!(object instanceof PgFunction)) {
-            return false;
-        } else if (object == this) {
-            return true;
-        }
-
-        return Equals(object, false);
+        return sbString.ToString();
     }
 
     
-    public bool Equals(Object object,
-            bool ignoreFunctionWhitespace) {
+    public override bool Equals(Object @object) {
+        if (!(@object is PgFunction)) {
+            return false;
+        } else if (@object == this) {
+            return true;
+        }
+
+        return Equals(@object, false);
+    }
+
+    
+    public bool Equals(Object @object, bool ignoreFunctionWhitespace) {
         bool equals = false;
 
-        if (this == object) {
+        if (this == @object) {
             equals = true;
-        } else if (object instanceof PgFunction) {
-            PgFunction function = (PgFunction) object;
+        } else if (@object is PgFunction) {
+            PgFunction function = (PgFunction) @object;
 
             if (name == null && function.getName() != null
                     || name != null && !name.Equals(function.getName())) {
@@ -196,9 +196,8 @@ public class PgFunction {
             String thatBody;
 
             if (ignoreFunctionWhitespace) {
-                thisBody = body.replaceAll("\\s+", " ");
-                thatBody =
-                        function.getBody().replaceAll("\\s+", " ");
+                thisBody = Regex.Replace(body, "\\s+", " ");
+                thatBody = Regex.Replace(function.getBody(), "\\s+", " ");
             } else {
                 thisBody = body;
                 thatBody = function.getBody();
@@ -209,11 +208,11 @@ public class PgFunction {
                 return false;
             }
 
-            if (arguments.size() != function.getArguments().size()) {
+            if (arguments.Count != function.getArguments().Count) {
                 return false;
             } else {
-                for (int i = 0; i < arguments.size(); i++) {
-                    if (!arguments.get(i).Equals(function.getArguments().get(i))) {
+                for (int i = 0; i < arguments.Count; i++) {
+                    if (!arguments[i].Equals(function.getArguments()[i])) {
                         return false;
                     }
                 }
@@ -225,24 +224,24 @@ public class PgFunction {
         return equals;
     }
 
-    @Override
-    public int hashCode() {
+    
+    public override int GetHashCode() {
         StringBuilder sbString = new StringBuilder(500);
-        sbString.append(body);
-        sbString.append('|');
-        sbString.append(name);
+        sbString.Append(body);
+        sbString.Append('|');
+        sbString.Append(name);
 
         foreach(Argument argument in arguments) {
-            sbString.append('|');
-            sbString.append(argument.getDeclaration(true));
+            sbString.Append('|');
+            sbString.Append(argument.getDeclaration(true));
         }
 
-        return sbString.toString().hashCode();
+        return sbString.ToString().GetHashCode();
     }
 
     
     
-    public static class Argument {
+    public class Argument {
 
         
         private String mode = "IN";
@@ -280,7 +279,7 @@ public class PgFunction {
 
         
         public void setMode(String mode) {
-            this.mode = mode == null || mode.isEmpty() ? "IN" : mode;
+            this.mode = String.IsNullOrEmpty(mode) ? "IN" : mode;
         }
 
         
@@ -297,30 +296,28 @@ public class PgFunction {
         public String getDeclaration(bool includeDefaultValue) {
             StringBuilder sbString = new StringBuilder(50);
 
-            if (mode != null && !"IN".equalsIgnoreCase(mode)) {
-                sbString.append(mode);
-                sbString.append(' ');
+            if (mode != null && !"IN".Equals(mode, StringComparison.InvariantCultureIgnoreCase)) {
+                sbString.Append(mode);
+                sbString.Append(' ');
             }
 
-            if (name != null && !name.isEmpty()) {
-                sbString.append(PgDiffUtils.getQuotedName(name));
-                sbString.append(' ');
+            if (name != null && !String.IsNullOrEmpty(name)) {
+                sbString.Append(PgDiffUtils.getQuotedName(name));
+                sbString.Append(' ');
             }
 
-            sbString.append(dataType);
+            sbString.Append(dataType);
 
-            if (includeDefaultValue && defaultExpression != null
-                    && !defaultExpression.isEmpty()) {
-                sbString.append(" = ");
-                sbString.append(defaultExpression);
+            if (includeDefaultValue && !String.IsNullOrEmpty(defaultExpression)) {
+                sbString.Append(" = ");
+                sbString.Append(defaultExpression);
             }
 
-            return sbString.toString();
+            return sbString.ToString();
         }
 
-        @Override
-        public bool Equals(Object obj) {
-            if (!(obj instanceof Argument)) {
+        public override bool Equals(Object obj) {
+            if (!(obj is Argument)) {
                 return false;
             } else if (this == obj) {
                 return true;
@@ -329,30 +326,28 @@ public class PgFunction {
             Argument argument = (Argument) obj;
 
             return (dataType == null ? argument.getDataType() == null
-                    : dataType.equalsIgnoreCase(argument.getDataType()))
+                    : dataType.Equals(argument.getDataType(),StringComparison.InvariantCultureIgnoreCase))
                     && (defaultExpression == null
                     ? argument.getDefaultExpression() == null
                     : defaultExpression.Equals(defaultExpression))
                     && (mode == null ? argument.getMode() == null
-                    : mode.equalsIgnoreCase(argument.getMode()))
+                    : mode.Equals(argument.getMode(),StringComparison.InvariantCultureIgnoreCase))
                     && (name == null ? argument.getName() == null
                     : name.Equals(argument.getName()));
         }
 
-        @Override
-        public int hashCode() {
+        
+        public override int GetHashCode() {
             StringBuilder sbString = new StringBuilder(50);
-            sbString.append(
-                    mode == null ? null : mode.toUpperCase(Locale.ENGLISH));
-            sbString.append('|');
-            sbString.append(name);
-            sbString.append('|');
-            sbString.append(dataType == null ? null
-                    : dataType.toUpperCase(Locale.ENGLISH));
-            sbString.append('|');
-            sbString.append(defaultExpression);
+            sbString.Append(mode == null ? null : mode.ToUpper());
+            sbString.Append('|');
+            sbString.Append(name);
+            sbString.Append('|');
+            sbString.Append(dataType == null ? null: dataType.ToUpper());
+            sbString.Append('|');
+            sbString.Append(defaultExpression);
 
-            return sbString.toString().hashCode();
+            return sbString.ToString().GetHashCode();
         }
     }
 }

@@ -1,6 +1,7 @@
 
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace cz.startnet.utils.pgdiff.schema {
 
@@ -11,16 +12,14 @@ namespace cz.startnet.utils.pgdiff.schema {
 public class PgColumn {
 
     
-    private static Pattern PATTERN_NULL =
-            Pattern.compile("^(.+)[\\s]+NULL$", Pattern.CASE_INSENSITIVE);
+    private static Regex PATTERN_NULL = new Regex("^(.+)[\\s]+NULL$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            
     
-    private static Pattern PATTERN_NOT_NULL = Pattern.compile(
-            "^(.+)[\\s]+NOT[\\s]+NULL$", Pattern.CASE_INSENSITIVE);
+    private static Regex PATTERN_NOT_NULL = new Regex("^(.+)[\\s]+NOT[\\s]+NULL$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     
-    private static Pattern PATTERN_DEFAULT = Pattern.compile(
-            "^(.+)[\\s]+DEFAULT[\\s]+(.+)$", Pattern.CASE_INSENSITIVE);
+    private static Regex PATTERN_DEFAULT = new Regex("^(.+)[\\s]+DEFAULT[\\s]+(.+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     
-    private Integer statistics;
+    private Int32 statistics;
     
     private String defaultValue;
     
@@ -62,27 +61,27 @@ public class PgColumn {
     
     public String getFullDefinition(bool addDefaults) {
         StringBuilder sbDefinition = new StringBuilder(100);
-        sbDefinition.append(PgDiffUtils.getQuotedName(name));
-        sbDefinition.append(' ');
-        sbDefinition.append(type);
+        sbDefinition.Append(PgDiffUtils.getQuotedName(name));
+        sbDefinition.Append(' ');
+        sbDefinition.Append(type);
 
-        if (defaultValue != null && !defaultValue.isEmpty()) {
-            sbDefinition.append(" DEFAULT ");
-            sbDefinition.append(defaultValue);
+        if (defaultValue != null && !String.IsNullOrEmpty(defaultValue)) {
+            sbDefinition.Append(" DEFAULT ");
+            sbDefinition.Append(defaultValue);
         } else if (!nullValue && addDefaults) {
             String defaultColValue = PgColumnUtils.getDefaultValue(type);
 
             if (defaultColValue != null) {
-                sbDefinition.append(" DEFAULT ");
-                sbDefinition.append(defaultColValue);
+                sbDefinition.Append(" DEFAULT ");
+                sbDefinition.Append(defaultColValue);
             }
         }
 
         if (!nullValue) {
-            sbDefinition.append(" NOT NULL");
+            sbDefinition.Append(" NOT NULL");
         }
 
-        return sbDefinition.toString();
+        return sbDefinition.ToString();
     }
 
     
@@ -106,12 +105,12 @@ public class PgColumn {
     }
 
     
-    public void setStatistics(Integer statistics) {
+    public void setStatistics(Int32 statistics) {
         this.statistics = statistics;
     }
 
     
-    public Integer getStatistics() {
+    public Int32 getStatistics() {
         return statistics;
     }
 
@@ -137,30 +136,30 @@ public class PgColumn {
 
     
     public void parseDefinition(String definition) {
-        String string = definition;
+        String @string = definition;
 
-        Matcher matcher = PATTERN_NOT_NULL.matcher(string);
+        Regex matcher = PATTERN_NOT_NULL;
 
-        if (matcher.matches()) {
-            string = matcher.group(1).trim();
+        if (matcher.IsMatch(@string)) {
+            @string = matcher.Matches(@string)[0].Groups[1].Value.Trim();
             setNullValue(false);
         } else {
-            matcher = PATTERN_NULL.matcher(string);
+            matcher = PATTERN_NULL;
 
-            if (matcher.matches()) {
-                string = matcher.group(1).trim();
-                setNullValue(true);
+            if (matcher.IsMatch(@string)) {
+                @string = matcher.Matches(@string)[0].Groups[1].Value.Trim();
+                    setNullValue(true);
             }
         }
 
-        matcher = PATTERN_DEFAULT.matcher(string);
+        matcher = PATTERN_DEFAULT;
 
-        if (matcher.matches()) {
-            string = matcher.group(1).trim();
-            setDefaultValue(matcher.group(2).trim());
+        if (matcher.IsMatch(@string)) {
+            @string = matcher.Matches(@string)[0].Groups[1].Value.Trim(); 
+            setDefaultValue(matcher.Matches(@string)[0].Groups[2].Value.Trim());
         }
 
-        setType(string);
+        setType(@string);
     }
 }
 }

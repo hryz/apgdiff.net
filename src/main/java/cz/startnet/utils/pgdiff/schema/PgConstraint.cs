@@ -1,6 +1,7 @@
 
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace cz.startnet.utils.pgdiff.schema {
 
@@ -10,8 +11,7 @@ namespace cz.startnet.utils.pgdiff.schema {
 public class PgConstraint {
 
     
-    private static Pattern PATTERN_PRIMARY_KEY =
-            Pattern.compile(".*PRIMARY[\\s]+KEY.*", Pattern.CASE_INSENSITIVE);
+    private static Regex PATTERN_PRIMARY_KEY = new Regex(".*PRIMARY[\\s]+KEY.*", RegexOptions.Compiled|RegexOptions.IgnoreCase);
     
     private String definition;
     
@@ -29,25 +29,25 @@ public class PgConstraint {
     
     public String getCreationSQL() {
         StringBuilder sbSQL = new StringBuilder(100);
-        sbSQL.append("ALTER TABLE ");
-        sbSQL.append(PgDiffUtils.getQuotedName(getTableName()));
-        sbSQL.append("\n\tADD CONSTRAINT ");
-        sbSQL.append(PgDiffUtils.getQuotedName(getName()));
-        sbSQL.append(' ');
-        sbSQL.append(getDefinition());
-        sbSQL.append(';');
+        sbSQL.Append("ALTER TABLE ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(getTableName()));
+        sbSQL.Append("\n\tADD CONSTRAINT ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(getName()));
+        sbSQL.Append(' ');
+        sbSQL.Append(getDefinition());
+        sbSQL.Append(';');
 
-        if (comment != null && !comment.isEmpty()) {
-            sbSQL.append("\n\nCOMMENT ON CONSTRAINT ");
-            sbSQL.append(PgDiffUtils.getQuotedName(name));
-            sbSQL.append(" ON ");
-            sbSQL.append(PgDiffUtils.getQuotedName(tableName));
-            sbSQL.append(" IS ");
-            sbSQL.append(comment);
-            sbSQL.append(';');
+        if (comment != null && !String.IsNullOrEmpty(comment)) {
+            sbSQL.Append("\n\nCOMMENT ON CONSTRAINT ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(name));
+            sbSQL.Append(" ON ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(tableName));
+            sbSQL.Append(" IS ");
+            sbSQL.Append(comment);
+            sbSQL.Append(';');
         }
 
-        return sbSQL.toString();
+        return sbSQL.ToString();
     }
 
     
@@ -73,13 +73,13 @@ public class PgConstraint {
     
     public String getDropSQL() {
         StringBuilder sbSQL = new StringBuilder(100);
-        sbSQL.append("ALTER TABLE ");
-        sbSQL.append(PgDiffUtils.getQuotedName(getTableName()));
-        sbSQL.append("\n\tDROP CONSTRAINT ");
-        sbSQL.append(PgDiffUtils.getQuotedName(getName()));
-        sbSQL.append(';');
+        sbSQL.Append("ALTER TABLE ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(getTableName()));
+        sbSQL.Append("\n\tDROP CONSTRAINT ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(getName()));
+        sbSQL.Append(';');
 
-        return sbSQL.toString();
+        return sbSQL.ToString();
     }
 
     
@@ -94,7 +94,7 @@ public class PgConstraint {
 
     
     public bool isPrimaryKeyConstraint() {
-        return PATTERN_PRIMARY_KEY.matcher(definition).matches();
+        return PATTERN_PRIMARY_KEY.IsMatch(definition);
     }
 
     
@@ -108,14 +108,13 @@ public class PgConstraint {
     }
 
     
-    @Override
-    public bool Equals(Object object) {
+    public override bool Equals(Object @object) {
         bool equals = false;
 
-        if (this == object) {
+        if (this == @object) {
             equals = true;
-        } else if (object instanceof PgConstraint) {
-            PgConstraint constraint = (PgConstraint) object;
+        } else if (@object is PgConstraint) {
+            PgConstraint constraint = (PgConstraint) @object;
             equals = definition.Equals(constraint.getDefinition())
                     && name.Equals(constraint.getName())
                     && tableName.Equals(constraint.getTableName());
@@ -125,10 +124,9 @@ public class PgConstraint {
     }
 
     
-    @Override
-    public int hashCode() {
-        return (getClass().getName() + "|" + definition + "|" + name + "|"
-                + tableName).hashCode();
+    
+    public override int GetHashCode() {
+        return (GetType().Name + "|" + definition + "|" + name + "|" + tableName).GetHashCode();
     }
 }
 }
