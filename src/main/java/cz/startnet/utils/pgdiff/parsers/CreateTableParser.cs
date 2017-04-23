@@ -1,8 +1,8 @@
-
 using System;
-using cz.startnet.utils.pgdiff.schema;
+using pgdiff.Properties;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff.parsers {
+namespace pgdiff.parsers {
 
 
 
@@ -25,9 +25,7 @@ public class CreateTableParser {
         PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
-            throw new Exception(String.Format(
-                    Resources.getString("CannotFindSchema"), schemaName,
-                    statement));
+            throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
         }
 
         schema.addTable(table);

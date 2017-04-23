@@ -1,7 +1,8 @@
 
 using System;
+using pgdiff.Properties;
 
-namespace cz.startnet.utils.pgdiff.parsers {
+namespace pgdiff.parsers {
 
 
 
@@ -52,7 +53,7 @@ public class Parser {
         }
 
         throw new ParserException(String.Format(
-                Resources.getString("CannotParse_stringExpectedWord"), _string,
+                Resources.CannotParseStringExpectedWord, _string,
                 word, position + 1, _string.Substring(position, position + 20)));
     }
 
@@ -165,7 +166,7 @@ public class Parser {
             return result;
         } catch (FormatException ex) {
             throw new ParserException(String.Format(
-                    Resources.getString("CannotParse_stringExpectedInteger"),
+                    Resources.CannotParseStringExpectedInteger,
                     _string, position + 1,
                     _string.Substring(position, position + 20)), ex);
         }
@@ -222,7 +223,7 @@ public class Parser {
 
             if (position == endPos) {
                 throw new ParserException(String.Format(
-                        Resources.getString("CannotParse_stringExpected_string"),
+                        Resources.CannotParseStringExpectedString,
                         _string, position + 1));
             }
 
@@ -241,7 +242,7 @@ public class Parser {
 
         if (position == endPos) {
             throw new ParserException(String.Format(
-                    Resources.getString("CannotParse_stringExpectedExpression"),
+                    Resources.CannotParseStringExpectedExpression,
                     _string, position + 1,
                     _string.Substring(position, position + 20)));
         }
@@ -295,7 +296,7 @@ public class Parser {
     
     public void throwUnsupportedCommand() {
         throw new ParserException(String.Format(
-                Resources.getString("CannotParse_stringUnsupportedCommand"),
+                Resources.CannotParseStringUnsupportedCommand,
                 _string, position + 1,
                 _string.Substring(position, position + 20)));
     }
@@ -335,7 +336,7 @@ public class Parser {
 
         if (endPos == position) {
             throw new ParserException(String.Format(
-                    Resources.getString("CannotParse_stringExpectedDataType"),
+                    Resources.CannotParseStringExpectedDataType,
                     _string, position + 1,
                     _string.Substring(position, position + 20)));
         }

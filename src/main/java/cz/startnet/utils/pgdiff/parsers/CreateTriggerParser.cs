@@ -1,8 +1,7 @@
-
 using System;
-using cz.startnet.utils.pgdiff.schema;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff.parsers {
+namespace pgdiff.parsers {
 
 
 

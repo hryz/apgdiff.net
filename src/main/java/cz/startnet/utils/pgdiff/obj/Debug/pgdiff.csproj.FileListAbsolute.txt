@@ -1,0 +1,8 @@
+C:\Users\root\Desktop\apgdiff\src\main\java\cz\startnet\utils\pgdiff\obj\Debug\pgdiff.csprojResolveAssemblyReference.cache
+C:\Users\root\Desktop\apgdiff\src\main\java\cz\startnet\utils\pgdiff\obj\Debug\pgdiff.Properties.Resources.resources
+C:\Users\root\Desktop\apgdiff\src\main\java\cz\startnet\utils\pgdiff\obj\Debug\pgdiff.csproj.GenerateResource.Cache
+C:\Users\root\Desktop\apgdiff\src\main\java\cz\startnet\utils\pgdiff\bin\Debug\pgdiff.exe.config
+C:\Users\root\Desktop\apgdiff\src\main\java\cz\startnet\utils\pgdiff\bin\Debug\pgdiff.exe
+C:\Users\root\Desktop\apgdiff\src\main\java\cz\startnet\utils\pgdiff\bin\Debug\pgdiff.pdb
+C:\Users\root\Desktop\apgdiff\src\main\java\cz\startnet\utils\pgdiff\obj\Debug\pgdiff.exe
+C:\Users\root\Desktop\apgdiff\src\main\java\cz\startnet\utils\pgdiff\obj\Debug\pgdiff.pdb

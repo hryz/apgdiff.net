@@ -1,35 +1,23 @@
-
 using System;
 
-namespace cz.startnet.utils.pgdiff {
+namespace pgdiff {
 
 
 
 
 
 
-public class Main {
+public class Programm {
 
     
-    public static void main(String[] args) {
-        
-        TextWriter writer = new TextWriter(System.out, true);
+    public static void Main(String[] args)
+    {
         PgDiffArguments arguments = new PgDiffArguments();
 
-        if (arguments.parse(writer, args)) {
-            
-            TextWriter encodedWriter = new TextWriter(
-                    new OutputStreamWriter(
-                    System.out, arguments.getOutCharsetName()));
-            PgDiff.createDiff(encodedWriter, arguments);
-            encodedWriter.close();
+        if (arguments.parse(Console.In, Console.Out, args)) {
+            PgDiff.createDiff(Console.Out, arguments);
         }
-
-        writer.close();
     }
-
-    
-    private Main() {
-    }
+        
 }
 }

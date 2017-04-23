@@ -1,9 +1,10 @@
-
 using System;
-using cz.startnet.utils.pgdiff.loader;
-using cz.startnet.utils.pgdiff.schema;
+using System.IO;
+using pgdiff.loader;
+using pgdiff.Properties;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff {
+namespace pgdiff {
 
 
 
@@ -27,9 +28,7 @@ public class PgDiff {
     }
 
     
-    public static void createDiff(TextWriter writer,
-            PgDiffArguments arguments, InputStream oldInputStream,
-            InputStream newInputStream) {
+    public static void createDiff(TextWriter writer, PgDiffArguments arguments, String oldInputStream, String newInputStream) {
         PgDatabase oldDatabase = PgDumpLoader.loadDatabaseSchema(
                 oldInputStream, arguments.getInCharsetName(),
                 arguments.isOutputIgnoredStatements(),
@@ -45,7 +44,7 @@ public class PgDiff {
     
     private static void createNewSchemas(TextWriter writer,
             PgDatabase oldDatabase, PgDatabase newDatabase) {
-        for (PgSchema newSchema : newDatabase.getSchemas()) {
+        foreach (PgSchema newSchema in newDatabase.getSchemas()) {
             if (oldDatabase.getSchema(newSchema.getName()) == null) {
                 writer.WriteLine();
                 writer.WriteLine(newSchema.getCreationSQL());
@@ -86,14 +85,12 @@ public class PgDiff {
         }
 
         if (arguments.isOutputIgnoredStatements()) {
-            if (!oldDatabase.getIgnoredStatements().isEmpty()) {
+            if (oldDatabase.getIgnoredStatements().Count > 0) {
                 writer.WriteLine();
                 writer.Write("/* ");
-                writer.WriteLine(Resources.getString(
-                        "OriginalDatabaseIgnoredStatements"));
+                writer.WriteLine(Resources.OriginalDatabaseIgnoredStatements);
 
-                for (String statement :
-                        oldDatabase.getIgnoredStatements()) {
+                foreach (String statement in oldDatabase.getIgnoredStatements()) {
                     writer.WriteLine();
                     writer.WriteLine(statement);
                 }
@@ -101,14 +98,12 @@ public class PgDiff {
                 writer.WriteLine("*/");
             }
 
-            if (!newDatabase.getIgnoredStatements().isEmpty()) {
+            if (newDatabase.getIgnoredStatements().Count > 0) {
                 writer.WriteLine();
                 writer.Write("/* ");
-                writer.WriteLine(
-                        Resources.getString("NewDatabaseIgnoredStatements"));
+                writer.WriteLine(Resources.NewDatabaseIgnoredStatements);
 
-                for (String statement :
-                        newDatabase.getIgnoredStatements()) {
+                foreach (String statement in newDatabase.getIgnoredStatements()) {
                     writer.WriteLine();
                     writer.WriteLine(statement);
                 }
@@ -121,7 +116,7 @@ public class PgDiff {
     
     private static void dropOldSchemas(TextWriter writer,
             PgDatabase oldDatabase, PgDatabase newDatabase) {
-        for (PgSchema oldSchema : oldDatabase.getSchemas()) {
+        foreach (PgSchema oldSchema in oldDatabase.getSchemas()) {
             if (newDatabase.getSchema(oldSchema.getName()) == null) {
                 writer.WriteLine();
                 writer.WriteLine("DROP SCHEMA "
@@ -135,10 +130,10 @@ public class PgDiff {
     private static void updateSchemas(TextWriter writer,
             PgDiffArguments arguments, PgDatabase oldDatabase,
             PgDatabase newDatabase) {
-        bool setSearchPath = newDatabase.getSchemas().size() > 1
-                || !newDatabase.getSchemas().get(0).getName().Equals("public");
+        bool setSearchPath = newDatabase.getSchemas().Count > 1
+                || !newDatabase.getSchemas()[0].getName().Equals("public");
 
-        for (PgSchema newSchema : newDatabase.getSchemas()) {
+        foreach (PgSchema newSchema in newDatabase.getSchemas()) {
             SearchPathHelper searchPathHelper;
 
             if (setSearchPath) {

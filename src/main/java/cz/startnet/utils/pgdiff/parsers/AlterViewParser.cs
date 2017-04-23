@@ -1,8 +1,8 @@
-
 using System;
-using cz.startnet.utils.pgdiff.schema;
+using pgdiff.Properties;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff.parsers {
+namespace pgdiff.parsers {
 
 
 
@@ -20,18 +20,14 @@ public class AlterViewParser {
         PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
-            throw new Exception(String.Format(
-                    Resources.getString("CannotFindSchema"), schemaName,
-                    statement));
+            throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
         }
 
         String objectName = ParserUtils.getObjectName(viewName);
         PgView view = schema.getView(objectName);
 
         if (view == null) {
-            throw new Exception(String.Format(
-                    Resources.getString("CannotFindView"), viewName,
-                    statement));
+            throw new Exception(String.Format(Resources.CannotFindView, viewName,statement));
         }
 
         while (!parser.expectOptional(";")) {

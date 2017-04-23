@@ -1,9 +1,8 @@
-
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace cz.startnet.utils.pgdiff.schema {
+namespace pgdiff.schema {
 
 
 
@@ -19,7 +18,7 @@ public class PgColumn {
     
     private static Regex PATTERN_DEFAULT = new Regex("^(.+)[\\s]+DEFAULT[\\s]+(.+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     
-    private Int32 statistics;
+    private Int32? statistics;
     
     private String defaultValue;
     
@@ -110,7 +109,7 @@ public class PgColumn {
     }
 
     
-    public Int32 getStatistics() {
+    public Int32? getStatistics() {
         return statistics;
     }
 

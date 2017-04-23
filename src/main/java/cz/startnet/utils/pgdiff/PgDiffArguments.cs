@@ -1,7 +1,9 @@
-
 using System;
+using System.IO;
+using System.Text;
+using pgdiff.Properties;
 
-namespace cz.startnet.utils.pgdiff {
+namespace pgdiff {
 
 
 
@@ -119,14 +121,14 @@ public class PgDiffArguments {
 
     
     
-    public bool parse(TextWriter writer, String[] args) {
+    public bool parse(TextReader reader, TextWriter writer, String[] args) {
         bool success = true;
         int argsLength;
 
-        if (args.length >= 2) {
-            argsLength = args.length - 2;
+        if (args.Length >= 2) {
+            argsLength = args.Length - 2;
         } else {
-            argsLength = args.length;
+            argsLength = args.Length;
         }
 
         for (int i = 0; i < argsLength; i++) {
@@ -153,7 +155,7 @@ public class PgDiffArguments {
             } else if ("--version".Equals(args[i])) {
                 setVersion(true);
             } else {
-                writer.Write(Resources.getString("ErrorUnknownOption"));
+                writer.Write(Resources.ErrorUnknownOption);
                 writer.Write(": ");
                 writer.WriteLine(args[i]);
                 success = false;
@@ -162,18 +164,18 @@ public class PgDiffArguments {
             }
         }
 
-        if (args.length == 1 && isVersion()) {
+        if (args.Length == 1 && isVersion()) {
             printVersion(writer);
             success = false;
-        } else if (args.length == 1 && isListCharsets()) {
-            listCharsets(writer);
+        } else if (args.Length == 1 && isListCharsets()) {
+            ListCharsets(writer);
             success = false;
-        } else if (args.length < 2) {
+        } else if (args.Length < 2) {
             printUsage(writer);
             success = false;
         } else if (success) {
-            setOldDumpFile(args[args.length - 2]);
-            setNewDumpFile(args[args.length - 1]);
+            setOldDumpFile(args[args.Length - 2]);
+            setNewDumpFile(args[args.Length - 1]);
         }
 
         return success;
@@ -181,15 +183,14 @@ public class PgDiffArguments {
 
     
     private void printUsage(TextWriter writer) {
-        writer.WriteLine(
-                Resources.getString("UsageHelp").replace("${tab}", "\t"));
+        writer.WriteLine(Resources.UsageHelp);
     }
 
     
     private void printVersion(TextWriter writer) {
-        writer.Write(Resources.getString("Version"));
+        writer.Write(Resources.Version);
         writer.Write(": ");
-        writer.WriteLine(Resources.getString("VersionNumber"));
+        writer.WriteLine(Resources.VersionNumber);
     }
 
     
@@ -223,11 +224,11 @@ public class PgDiffArguments {
     }
 
     
-    private void listCharsets(TextWriter writer) {
-        SortedMap<String, Charset> charsets = Charset.availableCharsets();
+    private void ListCharsets(TextWriter writer) {
+        var charsets = Encoding.GetEncodings();
 
-        for (String name : charsets.keySet()) {
-            writer.WriteLine(name);
+        foreach (var name in charsets) {
+            writer.WriteLine(name.Name);
         }
     }
 

@@ -1,8 +1,8 @@
-
 using System;
-using cz.startnet.utils.pgdiff.schema;
+using pgdiff.Properties;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff.parsers {
+namespace pgdiff.parsers {
 
 
 
@@ -22,18 +22,14 @@ public class AlterSequenceParser {
         PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
-            throw new Exception(String.Format(
-                    Resources.getString("CannotFindSchema"), schemaName,
-                    statement));
+            throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
         }
 
         String objectName = ParserUtils.getObjectName(sequenceName);
         PgSequence sequence = schema.getSequence(objectName);
 
         if (sequence == null) {
-            throw new Exception(String.Format(
-                    Resources.getString("CannotFindSequence"), sequenceName,
-                    statement));
+            throw new Exception(String.Format(Resources.CannotFindSequence, sequenceName,statement));
         }
 
         while (!parser.expectOptional(";")) {

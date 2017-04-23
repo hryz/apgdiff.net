@@ -1,9 +1,9 @@
-
 using System;
 using System.Collections.Generic;
-using cz.startnet.utils.pgdiff.schema;
+using pgdiff.Properties;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff.parsers {
+namespace pgdiff.parsers {
 
 
 
@@ -25,9 +25,7 @@ public class AlterTableParser {
         PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
-            throw new Exception(String.Format(
-                    Resources.getString("CannotFindSchema"), schemaName,
-                    statement));
+            throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
         }
 
         String objectName = ParserUtils.getObjectName(tableName);
@@ -50,9 +48,7 @@ public class AlterTableParser {
                 return;
             }
 
-            throw new Exception(String.Format(
-                    Resources.getString("CannotFindObject"), tableName,
-                    statement));
+            throw new Exception(String.Format(Resources.CannotFindObject, tableName,statement));
         }
 
         while (!parser.expectOptional(";")) {
@@ -194,9 +190,7 @@ public class AlterTableParser {
                 PgColumn column = table.getColumn(columnName);
 
                 if (column == null) {
-                    throw new Exception(String.Format(
-                            Resources.getString("CannotFindTableColumn"),
-                            columnName, table.getName(), parser.getString()));
+                    throw new Exception(String.Format(Resources.CannotFindTableColumn, columnName, table.getName(), parser.getString()));
                 }
 
                 column.setStatistics(parser.parseInteger());
@@ -207,25 +201,18 @@ public class AlterTableParser {
                     PgColumn column = table.getColumn(columnName);
 
                     if (column == null) {
-                        throw new Exception(String.Format(
-                                Resources.getString("CannotFindTableColumn"),
-                                columnName, table.getName(),
-                                parser.getString()));
+                        throw new Exception(String.Format(Resources.CannotFindTableColumn, columnName, table.getName(), parser.getString()));
                     }
 
                     column.setDefaultValue(defaultValue);
                 } else {
-                    throw new ParserException(String.Format(
-                            Resources.getString("CannotFindColumnInTable"),
-                            columnName, table.getName()));
+                    throw new ParserException(String.Format( Resources.CannotFindColumnInTable, columnName, table.getName()));
                 }
             } else if (parser.expectOptional("STORAGE")) {
                 PgColumn column = table.getColumn(columnName);
 
                 if (column == null) {
-                    throw new Exception(String.Format(
-                            Resources.getString("CannotFindTableColumn"),
-                            columnName, table.getName(), parser.getString()));
+                    throw new Exception(String.Format( Resources.CannotFindTableColumn,columnName, table.getName(), parser.getString()));
                 }
 
                 if (parser.expectOptional("PLAIN")) {

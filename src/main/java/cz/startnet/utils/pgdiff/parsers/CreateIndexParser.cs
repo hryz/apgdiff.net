@@ -1,8 +1,8 @@
-
 using System;
-using cz.startnet.utils.pgdiff.schema;
+using pgdiff.Properties;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff.parsers {
+namespace pgdiff.parsers {
 
 
 
@@ -32,18 +32,14 @@ public class CreateIndexParser {
         PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
-            throw new Exception(String.Format(
-                    Resources.getString("CannotFindSchema"), schemaName,
-                    statement));
+            throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
         }
 
         String objectName = ParserUtils.getObjectName(tableName);
         PgTable table = schema.getTable(objectName);
 
         if (table == null) {
-            throw new Exception(String.Format(
-                    Resources.getString("CannotFindTable"), tableName,
-                    statement));
+            throw new Exception(String.Format(Resources.CannotFindTable, tableName,statement));
         }
 
         PgIndex index = new PgIndex(indexName);

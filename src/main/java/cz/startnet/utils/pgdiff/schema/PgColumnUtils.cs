@@ -1,7 +1,7 @@
 
 using System;
 
-namespace cz.startnet.utils.pgdiff.schema {
+namespace pgdiff.schema {
 
 
 

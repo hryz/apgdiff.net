@@ -1,8 +1,7 @@
-
 using System;
 using System.Text;
 
-namespace cz.startnet.utils.pgdiff.schema {
+namespace pgdiff.schema {
 
 
 

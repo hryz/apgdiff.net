@@ -1,9 +1,9 @@
-
 using System;
+using System.IO;
 using System.Text;
-using cz.startnet.utils.pgdiff.schema;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff {
+namespace pgdiff {
 
 
 
@@ -15,7 +15,7 @@ public class PgDiffSequences {
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         // Add new sequences
-        for (PgSequence sequence : newSchema.getSequences()) {
+        foreach (PgSequence sequence in newSchema.getSequences()) {
             if (oldSchema == null
                     || !oldSchema.containsSequence(sequence.getName())) {
                 searchPathHelper.outputSearchPath(writer);
@@ -30,11 +30,10 @@ public class PgDiffSequences {
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         // Alter created sequences
-        for (PgSequence sequence : newSchema.getSequences()) {
+        foreach (PgSequence sequence in newSchema.getSequences()) {
             if ((oldSchema == null
                     || !oldSchema.containsSequence(sequence.getName()))
-                    && sequence.getOwnedBy() != null
-                    && !sequence.getOwnedBy().isEmpty()) {
+                    && !String.IsNullOrEmpty(sequence.getOwnedBy())) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.WriteLine();
                 writer.WriteLine(sequence.getOwnedBySQL());
@@ -51,7 +50,7 @@ public class PgDiffSequences {
         }
 
         // Drop sequences that do not exist in new schema
-        for (PgSequence sequence : oldSchema.getSequences()) {
+        foreach (PgSequence sequence in oldSchema.getSequences()) {
             if (!newSchema.containsSequence(sequence.getName())) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.WriteLine();
@@ -70,7 +69,7 @@ public class PgDiffSequences {
 
         StringBuilder sbSQL = new StringBuilder(100);
 
-        for (PgSequence newSequence : newSchema.getSequences()) {
+        foreach (PgSequence newSequence in newSchema.getSequences()) {
             PgSequence oldSequence =
                     oldSchema.getSequence(newSequence.getName());
 
@@ -78,37 +77,37 @@ public class PgDiffSequences {
                 continue;
             }
 
-            sbSQL.setLength(0);
+            sbSQL.Length = 0;
 
             String oldIncrement = oldSequence.getIncrement();
             String newIncrement = newSequence.getIncrement();
 
             if (newIncrement != null
                     && !newIncrement.Equals(oldIncrement)) {
-                sbSQL.append("\n\tINCREMENT BY ");
-                sbSQL.append(newIncrement);
+                sbSQL.Append("\n\tINCREMENT BY ");
+                sbSQL.Append(newIncrement);
             }
 
             String oldMinValue = oldSequence.getMinValue();
             String newMinValue = newSequence.getMinValue();
 
             if (newMinValue == null && oldMinValue != null) {
-                sbSQL.append("\n\tNO MINVALUE");
+                sbSQL.Append("\n\tNO MINVALUE");
             } else if (newMinValue != null
                     && !newMinValue.Equals(oldMinValue)) {
-                sbSQL.append("\n\tMINVALUE ");
-                sbSQL.append(newMinValue);
+                sbSQL.Append("\n\tMINVALUE ");
+                sbSQL.Append(newMinValue);
             }
 
             String oldMaxValue = oldSequence.getMaxValue();
             String newMaxValue = newSequence.getMaxValue();
 
             if (newMaxValue == null && oldMaxValue != null) {
-                sbSQL.append("\n\tNO MAXVALUE");
+                sbSQL.Append("\n\tNO MAXVALUE");
             } else if (newMaxValue != null
                     && !newMaxValue.Equals(oldMaxValue)) {
-                sbSQL.append("\n\tMAXVALUE ");
-                sbSQL.append(newMaxValue);
+                sbSQL.Append("\n\tMAXVALUE ");
+                sbSQL.Append(newMaxValue);
             }
 
             if (!arguments.isIgnoreStartWith()) {
@@ -116,8 +115,8 @@ public class PgDiffSequences {
                 String newStart = newSequence.getStartWith();
 
                 if (newStart != null && !newStart.Equals(oldStart)) {
-                    sbSQL.append("\n\tRESTART WITH ");
-                    sbSQL.append(newStart);
+                    sbSQL.Append("\n\tRESTART WITH ");
+                    sbSQL.Append(newStart);
                 }
             }
 
@@ -125,33 +124,33 @@ public class PgDiffSequences {
             String newCache = newSequence.getCache();
 
             if (newCache != null && !newCache.Equals(oldCache)) {
-                sbSQL.append("\n\tCACHE ");
-                sbSQL.append(newCache);
+                sbSQL.Append("\n\tCACHE ");
+                sbSQL.Append(newCache);
             }
 
             bool oldCycle = oldSequence.isCycle();
             bool newCycle = newSequence.isCycle();
 
             if (oldCycle && !newCycle) {
-                sbSQL.append("\n\tNO CYCLE");
+                sbSQL.Append("\n\tNO CYCLE");
             } else if (!oldCycle && newCycle) {
-                sbSQL.append("\n\tCYCLE");
+                sbSQL.Append("\n\tCYCLE");
             }
 
             String oldOwnedBy = oldSequence.getOwnedBy();
             String newOwnedBy = newSequence.getOwnedBy();
 
             if (newOwnedBy != null && !newOwnedBy.Equals(oldOwnedBy)) {
-                sbSQL.append("\n\tOWNED BY ");
-                sbSQL.append(newOwnedBy);
+                sbSQL.Append("\n\tOWNED BY ");
+                sbSQL.Append(newOwnedBy);
             }
 
-            if (sbSQL.length() > 0) {
+            if (sbSQL.Length > 0) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.WriteLine();
                 writer.Write("ALTER SEQUENCE "
                         + PgDiffUtils.getQuotedName(newSequence.getName()));
-                writer.Write(sbSQL.toString());
+                writer.Write(sbSQL.ToString());
                 writer.WriteLine(';');
             }
 

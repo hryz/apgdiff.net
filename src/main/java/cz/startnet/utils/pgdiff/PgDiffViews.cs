@@ -1,11 +1,10 @@
-
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using cz.startnet.utils.pgdiff.schema;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff {
+namespace pgdiff {
 
 
 
@@ -71,8 +70,10 @@ public class PgDiffViews {
 
         if (oldViewColumnNames == null && newViewColumnNames == null) {
             return !oldView.getQuery().Trim().Equals(newView.getQuery().Trim());
-        } else {
-            return !Arrays.Equals(oldViewColumnNames, newViewColumnNames); //todo!
+        }
+        else
+        {
+            return !Enumerable.SequenceEqual(oldViewColumnNames, newViewColumnNames);
         }
     }
 

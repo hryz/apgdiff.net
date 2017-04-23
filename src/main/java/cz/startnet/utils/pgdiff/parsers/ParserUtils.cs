@@ -1,10 +1,9 @@
-
 using System;
 using System.Collections.Generic;
 using System.Text;
-using cz.startnet.utils.pgdiff.schema;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff.parsers {
+namespace pgdiff.parsers {
 
 
 

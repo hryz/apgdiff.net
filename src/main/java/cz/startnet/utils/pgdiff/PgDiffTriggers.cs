@@ -1,8 +1,8 @@
-
 using System.Collections.Generic;
-using cz.startnet.utils.pgdiff.schema;
+using System.IO;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff {
+namespace pgdiff {
 
 
 
@@ -15,7 +15,7 @@ public class PgDiffTriggers {
     public static void createTriggers(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
-        for (PgTable newTable : newSchema.getTables()) {
+        foreach (PgTable newTable in newSchema.getTables()) {
             PgTable oldTable;
 
             if (oldSchema == null) {
@@ -25,7 +25,7 @@ public class PgDiffTriggers {
             }
 
             // Add new triggers
-            for (PgTrigger trigger : getNewTriggers(oldTable, newTable)) {
+            foreach (PgTrigger trigger in getNewTriggers(oldTable, newTable)) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.WriteLine();
                 writer.WriteLine(trigger.getCreationSQL());
@@ -37,7 +37,7 @@ public class PgDiffTriggers {
     public static void dropTriggers(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
-        for (PgTable newTable : newSchema.getTables()) {
+        foreach (PgTable newTable in newSchema.getTables()) {
             PgTable oldTable;
 
             if (oldSchema == null) {
@@ -47,8 +47,7 @@ public class PgDiffTriggers {
             }
 
             // Drop triggers that no more exist or are modified
-            for (PgTrigger trigger :
-                    getDropTriggers(oldTable, newTable)) {
+            foreach (PgTrigger trigger in getDropTriggers(oldTable, newTable)) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.WriteLine();
                 writer.WriteLine(trigger.getDropSQL());
@@ -60,14 +59,14 @@ public class PgDiffTriggers {
     private static List<PgTrigger> getDropTriggers(PgTable oldTable,
             PgTable newTable) {
         
-        List<PgTrigger> list = new ArrayList<PgTrigger>();
+        List<PgTrigger> list = new List<PgTrigger>();
 
         if (newTable != null && oldTable != null) {
             List<PgTrigger> newTriggers = newTable.getTriggers();
 
-            for (PgTrigger oldTrigger : oldTable.getTriggers()) {
-                if (!newTriggers.contains(oldTrigger)) {
-                    list.add(oldTrigger);
+            foreach (PgTrigger oldTrigger in oldTable.getTriggers()) {
+                if (!newTriggers.Contains(oldTrigger)) {
+                    list.Add(oldTrigger);
                 }
             }
         }
@@ -79,15 +78,15 @@ public class PgDiffTriggers {
     private static List<PgTrigger> getNewTriggers(PgTable oldTable,
             PgTable newTable) {
         
-        List<PgTrigger> list = new ArrayList<PgTrigger>();
+        List<PgTrigger> list = new List<PgTrigger>();
 
         if (newTable != null) {
             if (oldTable == null) {
-                list.addAll(newTable.getTriggers());
+                list.AddRange(newTable.getTriggers());
             } else {
-                for (PgTrigger newTrigger : newTable.getTriggers()) {
-                    if (!oldTable.getTriggers().contains(newTrigger)) {
-                        list.add(newTrigger);
+                foreach (PgTrigger newTrigger in newTable.getTriggers()) {
+                    if (!oldTable.getTriggers().Contains(newTrigger)) {
+                        list.Add(newTrigger);
                     }
                 }
             }
@@ -104,14 +103,14 @@ public class PgDiffTriggers {
             return;
         }
 
-        for (PgTable oldTable : oldSchema.getTables()) {
+        foreach (PgTable oldTable in oldSchema.getTables()) {
             PgTable newTable = newSchema.getTable(oldTable.getName());
 
             if (newTable == null) {
                 continue;
             }
 
-            for (PgTrigger oldTrigger : oldTable.getTriggers()) {
+            foreach (PgTrigger oldTrigger in oldTable.getTriggers()) {
                 PgTrigger newTrigger =
                         newTable.getTrigger(oldTrigger.getName());
 

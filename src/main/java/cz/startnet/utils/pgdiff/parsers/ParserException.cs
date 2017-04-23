@@ -1,7 +1,7 @@
 
 using System;
 
-namespace cz.startnet.utils.pgdiff.parsers {
+namespace pgdiff.parsers {
 
 
 public class ParserException : Exception {

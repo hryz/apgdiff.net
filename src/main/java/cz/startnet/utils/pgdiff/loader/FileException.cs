@@ -2,7 +2,7 @@
 
 using System;
 
-namespace cz.startnet.utils.pgdiff.loader {
+namespace pgdiff.loader {
 
 
 public class FileException : Exception {

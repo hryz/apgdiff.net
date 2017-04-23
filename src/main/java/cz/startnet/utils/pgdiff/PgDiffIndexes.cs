@@ -1,9 +1,9 @@
-
 using System;
 using System.Collections.Generic;
-using cz.startnet.utils.pgdiff.schema;
+using System.IO;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff {
+namespace pgdiff {
 
 
 
@@ -16,18 +16,18 @@ public class PgDiffIndexes {
     public static void createIndexes(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
-        for (PgTable newTable : newSchema.getTables()) {
+        foreach (PgTable newTable in newSchema.getTables()) {
             String newTableName = newTable.getName();
 
             // Add new indexes
             if (oldSchema == null) {
-                for (PgIndex index : newTable.getIndexes()) {
+                foreach (PgIndex index in newTable.getIndexes()) {
                     searchPathHelper.outputSearchPath(writer);
                     writer.WriteLine();
                     writer.WriteLine(index.getCreationSQL());
                 }
             } else {
-                for (PgIndex index : getNewIndexes(
+                foreach (PgIndex index in getNewIndexes(
                         oldSchema.getTable(newTableName), newTable)) {
                     searchPathHelper.outputSearchPath(writer);
                     writer.WriteLine();
@@ -41,7 +41,7 @@ public class PgDiffIndexes {
     public static void dropIndexes(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
-        for (PgTable newTable : newSchema.getTables()) {
+        foreach (PgTable newTable in newSchema.getTables()) {
             String newTableName = newTable.getName();
             PgTable oldTable;
 
@@ -52,7 +52,7 @@ public class PgDiffIndexes {
             }
 
             // Drop indexes that do not exist in new schema or are modified
-            for (PgIndex index : getDropIndexes(oldTable, newTable)) {
+            foreach (PgIndex index in getDropIndexes(oldTable, newTable)) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.WriteLine();
                 writer.WriteLine(index.getDropSQL());
@@ -64,13 +64,13 @@ public class PgDiffIndexes {
     private static List<PgIndex> getDropIndexes(PgTable oldTable,
             PgTable newTable) {
         
-        List<PgIndex> list = new ArrayList<PgIndex>();
+        List<PgIndex> list = new List<PgIndex>();
 
         if (newTable != null && oldTable != null) {
-            for (PgIndex index : oldTable.getIndexes()) {
+            foreach (PgIndex index in oldTable.getIndexes()) {
                 if (!newTable.containsIndex(index.getName())
                         || !newTable.getIndex(index.getName()).Equals(index)) {
-                    list.add(index);
+                    list.Add(index);
                 }
             }
         }
@@ -82,19 +82,19 @@ public class PgDiffIndexes {
     private static List<PgIndex> getNewIndexes(PgTable oldTable,
             PgTable newTable) {
         
-        List<PgIndex> list = new ArrayList<PgIndex>();
+        List<PgIndex> list = new List<PgIndex>();
 
         if (newTable != null) {
             if (oldTable == null) {
-                for (PgIndex index : newTable.getIndexes()) {
-                    list.add(index);
+                foreach (PgIndex index in newTable.getIndexes()) {
+                    list.Add(index);
                 }
             } else {
-                for (PgIndex index : newTable.getIndexes()) {
+                foreach (PgIndex index in newTable.getIndexes()) {
                     if (!oldTable.containsIndex(index.getName())
                             || !oldTable.getIndex(index.getName()).
                             Equals(index)) {
-                        list.add(index);
+                        list.Add(index);
                     }
                 }
             }
@@ -111,7 +111,7 @@ public class PgDiffIndexes {
             return;
         }
 
-        for (PgIndex oldIndex : oldSchema.getIndexes()) {
+        foreach (PgIndex oldIndex in oldSchema.getIndexes()) {
             PgIndex newIndex = newSchema.getIndex(oldIndex.getName());
 
             if (newIndex == null) {

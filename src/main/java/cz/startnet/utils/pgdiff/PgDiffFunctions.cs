@@ -1,7 +1,7 @@
+using System.IO;
+using pgdiff.schema;
 
-using cz.startnet.utils.pgdiff.schema;
-
-namespace cz.startnet.utils.pgdiff {
+namespace pgdiff {
 
 
 
@@ -13,7 +13,7 @@ public class PgDiffFunctions {
             PgDiffArguments arguments, PgSchema oldSchema,
             PgSchema newSchema, SearchPathHelper searchPathHelper) {
         // Add new functions and replace modified functions
-        for (PgFunction newFunction : newSchema.getFunctions()) {
+        foreach (PgFunction newFunction in newSchema.getFunctions()) {
             PgFunction oldFunction;
 
             if (oldSchema == null) {
@@ -40,7 +40,7 @@ public class PgDiffFunctions {
         }
 
         // Drop functions that exist no more
-        for (PgFunction oldFunction : oldSchema.getFunctions()) {
+        foreach (PgFunction oldFunction in oldSchema.getFunctions()) {
             if (!newSchema.containsFunction(oldFunction.getSignature())) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.WriteLine();
@@ -57,7 +57,7 @@ public class PgDiffFunctions {
             return;
         }
 
-        for (PgFunction oldfunction : oldSchema.getFunctions()) {
+        foreach (PgFunction oldfunction in oldSchema.getFunctions()) {
             PgFunction newFunction =
                     newSchema.getFunction(oldfunction.getSignature());
 
@@ -79,8 +79,7 @@ public class PgDiffFunctions {
 
                 bool addComma = false;
 
-                for (PgFunction.Argument argument :
-                        newFunction.getArguments()) {
+                foreach (PgFunction.Argument argument in newFunction.getArguments()) {
                     if (addComma) {
                         writer.Write(", ");
                     } else {
@@ -103,8 +102,7 @@ public class PgDiffFunctions {
 
                 bool addComma = false;
 
-                for (PgFunction.Argument argument :
-                        newFunction.getArguments()) {
+                foreach (PgFunction.Argument argument in newFunction.getArguments()) {
                     if (addComma) {
                         writer.Write(", ");
                     } else {

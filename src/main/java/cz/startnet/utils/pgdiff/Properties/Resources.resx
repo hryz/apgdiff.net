@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CannotFindColumnInTable" xml:space="preserve">
+    <value>Cannot find column '{0}' in table '{1}'</value>
+  </data>
+  <data name="CannotFindObject" xml:space="preserve">
+    <value>Cannot find object '{0}' for statement '{1}'.</value>
+  </data>
+  <data name="CannotFindSchema" xml:space="preserve">
+    <value>Cannot find schema '{0}' for statement '{1}'. Missing CREATE SCHEMA statement?</value>
+  </data>
+  <data name="CannotFindSequence" xml:space="preserve">
+    <value>Cannot find sequence '{0}' for statement '{1}'. Missing CREATE SEQUENCE?</value>
+  </data>
+  <data name="CannotFindTable" xml:space="preserve">
+    <value>Cannot find table '{0}' for statement '{1}'. Missing CREATE TABLE?</value>
+  </data>
+  <data name="CannotFindTableColumn" xml:space="preserve">
+    <value>Cannot find column '{0}' in table '{1}' for statement '{2}'.</value>
+  </data>
+  <data name="CannotFindView" xml:space="preserve">
+    <value>Cannot find view '{0}' for statement '{1}'. Missing CREATE VIEW statement?</value>
+  </data>
+  <data name="CannotParseStringExpectedDataType" xml:space="preserve">
+    <value>Cannot parse string: {0}\nExpected data type definition at position {1} '{2}'</value>
+  </data>
+  <data name="CannotParseStringExpectedExpression" xml:space="preserve">
+    <value>Cannot parse string: {0}\nExpected expression at position {1} '{2}'</value>
+  </data>
+  <data name="CannotParseStringExpectedInteger" xml:space="preserve">
+    <value>Cannot parse string: {0}\nExpected integer at position {1} '{2}'</value>
+  </data>
+  <data name="CannotParseStringExpectedString" xml:space="preserve">
+    <value>Cannot parse string: {0}\nExpected string at position {1}</value>
+  </data>
+  <data name="CannotParseStringExpectedWord" xml:space="preserve">
+    <value>Cannot parse string: {0}\nExpected {1} at position {2} '{3}'</value>
+  </data>
+  <data name="CannotParseStringUnsupportedCommand" xml:space="preserve">
+    <value>Cannot parse string: {0}\nUnsupported command at position {1} '{2}'</value>
+  </data>
+  <data name="CannotReadFile" xml:space="preserve">
+    <value>Cannot read file</value>
+  </data>
+  <data name="EndOfStatementNotFound" xml:space="preserve">
+    <value>Cannot find ending semicolon of statement: {0}</value>
+  </data>
+  <data name="ErrorUnknownOption" xml:space="preserve">
+    <value>ERROR: Unknown option</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>File '{0}' not found</value>
+  </data>
+  <data name="NewDatabaseIgnoredStatements" xml:space="preserve">
+    <value>New database ignored statements</value>
+  </data>
+  <data name="OriginalDatabaseIgnoredStatements" xml:space="preserve">
+    <value>Original database ignored statements</value>
+  </data>
+  <data name="TypeParameterChange" xml:space="preserve">
+    <value>TYPE change - table: {0} original: {1} new: {2}</value>
+  </data>
+  <data name="UnsupportedEncoding" xml:space="preserve">
+    <value>Unsupported encoding</value>
+  </data>
+  <data name="UsageHelp" xml:space="preserve">
+    <value>Usage: apgdiff [options] &lt;old_dump&gt; &lt;new_dump&gt;
+
+Options:
+
+--version:
+	displays apgdiff version
+
+--add-defaults:
+	adds DEFAULT ... in case new column has NOT NULL constraint but no default
+	value (the default value is dropped later)
+
+--add-transaction:
+	adds START TRANSACTION and COMMIT TRANSACTION to the generated diff file
+
+--ignore-function-whitespace:
+	ignores multiple spaces and new lines when comparing content of functions
+	- WARNING: this may cause functions to appear to be same in cases they are
+	not, so use this feature only if you know what you are doing
+
+--ignore-start-with:
+	ignores START WITH modifications on SEQUENCEs (default is not to ignore
+	these changes)
+
+--in-charset-name &lt;charset&gt;:
+	charset that should be used for reading input files (standard charset name
+	supported by Java, default is UTF-8)
+
+--out-charset-name &lt;charset&gt;:
+	charset that should be used for writing output (standard charset name
+	supported by Java, default is UTF-8)
+
+--output-ignored-statements:
+	outputs information about DDL statements that apgdiff ignores at this
+	moment (it will not output any SELECT, INSERT, UPDATE and/or DELETE
+	statements)
+
+--ignore-slony-triggers:
+	when parsing SQL statements, ignores Slony triggers named _slony_logtrigger
+	and _slony_denyaccess
+
+--list-charsets
+	lists all supported charsets</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="VersionNumber" xml:space="preserve">
+    <value>2.4</value>
+  </data>
+  <data name="WarningUnableToDetermineStorageType" xml:space="preserve">
+    <value>WARNING: Column {0} in new table has no STORAGE set but in old table storage was set. Unable to determine STORAGE type.</value>
+  </data>
+</root>

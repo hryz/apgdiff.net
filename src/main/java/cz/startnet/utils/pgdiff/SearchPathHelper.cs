@@ -1,8 +1,7 @@
-
 using System;
 using System.IO;
 
-namespace cz.startnet.utils.pgdiff {
+namespace pgdiff {
 
 
 

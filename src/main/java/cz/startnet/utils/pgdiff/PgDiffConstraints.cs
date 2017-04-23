@@ -1,8 +1,8 @@
-
 using System.Collections.Generic;
-using cz.startnet.utils.pgdiff.schema;
+using System.IO;
+using pgdiff.schema;
 
-namespace cz.startnet.utils.pgdiff {
+namespace pgdiff {
 
 
 
@@ -15,7 +15,7 @@ public class PgDiffConstraints {
     public static void createConstraints(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             bool primaryKey, SearchPathHelper searchPathHelper) {
-        for (PgTable newTable : newSchema.getTables()) {
+        foreach (PgTable newTable in newSchema.getTables()) {
             PgTable oldTable;
 
             if (oldSchema == null) {
@@ -25,8 +25,7 @@ public class PgDiffConstraints {
             }
 
             // Add new constraints
-            for (PgConstraint constraint :
-                    getNewConstraints(oldTable, newTable, primaryKey)) {
+            foreach (PgConstraint constraint in getNewConstraints(oldTable, newTable, primaryKey)) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.WriteLine();
                 writer.WriteLine(constraint.getCreationSQL());
@@ -37,7 +36,7 @@ public class PgDiffConstraints {
     public static void dropConstraints(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             bool primaryKey, SearchPathHelper searchPathHelper) {
-        for (PgTable newTable : newSchema.getTables()) {
+        foreach (PgTable newTable in newSchema.getTables()) {
             PgTable oldTable;
 
             if (oldSchema == null) {
@@ -47,8 +46,7 @@ public class PgDiffConstraints {
             }
 
             // Drop constraints that no more exist or are modified
-            for (PgConstraint constraint :
-                    getDropConstraints(oldTable, newTable, primaryKey)) {
+            foreach (PgConstraint constraint in getDropConstraints(oldTable, newTable, primaryKey)) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.WriteLine();
                 writer.WriteLine(constraint.getDropSQL());
@@ -60,15 +58,15 @@ public class PgDiffConstraints {
     private static List<PgConstraint> getDropConstraints(PgTable oldTable,
             PgTable newTable, bool primaryKey) {
         
-        List<PgConstraint> list = new ArrayList<PgConstraint>();
+        List<PgConstraint> list = new List<PgConstraint>();
 
         if (newTable != null && oldTable != null) {
-            for (PgConstraint constraint : oldTable.getConstraints()) {
+            foreach (PgConstraint constraint in oldTable.getConstraints()) {
                 if (constraint.isPrimaryKeyConstraint() == primaryKey
                         && (!newTable.containsConstraint(constraint.getName())
                         || !newTable.getConstraint(constraint.getName()).Equals(
                         constraint))) {
-                    list.add(constraint);
+                    list.Add(constraint);
                 }
             }
         }
@@ -80,25 +78,23 @@ public class PgDiffConstraints {
     private static List<PgConstraint> getNewConstraints(PgTable oldTable,
             PgTable newTable, bool primaryKey) {
         
-        List<PgConstraint> list = new ArrayList<PgConstraint>();
+        List<PgConstraint> list = new List<PgConstraint>();
 
         if (newTable != null) {
             if (oldTable == null) {
-                for (PgConstraint constraint :
-                        newTable.getConstraints()) {
+                foreach (PgConstraint constraint in newTable.getConstraints()) {
                     if (constraint.isPrimaryKeyConstraint() == primaryKey) {
-                        list.add(constraint);
+                        list.Add(constraint);
                     }
                 }
             } else {
-                for (PgConstraint constraint :
-                        newTable.getConstraints()) {
+                foreach (PgConstraint constraint in newTable.getConstraints()) {
                     if ((constraint.isPrimaryKeyConstraint() == primaryKey)
                             && (!oldTable.containsConstraint(
                             constraint.getName())
                             || !oldTable.getConstraint(constraint.getName()).
                             Equals(constraint))) {
-                        list.add(constraint);
+                        list.Add(constraint);
                     }
                 }
             }
@@ -115,14 +111,14 @@ public class PgDiffConstraints {
             return;
         }
 
-        for (PgTable oldTable : oldSchema.getTables()) {
+        foreach (PgTable oldTable in oldSchema.getTables()) {
             PgTable newTable = newSchema.getTable(oldTable.getName());
 
             if (newTable == null) {
                 continue;
             }
 
-            for (PgConstraint oldConstraint : oldTable.getConstraints()) {
+            foreach (PgConstraint oldConstraint in  oldTable.getConstraints()) {
                 PgConstraint newConstraint =
                         newTable.getConstraint(oldConstraint.getName());
 
