@@ -1,6 +1,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using cz.startnet.utils.pgdiff.schema;
 
 namespace cz.startnet.utils.pgdiff {
@@ -14,36 +16,36 @@ namespace cz.startnet.utils.pgdiff {
 public class PgDiffViews {
 
     
-    public static void createViews(PrintWriter writer,
+    public static void createViews(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
-        for (PgView newView : newSchema.getViews()) {
+        foreach (PgView newView in newSchema.getViews()) {
             if (oldSchema == null
                     || !oldSchema.containsView(newView.getName())
                     || isViewModified(
                     oldSchema.getView(newView.getName()), newView)) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(newView.getCreationSQL());
+                writer.WriteLine();
+                writer.WriteLine(newView.getCreationSQL());
             }
         }
     }
 
     
-    public static void dropViews(PrintWriter writer,
+    public static void dropViews(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        for (PgView oldView : oldSchema.getViews()) {
+        foreach (PgView oldView in oldSchema.getViews()) {
             PgView newView = newSchema.getView(oldView.getName());
 
             if (newView == null || isViewModified(oldView, newView)) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(oldView.getDropSQL());
+                writer.WriteLine();
+                writer.WriteLine(oldView.getDropSQL());
             }
         }
     }
@@ -53,40 +55,36 @@ public class PgDiffViews {
             PgView newView) {
         String[] oldViewColumnNames;
 
-        if (oldView.getColumnNames() == null
-                || oldView.getColumnNames().isEmpty()) {
+        if (oldView.getColumnNames() == null|| oldView.getColumnNames().Count == 0) {
             oldViewColumnNames = null;
         } else {
-            oldViewColumnNames = oldView.getColumnNames().toArray(
-                    new String[oldView.getColumnNames().size()]);
+            oldViewColumnNames = oldView.getColumnNames().ToArray();
         }
 
         String[] newViewColumnNames;
 
-        if (newView.getColumnNames() == null
-                || newView.getColumnNames().isEmpty()) {
+        if (newView.getColumnNames() == null || newView.getColumnNames().Count == 0) {
             newViewColumnNames = null;
         } else {
-            newViewColumnNames = newView.getColumnNames().toArray(
-                    new String[newView.getColumnNames().size()]);
+            newViewColumnNames = newView.getColumnNames().ToArray();
         }
 
         if (oldViewColumnNames == null && newViewColumnNames == null) {
-            return !oldView.getQuery().trim().equals(newView.getQuery().trim());
+            return !oldView.getQuery().Trim().Equals(newView.getQuery().Trim());
         } else {
-            return !Arrays.equals(oldViewColumnNames, newViewColumnNames);
+            return !Arrays.equals(oldViewColumnNames, newViewColumnNames); //todo!
         }
     }
 
     
-    public static void alterViews(PrintWriter writer,
+    public static void alterViews(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        for (PgView oldView : oldSchema.getViews()) {
+        foreach (PgView oldView in oldSchema.getViews()) {
             PgView newView = newSchema.getView(oldView.getName());
 
             if (newView == null) {
@@ -99,55 +97,50 @@ public class PgDiffViews {
                     && newView.getComment() != null
                     || oldView.getComment() != null
                     && newView.getComment() != null
-                    && !oldView.getComment().equals(
+                    && !oldView.getComment().Equals(
                     newView.getComment())) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("COMMENT ON VIEW ");
-                writer.print(
+                writer.WriteLine();
+                writer.Write("COMMENT ON VIEW ");
+                writer.Write(
                         PgDiffUtils.getQuotedName(newView.getName()));
-                writer.print(" IS ");
-                writer.print(newView.getComment());
-                writer.println(';');
+                writer.Write(" IS ");
+                writer.Write(newView.getComment());
+                writer.WriteLine(';');
             } else if (oldView.getComment() != null
                     && newView.getComment() == null) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("COMMENT ON VIEW ");
-                writer.print(PgDiffUtils.getQuotedName(newView.getName()));
-                writer.println(" IS NULL;");
+                writer.WriteLine();
+                writer.Write("COMMENT ON VIEW ");
+                writer.Write(PgDiffUtils.getQuotedName(newView.getName()));
+                writer.WriteLine(" IS NULL;");
             }
 
-            List<String> columnNames =
-                    new ArrayList<String>(newView.getColumnComments().size());
+            List<String> columnNames = new List<string>();
 
-            for (PgView.ColumnComment columnComment :
-                    newView.getColumnComments()) {
-                columnNames.add(columnComment.getColumnName());
+            foreach (PgView.ColumnComment columnComment in newView.getColumnComments()) {
+                columnNames.Add(columnComment.getColumnName());
             }
 
-            for (PgView.ColumnComment columnComment :
-                    oldView.getColumnComments()) {
-                if (!columnNames.contains(columnComment.getColumnName())) {
-                    columnNames.add(columnComment.getColumnName());
+            foreach (PgView.ColumnComment columnComment in oldView.getColumnComments()) {
+                if (!columnNames.Contains(columnComment.getColumnName())) {
+                    columnNames.Add(columnComment.getColumnName());
                 }
             }
 
-            for (String columnName : columnNames) {
+            foreach (String columnName in columnNames) {
                 PgView.ColumnComment oldColumnComment = null;
                 PgView.ColumnComment newColumnComment = null;
 
-                for (PgView.ColumnComment columnComment :
-                        oldView.getColumnComments()) {
-                    if (columnName.equals(columnComment.getColumnName())) {
+                foreach (PgView.ColumnComment columnComment in oldView.getColumnComments()) {
+                    if (columnName.Equals(columnComment.getColumnName())) {
                         oldColumnComment = columnComment;
                         break;
                     }
                 }
 
-                for (PgView.ColumnComment columnComment :
-                        newView.getColumnComments()) {
-                    if (columnName.equals(columnComment.getColumnName())) {
+                foreach (PgView.ColumnComment columnComment in newView.getColumnComments()) {
+                    if (columnName.Equals(columnComment.getColumnName())) {
                         newColumnComment = columnComment;
                         break;
                     }
@@ -183,7 +176,7 @@ public class PgDiffViews {
     }
 
     
-    private static void diffDefaultValues(PrintWriter writer,
+    private static void diffDefaultValues(TextWriter writer,
             PgView oldView, PgView newView,
             SearchPathHelper searchPathHelper) {
         List<PgView.DefaultValue> oldValues =

@@ -1,5 +1,6 @@
 
 using System;
+using System.Globalization;
 
 namespace cz.startnet.utils.pgdiff {
 
@@ -469,14 +470,14 @@ public class PgDiffUtils {
     
     public static String getQuotedName(String name,
             bool excludeKeywords) {
-        if (name.indexOf('-') != -1 || name.indexOf('.') != -1) {
+        if (name.IndexOf('-') != -1 || name.IndexOf('.') != -1) {
             return '"' + name + '"';
         }
 
-        for (int i = 0; i < name.length(); i++) {
-            char chr = name.charAt(i);
+        for (int i = 0; i < name.Length; i++) {
+            char chr = name[i];
 
-            if (Character.isUpperCase(chr)) {
+            if (Char.IsUpper(chr)) {
                 return '"' + name + '"';
             }
         }
@@ -485,10 +486,10 @@ public class PgDiffUtils {
             return name;
         }
 
-        String upperName = name.toUpperCase(Locale.ENGLISH);
+        String upperName = name.ToUpper();
 
-        for (String keyword : KEYWORDS) {
-            if (keyword.equals(upperName)) {
+        foreach (String keyword in KEYWORDS) {
+            if (keyword.Equals(upperName)) {
                 return '"' + name + '"';
             }
         }

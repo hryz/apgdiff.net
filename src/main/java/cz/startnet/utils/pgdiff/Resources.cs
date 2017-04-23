@@ -9,8 +9,7 @@ namespace cz.startnet.utils.pgdiff {
 public class Resources {
 
     
-    private static ResourceBundle RESOURCE_BUNDLE =
-            ResourceBundle.getBundle("cz/startnet/utils/pgdiff/Resources");
+    private static ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("cz/startnet/utils/pgdiff/Resources");
 
     
     public static String getString(String key) {

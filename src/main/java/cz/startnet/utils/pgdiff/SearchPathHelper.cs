@@ -1,5 +1,6 @@
 
 using System;
+using System.IO;
 
 namespace cz.startnet.utils.pgdiff {
 
@@ -19,10 +20,10 @@ public class SearchPathHelper {
     }
 
     
-    public void outputSearchPath(PrintWriter writer) {
-        if (!wasOutput && searchPath != null && !searchPath.isEmpty()) {
-            writer.println();
-            writer.println(searchPath);
+    public void outputSearchPath(TextWriter writer) {
+        if (!wasOutput && searchPath != null && ! String.IsNullOrEmpty(searchPath)) {
+            writer.WriteLine();
+            writer.WriteLine(searchPath);
             wasOutput = true;
         }
     }
