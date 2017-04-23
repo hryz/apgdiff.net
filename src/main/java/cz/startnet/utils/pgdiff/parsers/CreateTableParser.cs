@@ -1,8 +1,4 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff.parsers;
 
 import cz.startnet.utils.pgdiff.Resources;
@@ -13,19 +9,10 @@ import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgTable;
 import java.text.MessageFormat;
 
-/**
- * Parses CREATE TABLE statements.
- *
- * @author fordfrog
- */
+
 public class CreateTableParser {
 
-    /**
-     * Parses CREATE TABLE statement.
-     *
-     * @param database  database
-     * @param statement CREATE TABLE statement
-     */
+    
     public static void parse(final PgDatabase database,
             final String statement) {
         final Parser parser = new Parser(statement);
@@ -86,12 +73,7 @@ public class CreateTableParser {
         }
     }
 
-    /**
-     * Parses INHERITS.
-     *
-     * @param parser parser
-     * @param table  pg table
-     */
+    
     private static void parseInherits(final Parser parser,
             final PgTable table) {
         parser.expect("(");
@@ -108,12 +90,7 @@ public class CreateTableParser {
         }
     }
 
-    /**
-     * Parses CONSTRAINT definition.
-     *
-     * @param parser parser
-     * @param table  table
-     */
+    
     private static void parseConstraint(final Parser parser,
             final PgTable table) {
         final PgConstraint constraint = new PgConstraint(
@@ -123,12 +100,7 @@ public class CreateTableParser {
         constraint.setTableName(table.getName());
     }
 
-    /**
-     * Parses column definition.
-     *
-     * @param parser parser
-     * @param table  table
-     */
+    
     private static void parseColumn(final Parser parser, final PgTable table) {
         final PgColumn column = new PgColumn(
                 ParserUtils.getObjectName(parser.parseIdentifier()));
@@ -136,9 +108,7 @@ public class CreateTableParser {
         column.parseDefinition(parser.getExpression());
     }
 
-    /**
-     * Creates a new instance of CreateTableParser.
-     */
+    
     private CreateTableParser() {
     }
 }

@@ -1,8 +1,4 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff.parsers;
 
 import cz.startnet.utils.pgdiff.Resources;
@@ -11,21 +7,10 @@ import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgView;
 import java.text.MessageFormat;
 
-/**
- * Parses ALTER VIEW statements.
- *
- * @author fordfrog
- */
+
 public class AlterViewParser {
 
-    /**
-     * Parses ALTER VIEW statement.
-     *
-     * @param database                database
-     * @param statement               ALTER VIEW statement
-     * @param outputIgnoredStatements whether ignored statements should be
-     *                                output in the diff
-     */
+    
     public static void parse(final PgDatabase database,
             final String statement, final boolean outputIgnoredStatements) {
         final Parser parser = new Parser(statement);
@@ -79,9 +64,7 @@ public class AlterViewParser {
         }
     }
 
-    /**
-     * Creates new instance of AlterViewParser.
-     */
+    
     private AlterViewParser() {
     }
 }

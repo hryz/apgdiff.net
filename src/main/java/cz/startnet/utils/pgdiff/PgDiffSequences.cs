@@ -1,29 +1,14 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff;
 
 import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgSequence;
 import java.io.PrintWriter;
 
-/**
- * Diffs sequences.
- *
- * @author fordfrog
- */
+
 public class PgDiffSequences {
 
-    /**
-     * Outputs statements for creation of new sequences.
-     *
-     * @param writer           writer the output should be written to
-     * @param oldSchema        original schema
-     * @param newSchema        new schema
-     * @param searchPathHelper search path helper
-     */
+    
     public static void createSequences(final PrintWriter writer,
             final PgSchema oldSchema, final PgSchema newSchema,
             final SearchPathHelper searchPathHelper) {
@@ -38,14 +23,7 @@ public class PgDiffSequences {
         }
     }
 
-    /**
-     * Outputs statements for altering of new sequences.
-     *
-     * @param writer           writer the output should be written to
-     * @param oldSchema        original schema
-     * @param newSchema        new schema
-     * @param searchPathHelper search path helper
-     */
+    
     public static void alterCreatedSequences(final PrintWriter writer,
             final PgSchema oldSchema, final PgSchema newSchema,
             final SearchPathHelper searchPathHelper) {
@@ -62,14 +40,7 @@ public class PgDiffSequences {
         }
     }
 
-    /**
-     * Outputs statements for dropping of sequences that do not exist anymore.
-     *
-     * @param writer           writer the output should be written to
-     * @param oldSchema        original schema
-     * @param newSchema        new schema
-     * @param searchPathHelper search path helper
-     */
+    
     public static void dropSequences(final PrintWriter writer,
             final PgSchema oldSchema, final PgSchema newSchema,
             final SearchPathHelper searchPathHelper) {
@@ -87,15 +58,7 @@ public class PgDiffSequences {
         }
     }
 
-    /**
-     * Outputs statement for modified sequences.
-     *
-     * @param writer           writer the output should be written to
-     * @param arguments        object containing arguments settings
-     * @param oldSchema        original schema
-     * @param newSchema        new schema
-     * @param searchPathHelper search path helper
-     */
+    
     public static void alterSequences(final PrintWriter writer,
             final PgDiffArguments arguments, final PgSchema oldSchema,
             final PgSchema newSchema, final SearchPathHelper searchPathHelper) {
@@ -214,9 +177,7 @@ public class PgDiffSequences {
         }
     }
 
-    /**
-     * Creates a new instance of PgDiffSequences.
-     */
+    
     private PgDiffSequences() {
     }
 }

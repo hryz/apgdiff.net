@@ -1,8 +1,4 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff.parsers;
 
 import cz.startnet.utils.pgdiff.Resources;
@@ -11,19 +7,10 @@ import cz.startnet.utils.pgdiff.schema.PgFunction;
 import cz.startnet.utils.pgdiff.schema.PgSchema;
 import java.text.MessageFormat;
 
-/**
- * Parses CREATE FUNCTION and CREATE OR REPLACE FUNCTION statements.
- *
- * @author fordfrog
- */
+
 public class CreateFunctionParser {
 
-    /**
-     * Parses CREATE FUNCTION and CREATE OR REPLACE FUNCTION statement.
-     *
-     * @param database  database
-     * @param statement CREATE FUNCTION statement
-     */
+    
     public static void parse(final PgDatabase database,
             final String statement) {
         final Parser parser = new Parser(statement);
@@ -106,9 +93,7 @@ public class CreateFunctionParser {
         function.setBody(parser.getRest());
     }
 
-    /**
-     * Creates a new instance of CreateFunctionParser.
-     */
+    
     private CreateFunctionParser() {
     }
 }

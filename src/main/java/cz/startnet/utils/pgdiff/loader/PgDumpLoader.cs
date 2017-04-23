@@ -1,8 +1,4 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff.loader;
 
 import cz.startnet.utils.pgdiff.Resources;
@@ -29,125 +25,75 @@ import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Loads PostgreSQL dump into classes.
- *
- * @author fordfrog
- */
+
 public class PgDumpLoader { //NOPMD
 
-    /**
-     * Pattern for testing whether it is CREATE SCHEMA statement.
-     */
+    
     private static final Pattern PATTERN_CREATE_SCHEMA = Pattern.compile(
             "^CREATE[\\s]+SCHEMA[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for parsing default schema (search_path).
-     */
+
     private static final Pattern PATTERN_DEFAULT_SCHEMA = Pattern.compile(
             "^SET[\\s]+search_path[\\s]*=[\\s]*\"?([^,\\s\"]+)\"?"
             + "(?:,[\\s]+.*)?;$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is CREATE TABLE statement.
-     */
+    
     private static final Pattern PATTERN_CREATE_TABLE = Pattern.compile(
             "^CREATE[\\s]+TABLE[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is CREATE VIEW statement.
-     */
+    
     private static final Pattern PATTERN_CREATE_VIEW = Pattern.compile(
             "^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?VIEW[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is ALTER TABLE statement.
-     */
+    
     private static final Pattern PATTERN_ALTER_TABLE =
             Pattern.compile("^ALTER[\\s]+TABLE[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is CREATE SEQUENCE statement.
-     */
+    
     private static final Pattern PATTERN_CREATE_SEQUENCE = Pattern.compile(
             "^CREATE[\\s]+SEQUENCE[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is ALTER SEQUENCE statement.
-     */
+    
     private static final Pattern PATTERN_ALTER_SEQUENCE =
             Pattern.compile("^ALTER[\\s]+SEQUENCE[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is CREATE INDEX statement.
-     */
+    
     private static final Pattern PATTERN_CREATE_INDEX = Pattern.compile(
             "^CREATE[\\s]+(?:UNIQUE[\\s]+)?INDEX[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is SELECT statement.
-     */
+    
     private static final Pattern PATTERN_SELECT = Pattern.compile(
             "^SELECT[\\s]+.*$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is INSERT INTO statement.
-     */
+    
     private static final Pattern PATTERN_INSERT_INTO = Pattern.compile(
             "^INSERT[\\s]+INTO[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is UPDATE statement.
-     */
+    
     private static final Pattern PATTERN_UPDATE = Pattern.compile(
             "^UPDATE[\\s].*$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is DELETE FROM statement.
-     */
+    
     private static final Pattern PATTERN_DELETE_FROM = Pattern.compile(
             "^DELETE[\\s]+FROM[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is CREATE TRIGGER statement.
-     */
+    
     private static final Pattern PATTERN_CREATE_TRIGGER = Pattern.compile(
             "^CREATE[\\s]+TRIGGER[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is CREATE FUNCTION or CREATE OR REPLACE
-     * FUNCTION statement.
-     */
+    
     private static final Pattern PATTERN_CREATE_FUNCTION = Pattern.compile(
             "^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?FUNCTION[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is ALTER VIEW statement.
-     */
+    
     private static final Pattern PATTERN_ALTER_VIEW = Pattern.compile(
             "^ALTER[\\s]+VIEW[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Pattern for testing whether it is COMMENT statement.
-     */
+    
     private static final Pattern PATTERN_COMMENT = Pattern.compile(
             "^COMMENT[\\s]+ON[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    /**
-     * Storage of unprocessed line part.
-     */
+    
     private static String lineBuffer;
 
-    /**
-     * Loads database schema from dump file.
-     *
-     * @param inputStream             input stream that should be read
-     * @param charsetName             charset that should be used to read the
-     *                                file
-     * @param outputIgnoredStatements whether ignored statements should be
-     *                                included in the output
-     * @param ignoreSlonyTriggers     whether Slony triggers should be ignored
-     *
-     * @return database schema from dump file
-     */
+    
     public static PgDatabase loadDatabaseSchema(final InputStream inputStream,
             final String charsetName, final boolean outputIgnoredStatements,
             final boolean ignoreSlonyTriggers) {
@@ -217,18 +163,7 @@ public class PgDumpLoader { //NOPMD
         return database;
     }
 
-    /**
-     * Loads database schema from dump file.
-     *
-     * @param file                    name of file containing the dump
-     * @param charsetName             charset that should be used to read the
-     *                                file
-     * @param outputIgnoredStatements whether ignored statements should be
-     *                                included in the output
-     * @param ignoreSlonyTriggers     whether Slony triggers should be ignored
-     *
-     * @return database schema from dump file
-     */
+    
     public static PgDatabase loadDatabaseSchema(final String file,
             final String charsetName, final boolean outputIgnoredStatements,
             final boolean ignoreSlonyTriggers) {
@@ -241,13 +176,7 @@ public class PgDumpLoader { //NOPMD
         }
     }
 
-    /**
-     * Reads whole statement from the reader into single-line string.
-     *
-     * @param reader reader to be read
-     *
-     * @return whole statement from the reader into single-line string
-     */
+
     private static String getWholeStatement(final BufferedReader reader) {
         final StringBuilder sbStatement = new StringBuilder(1024);
 
@@ -306,11 +235,7 @@ public class PgDumpLoader { //NOPMD
         }
     }
 
-    /**
-     * Strips comment from statement line.
-     *
-     * @param sbStatement string builder containing statement
-     */
+    
     private static void stripComment(final StringBuilder sbStatement) {
         int pos = sbStatement.indexOf("--");
 
@@ -331,15 +256,7 @@ public class PgDumpLoader { //NOPMD
         }
     }
 
-    /**
-     * Checks whether specified position in the string builder is quoted. It
-     * might be quoted either by single quote or by dollar sign quoting.
-     *
-     * @param sbString string builder
-     * @param pos      position to be checked
-     *
-     * @return true if the specified position is quoted, otherwise false
-     */
+    
     @SuppressWarnings("AssignmentToForLoopParameter")
     private static boolean isQuoted(final StringBuilder sbString,
             final int pos) {
@@ -376,9 +293,7 @@ public class PgDumpLoader { //NOPMD
         return isQuoted;
     }
 
-    /**
-     * Creates a new instance of PgDumpLoader.
-     */
+    
     private PgDumpLoader() {
     }
 }

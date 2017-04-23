@@ -1,8 +1,4 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff.parsers;
 
 import cz.startnet.utils.pgdiff.Resources;
@@ -13,19 +9,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Parses CREATE VIEW statements.
- *
- * @author fordfrog
- */
+
 public class CreateViewParser {
 
-    /**
-     * Parses CREATE VIEW statement.
-     *
-     * @param database  database
-     * @param statement CREATE VIEW statement
-     */
+    
     public static void parse(final PgDatabase database,
             final String statement) {
         final Parser parser = new Parser(statement);
@@ -66,9 +53,7 @@ public class CreateViewParser {
         schema.addView(view);
     }
 
-    /**
-     * Creates a new instance of CreateViewParser.
-     */
+    
     private CreateViewParser() {
     }
 }

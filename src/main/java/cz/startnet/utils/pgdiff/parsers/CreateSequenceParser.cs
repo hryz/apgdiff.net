@@ -1,8 +1,4 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff.parsers;
 
 import cz.startnet.utils.pgdiff.Resources;
@@ -11,19 +7,10 @@ import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgSequence;
 import java.text.MessageFormat;
 
-/**
- * Parses CREATE SEQUENCE statements.
- *
- * @author fordfrog
- */
+
 public class CreateSequenceParser {
 
-    /**
-     * Parses CREATE SEQUENCE statement.
-     *
-     * @param database  database
-     * @param statement CREATE SEQUENCE statement
-     */
+    
     public static void parse(final PgDatabase database,
             final String statement) {
         final Parser parser = new Parser(statement);
@@ -82,9 +69,7 @@ public class CreateSequenceParser {
         }
     }
 
-    /**
-     * Creates a new instance of CreateSequenceParser.
-     */
+    
     private CreateSequenceParser() {
     }
 }

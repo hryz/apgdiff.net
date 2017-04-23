@@ -1,27 +1,12 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff.schema;
 
 import java.util.Locale;
 
-/**
- * Utilities for {@link PgColumn}.
- *
- * @author fordfrog
- */
+
 public class PgColumnUtils {
 
-    /**
-     * Returns default value for given column type. If no default value is
-     * specified then null is returned.
-     *
-     * @param type column type
-     *
-     * @return found default value or null
-     */
+    
     public static String getDefaultValue(final String type) {
         final String defaultValue;
         final String adjType = type.toLowerCase(Locale.ENGLISH);
@@ -55,9 +40,7 @@ public class PgColumnUtils {
         return defaultValue;
     }
 
-    /**
-     * Creates a new PgColumnUtils object.
-     */
+    
     private PgColumnUtils() {
     }
 }

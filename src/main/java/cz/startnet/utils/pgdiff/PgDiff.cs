@@ -1,8 +1,4 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff;
 
 import cz.startnet.utils.pgdiff.loader.PgDumpLoader;
@@ -11,19 +7,10 @@ import cz.startnet.utils.pgdiff.schema.PgSchema;
 import java.io.InputStream;
 import java.io.PrintWriter;
 
-/**
- * Creates diff of two database schemas.
- *
- * @author fordfrog
- */
+
 public class PgDiff {
 
-    /**
-     * Creates diff on the two database schemas.
-     *
-     * @param writer    writer the output should be written to
-     * @param arguments object containing arguments settings
-     */
+    
     public static void createDiff(final PrintWriter writer,
             final PgDiffArguments arguments) {
         final PgDatabase oldDatabase = PgDumpLoader.loadDatabaseSchema(
@@ -38,16 +25,7 @@ public class PgDiff {
         diffDatabaseSchemas(writer, arguments, oldDatabase, newDatabase);
     }
 
-    /**
-     * Creates diff on the two database schemas.
-     *
-     * @param writer         writer the output should be written to
-     * @param arguments      object containing arguments settings
-     * @param oldInputStream input stream of file containing dump of the
-     *                       original schema
-     * @param newInputStream input stream of file containing dump of the new
-     *                       schema
-     */
+    
     public static void createDiff(final PrintWriter writer,
             final PgDiffArguments arguments, final InputStream oldInputStream,
             final InputStream newInputStream) {
@@ -63,13 +41,7 @@ public class PgDiff {
         diffDatabaseSchemas(writer, arguments, oldDatabase, newDatabase);
     }
 
-    /**
-     * Creates new schemas (not the objects inside the schemas).
-     *
-     * @param writer      writer the output should be written to
-     * @param oldDatabase original database schema
-     * @param newDatabase new database schema
-     */
+    
     private static void createNewSchemas(final PrintWriter writer,
             final PgDatabase oldDatabase, final PgDatabase newDatabase) {
         for (final PgSchema newSchema : newDatabase.getSchemas()) {
@@ -80,14 +52,7 @@ public class PgDiff {
         }
     }
 
-    /**
-     * Creates diff from comparison of two database schemas.
-     *
-     * @param writer      writer the output should be written to
-     * @param arguments   object containing arguments settings
-     * @param oldDatabase original database schema
-     * @param newDatabase new database schema
-     */
+    
     private static void diffDatabaseSchemas(final PrintWriter writer,
             final PgDiffArguments arguments, final PgDatabase oldDatabase,
             final PgDatabase newDatabase) {
@@ -152,13 +117,7 @@ public class PgDiff {
         }
     }
 
-    /**
-     * Drops old schemas that do not exist anymore.
-     *
-     * @param writer      writer the output should be written to
-     * @param oldDatabase original database schema
-     * @param newDatabase new database schema
-     */
+    
     private static void dropOldSchemas(final PrintWriter writer,
             final PgDatabase oldDatabase, final PgDatabase newDatabase) {
         for (final PgSchema oldSchema : oldDatabase.getSchemas()) {
@@ -171,14 +130,7 @@ public class PgDiff {
         }
     }
 
-    /**
-     * Updates objects in schemas.
-     *
-     * @param writer      writer the output should be written to
-     * @param arguments   object containing arguments settings
-     * @param oldDatabase original database schema
-     * @param newDatabase new database schema
-     */
+    
     private static void updateSchemas(final PrintWriter writer,
             final PgDiffArguments arguments, final PgDatabase oldDatabase,
             final PgDatabase newDatabase) {
@@ -280,9 +232,7 @@ public class PgDiff {
         }
     }
 
-    /**
-     * Creates a new instance of PgDiff.
-     */
+    
     private PgDiff() {
     }
 }

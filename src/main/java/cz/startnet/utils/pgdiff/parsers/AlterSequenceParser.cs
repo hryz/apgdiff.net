@@ -1,8 +1,4 @@
-/**
- * Copyright 2010 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff.parsers;
 
 import cz.startnet.utils.pgdiff.Resources;
@@ -11,21 +7,10 @@ import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgSequence;
 import java.text.MessageFormat;
 
-/**
- * Parses ALTER SEQUENCE statements.
- *
- * @author mix86
- */
+
 public class AlterSequenceParser {
 
-    /**
-     * Parses ALTER SEQUENCE statement.
-     *
-     * @param database                database
-     * @param statement               ALTER SEQUENCE statement
-     * @param outputIgnoredStatements whether ignored statements should be
-     *                                output in the diff
-     */
+    
     public static void parse(final PgDatabase database,
             final String statement, final boolean outputIgnoredStatements) {
         final Parser parser = new Parser(statement);
@@ -66,9 +51,7 @@ public class AlterSequenceParser {
         }
     }
 
-    /**
-     * Creates new instance of AlterSequenceParser.
-     */
+    
     private AlterSequenceParser() {
     }
 }

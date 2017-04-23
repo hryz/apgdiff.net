@@ -1,8 +1,4 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff;
 
 import cz.startnet.utils.pgdiff.schema.PgConstraint;
@@ -12,24 +8,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Diffs constraints.
- *
- * @author fordfrog
- */
+
 public class PgDiffConstraints {
 
-    /**
-     * Outputs statements for creation of new constraints.
-     *
-     * @param writer           writer the output should be written to
-     * @param oldSchema        original schema
-     * @param newSchema        new schema
-     * @param primaryKey       determines whether primary keys should be
-     *                         processed or any other constraints should be
-     *                         processed
-     * @param searchPathHelper search path helper
-     */
+    
     public static void createConstraints(final PrintWriter writer,
             final PgSchema oldSchema, final PgSchema newSchema,
             final boolean primaryKey, final SearchPathHelper searchPathHelper) {
@@ -52,17 +34,6 @@ public class PgDiffConstraints {
         }
     }
 
-    /**
-     * Outputs statements for dropping non-existent or modified constraints.
-     *
-     * @param writer           writer the output should be written to
-     * @param oldSchema        original schema
-     * @param newSchema        new schema
-     * @param primaryKey       determines whether primary keys should be
-     *                         processed or any other constraints should be
-     *                         processed
-     * @param searchPathHelper search path helper
-     */
     public static void dropConstraints(final PrintWriter writer,
             final PgSchema oldSchema, final PgSchema newSchema,
             final boolean primaryKey, final SearchPathHelper searchPathHelper) {
@@ -85,19 +56,7 @@ public class PgDiffConstraints {
         }
     }
 
-    /**
-     * Returns list of constraints that should be dropped.
-     *
-     * @param oldTable   original table or null
-     * @param newTable   new table or null
-     * @param primaryKey determines whether primary keys should be processed or
-     *                   any other constraints should be processed
-     *
-     * @return list of constraints that should be dropped
-     *
-     * @todo Constraints that are depending on a removed field should not be
-     * added to drop because they are already removed.
-     */
+    
     private static List<PgConstraint> getDropConstraints(final PgTable oldTable,
             final PgTable newTable, final boolean primaryKey) {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
@@ -117,16 +76,7 @@ public class PgDiffConstraints {
         return list;
     }
 
-    /**
-     * Returns list of constraints that should be added.
-     *
-     * @param oldTable   original table
-     * @param newTable   new table
-     * @param primaryKey determines whether primary keys should be processed or
-     *                   any other constraints should be processed
-     *
-     * @return list of constraints that should be added
-     */
+    
     private static List<PgConstraint> getNewConstraints(final PgTable oldTable,
             final PgTable newTable, final boolean primaryKey) {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
@@ -157,14 +107,7 @@ public class PgDiffConstraints {
         return list;
     }
 
-    /**
-     * Outputs statements for constraint comments that have changed.
-     *
-     * @param writer           writer
-     * @param oldSchema        old schema
-     * @param newSchema        new schema
-     * @param searchPathHelper search path helper
-     */
+    
     public static void alterComments(final PrintWriter writer,
             final PgSchema oldSchema, final PgSchema newSchema,
             final SearchPathHelper searchPathHelper) {
@@ -238,9 +181,7 @@ public class PgDiffConstraints {
         }
     }
 
-    /**
-     * Creates a new instance of PgDiffConstraints.
-     */
+    
     private PgDiffConstraints() {
     }
 }

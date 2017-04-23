@@ -1,28 +1,14 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff.parsers;
 
 import cz.startnet.utils.pgdiff.schema.PgDatabase;
 import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgTrigger;
 
-/**
- * Parses CREATE TRIGGER statements.
- *
- * @author fordfrog
- */
+
 public class CreateTriggerParser {
 
-    /**
-     * Parses CREATE TRIGGER statement.
-     *
-     * @param database            database
-     * @param statement           CREATE TRIGGER statement
-     * @param ignoreSlonyTriggers whether Slony triggers should be ignored
-     */
+    
     public static void parse(final PgDatabase database,
             final String statement, final boolean ignoreSlonyTriggers) {
         final Parser parser = new Parser(statement);
@@ -106,9 +92,7 @@ public class CreateTriggerParser {
         }
     }
 
-    /**
-     * Creates a new CreateTableParser object.
-     */
+    
     private CreateTriggerParser() {
     }
 }

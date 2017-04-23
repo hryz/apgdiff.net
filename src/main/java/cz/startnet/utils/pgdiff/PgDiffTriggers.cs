@@ -1,8 +1,4 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff;
 
 import cz.startnet.utils.pgdiff.schema.PgSchema;
@@ -12,21 +8,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Diffs triggers.
- *
- * @author fordfrog
- */
+
 public class PgDiffTriggers {
 
-    /**
-     * Outputs statements for creation of new triggers.
-     *
-     * @param writer           writer the output should be written to
-     * @param oldSchema        original schema
-     * @param newSchema        new schema
-     * @param searchPathHelper search path helper
-     */
+    
     public static void createTriggers(final PrintWriter writer,
             final PgSchema oldSchema, final PgSchema newSchema,
             final SearchPathHelper searchPathHelper) {
@@ -48,14 +33,7 @@ public class PgDiffTriggers {
         }
     }
 
-    /**
-     * Outputs statements for dropping triggers.
-     *
-     * @param writer           writer the output should be written to
-     * @param oldSchema        original schema
-     * @param newSchema        new schema
-     * @param searchPathHelper search path helper
-     */
+    
     public static void dropTriggers(final PrintWriter writer,
             final PgSchema oldSchema, final PgSchema newSchema,
             final SearchPathHelper searchPathHelper) {
@@ -78,14 +56,7 @@ public class PgDiffTriggers {
         }
     }
 
-    /**
-     * Returns list of triggers that should be dropped.
-     *
-     * @param oldTable original table
-     * @param newTable new table
-     *
-     * @return list of triggers that should be dropped
-     */
+    
     private static List<PgTrigger> getDropTriggers(final PgTable oldTable,
             final PgTable newTable) {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
@@ -104,14 +75,7 @@ public class PgDiffTriggers {
         return list;
     }
 
-    /**
-     * Returns list of triggers that should be added.
-     *
-     * @param oldTable original table
-     * @param newTable new table
-     *
-     * @return list of triggers that should be added
-     */
+    
     private static List<PgTrigger> getNewTriggers(final PgTable oldTable,
             final PgTable newTable) {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
@@ -132,14 +96,7 @@ public class PgDiffTriggers {
         return list;
     }
 
-    /**
-     * Outputs statements for trigger comments that have changed.
-     *
-     * @param writer           writer
-     * @param oldSchema        old schema
-     * @param newSchema        new schema
-     * @param searchPathHelper search path helper
-     */
+    
     public static void alterComments(final PrintWriter writer,
             final PgSchema oldSchema, final PgSchema newSchema,
             final SearchPathHelper searchPathHelper) {
@@ -195,9 +152,7 @@ public class PgDiffTriggers {
         }
     }
 
-    /**
-     * Creates a new instance of PgDiffTriggers.
-     */
+    
     private PgDiffTriggers() {
     }
 }

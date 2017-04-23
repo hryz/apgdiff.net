@@ -1,6 +1,4 @@
-/**
- * Copyright 2010 StartNet s.r.o.
- */
+
 package cz.startnet.utils.pgdiff.parsers;
 
 import cz.startnet.utils.pgdiff.Resources;
@@ -16,21 +14,10 @@ import cz.startnet.utils.pgdiff.schema.PgTrigger;
 import cz.startnet.utils.pgdiff.schema.PgView;
 import java.text.MessageFormat;
 
-/**
- * COMMENT parser.
- *
- * @author fordfrog
- */
+
 public class CommentParser {
 
-    /**
-     * Parses COMMENT statements.
-     *
-     * @param database                database
-     * @param statement               COMMENT statement
-     * @param outputIgnoredStatements whether ignored statements should be
-     *                                output into the diff
-     */
+    
     public static void parse(final PgDatabase database,
             final String statement, final boolean outputIgnoredStatements) {
         final Parser parser = new Parser(statement);
@@ -61,12 +48,7 @@ public class CommentParser {
         }
     }
 
-    /**
-     * Parses COMMENT ON TABLE.
-     *
-     * @param parser   parser
-     * @param database database
-     */
+    
     private static void parseTable(final Parser parser,
             final PgDatabase database) {
         final String tableName = parser.parseIdentifier();
@@ -82,12 +64,7 @@ public class CommentParser {
         parser.expect(";");
     }
 
-    /**
-     * Parses COMMENT ON CONSTRAINT.
-     *
-     * @param parser   parser
-     * @param database database
-     */
+    
     private static void parseConstraint(final Parser parser,
             final PgDatabase database) {
         final String constraintName =
@@ -108,12 +85,7 @@ public class CommentParser {
         parser.expect(";");
     }
 
-    /**
-     * Parses COMMENT ON DATABASE.
-     *
-     * @param parser   parser
-     * @param database database
-     */
+    
     private static void parseDatabase(final Parser parser,
             final PgDatabase database) {
         parser.parseIdentifier();
@@ -122,12 +94,7 @@ public class CommentParser {
         parser.expect(";");
     }
 
-    /**
-     * Parses COMMENT ON INDEX.
-     *
-     * @param parser   parser
-     * @param database database
-     */
+    
     private static void parseIndex(final Parser parser,
             final PgDatabase database) {
         final String indexName = parser.parseIdentifier();
@@ -150,12 +117,7 @@ public class CommentParser {
         }
     }
 
-    /**
-     * Parses COMMENT ON SCHEMA.
-     *
-     * @param parser   parser
-     * @param database database
-     */
+    
     private static void parseSchema(final Parser parser,
             final PgDatabase database) {
         final String schemaName =
@@ -167,12 +129,7 @@ public class CommentParser {
         parser.expect(";");
     }
 
-    /**
-     * Parses COMMENT ON SEQUENCE.
-     *
-     * @param parser   parser
-     * @param database database
-     */
+    
     private static void parseSequence(final Parser parser,
             final PgDatabase database) {
         final String sequenceName = parser.parseIdentifier();
@@ -188,12 +145,7 @@ public class CommentParser {
         parser.expect(";");
     }
 
-    /**
-     * Parses COMMENT ON TRIGGER.
-     *
-     * @param parser   parser
-     * @param database database
-     */
+    
     private static void parseTrigger(final Parser parser,
             final PgDatabase database) {
         final String triggerName =
@@ -214,12 +166,7 @@ public class CommentParser {
         parser.expect(";");
     }
 
-    /**
-     * Parses COMMENT ON VIEW.
-     *
-     * @param parser   parser
-     * @param database database
-     */
+    
     private static void parseView(final Parser parser,
             final PgDatabase database) {
         final String viewName = parser.parseIdentifier();
@@ -234,12 +181,7 @@ public class CommentParser {
         parser.expect(";");
     }
 
-    /**
-     * Parses COMMENT ON COLUMN.
-     *
-     * @param parser   parser
-     * @param database database
-     */
+    
     private static void parseColumn(final Parser parser,
             final PgDatabase database) {
         final String columnName = parser.parseIdentifier();
@@ -277,12 +219,7 @@ public class CommentParser {
         }
     }
 
-    /**
-     * Parses COMMENT ON FUNCTION.
-     *
-     * @param parser   parser
-     * @param database database
-     */
+    
     private static void parseFunction(final Parser parser,
             final PgDatabase database) {
         final String functionName = parser.parseIdentifier();
@@ -347,14 +284,7 @@ public class CommentParser {
         parser.expect(";");
     }
 
-    /**
-     * Parses comment from parser. If comment is "null" string then null is
-     * returned, otherwise the parsed string is returned.
-     *
-     * @param parser parser
-     *
-     * @return string or null
-     */
+    
     private static String getComment(final Parser parser) {
         final String comment = parser.parseString();
 
@@ -365,9 +295,7 @@ public class CommentParser {
         return comment;
     }
 
-    /**
-     * Creates new instance of CommentParser.
-     */
+    
     private CommentParser() {
     }
 }

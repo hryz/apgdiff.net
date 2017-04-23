@@ -1,8 +1,4 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff.parsers;
 
 import cz.startnet.utils.pgdiff.Resources;
@@ -12,19 +8,10 @@ import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgTable;
 import java.text.MessageFormat;
 
-/**
- * Parses CREATE INDEX statements.
- *
- * @author fordfrog
- */
+
 public class CreateIndexParser {
 
-    /**
-     * Parses CREATE INDEX statement.
-     *
-     * @param database  database
-     * @param statement CREATE INDEX statement
-     */
+    
     public static void parse(final PgDatabase database,
             final String statement) {
         final Parser parser = new Parser(statement);
@@ -69,9 +56,7 @@ public class CreateIndexParser {
         index.setUnique(unique);
     }
 
-    /**
-     * Creates a new instance of CreateIndexParser.
-     */
+    
     private CreateIndexParser() {
     }
 }

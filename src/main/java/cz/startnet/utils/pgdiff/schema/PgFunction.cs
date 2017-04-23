@@ -1,8 +1,4 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff.schema;
 
 import cz.startnet.utils.pgdiff.PgDiffUtils;
@@ -11,54 +7,30 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Stores function information.
- *
- * @author fordfrog
- */
+
 public class PgFunction {
 
-    /**
-     * Name of the function including argument types.
-     */
+    
     private String name;
-    /**
-     * List of arguments.
-     */
+    
     @SuppressWarnings("CollectionWithoutInitialCapacity")
     private final List<Argument> arguments = new ArrayList<Argument>();
-    /**
-     * Whole definition of the function from RETURNS keyword.
-     */
+    
     private String body;
-    /**
-     * Comment.
-     */
+    
     private String comment;
 
-    /**
-     * Getter for {@link #comment}.
-     *
-     * @return {@link #comment}
-     */
+    
     public String getComment() {
         return comment;
     }
 
-    /**
-     * Setter for {@link #comment}.
-     *
-     * @param comment {@link #comment}
-     */
+    
     public void setComment(final String comment) {
         this.comment = comment;
     }
 
-    /**
-     * Returns creation SQL of the function.
-     *
-     * @return creation SQL
-     */
+    
     public String getCreationSQL() {
         final StringBuilder sbSQL = new StringBuilder(500);
         sbSQL.append("CREATE OR REPLACE FUNCTION ");
@@ -106,29 +78,17 @@ public class PgFunction {
         return sbSQL.toString();
     }
 
-    /**
-     * Setter for {@link #body}.
-     *
-     * @param body {@link #body}
-     */
+    
     public void setBody(final String body) {
         this.body = body;
     }
 
-    /**
-     * Getter for {@link #body}.
-     *
-     * @return {@link #body}
-     */
+    
     public String getBody() {
         return body;
     }
 
-    /**
-     * Creates and returns SQL for dropping the function.
-     *
-     * @return created SQL
-     */
+    
     public String getDropSQL() {
         final StringBuilder sbString = new StringBuilder(100);
         sbString.append("DROP FUNCTION ");
@@ -156,48 +116,27 @@ public class PgFunction {
         return sbString.toString();
     }
 
-    /**
-     * Setter for {@link #name}.
-     *
-     * @param name {@link #name}
-     */
+    
     public void setName(final String name) {
         this.name = name;
     }
 
-    /**
-     * Getter for {@link #name}.
-     *
-     * @return {@link #name}
-     */
+    
     public String getName() {
         return name;
     }
 
-    /**
-     * Getter for {@link #arguments}. List cannot be modified.
-     *
-     * @return {@link #arguments}
-     */
+    
     public List<Argument> getArguments() {
         return Collections.unmodifiableList(arguments);
     }
 
-    /**
-     * Adds argument to the list of arguments.
-     *
-     * @param argument argument
-     */
+    
     public void addArgument(final Argument argument) {
         arguments.add(argument);
     }
 
-    /**
-     * Returns function signature. It consists of unquoted name and argument
-     * data types.
-     *
-     * @return function signature
-     */
+    
     public String getSignature() {
         final StringBuilder sbString = new StringBuilder(100);
         sbString.append(name);
@@ -235,19 +174,7 @@ public class PgFunction {
         return equals(object, false);
     }
 
-    /**
-     * Compares two objects whether they are equal. If both objects are of the
-     * same class but they equal just in whitespace in {@link #body}, they are
-     * considered being equal.
-     *
-     * @param object                   object to be compared
-     * @param ignoreFunctionWhitespace whether multiple whitespaces in function
-     *                                 {@link #body} should be ignored
-     *
-     * @return true if {@code object} is pg function and the function code is
-     *         the same when compared ignoring whitespace, otherwise returns
-     *         false
-     */
+    
     public boolean equals(final Object object,
             final boolean ignoreFunctionWhitespace) {
         boolean equals = false;
@@ -310,108 +237,60 @@ public class PgFunction {
         return sbString.toString().hashCode();
     }
 
-    /**
-     * Function argument information.
-     */
+    
     @SuppressWarnings("PublicInnerClass")
     public static class Argument {
 
-        /**
-         * Argument mode.
-         */
+        
         private String mode = "IN";
-        /**
-         * Argument name.
-         */
+        
         private String name;
-        /**
-         * Argument data type.
-         */
+        
         private String dataType;
-        /**
-         * Argument default expression.
-         */
+        
         private String defaultExpression;
 
-        /**
-         * Getter for {@link #dataType}.
-         *
-         * @return {@link #dataType}
-         */
+        
         public String getDataType() {
             return dataType;
         }
 
-        /**
-         * Setter for {@link #dataType}.
-         *
-         * @param dataType {@link #dataType}
-         */
+        
         public void setDataType(final String dataType) {
             this.dataType = dataType;
         }
 
-        /**
-         * Getter for {@link #defaultExpression}.
-         *
-         * @return {@link #defaultExpression}
-         */
+        
         public String getDefaultExpression() {
             return defaultExpression;
         }
 
-        /**
-         * Setter for {@link #defaultExpression}.
-         *
-         * @param defaultExpression {@link #defaultExpression}
-         */
+        
         public void setDefaultExpression(final String defaultExpression) {
             this.defaultExpression = defaultExpression;
         }
 
-        /**
-         * Getter for {@link #mode}.
-         *
-         * @return {@link #mode}
-         */
+        
         public String getMode() {
             return mode;
         }
 
-        /**
-         * Setter for {@link #mode}.
-         *
-         * @param mode {@link #mode}
-         */
+        
         public void setMode(final String mode) {
             this.mode = mode == null || mode.isEmpty() ? "IN" : mode;
         }
 
-        /**
-         * Getter for {@link #name}.
-         *
-         * @return {@link #name}
-         */
+        
         public String getName() {
             return name;
         }
 
-        /**
-         * Setter for {@link #name}.
-         *
-         * @param name {@link #name}
-         */
+        
         public void setName(final String name) {
             this.name = name;
         }
 
-        /**
-         * Creates argument declaration.
-         *
-         * @param includeDefaultValue whether to include default value
-         *
-         * @return argument declaration
-         */
+        
         public String getDeclaration(final boolean includeDefaultValue) {
             final StringBuilder sbString = new StringBuilder(50);
 

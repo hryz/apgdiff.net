@@ -1,23 +1,11 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff;
 
 import java.util.Locale;
 
-/**
- * Utilities for creation of diffs.
- *
- * @author fordfrog
- */
+
 public class PgDiffUtils {
 
-    /**
-     * Array of reserved keywords. Non-reserved keywords are excluded. Source
-     * http://www.postgresql.org/docs/9.0/static/sql-keywords-appendix.html.
-     */
     private static final String[] KEYWORDS = new String[]{
         "ABS",
         "ABSOLUTE",
@@ -476,16 +464,7 @@ public class PgDiffUtils {
         "YEAR",
         "ZONE"};
 
-    /**
-     * If name contains only lower case characters and digits and is not
-     * keyword, it is returned not quoted, otherwise the string is returned
-     * quoted.
-     *
-     * @param name            name
-     * @param excludeKeywords whether check against keywords should be skipped
-     *
-     * @return quoted string if needed, otherwise not quoted string
-     */
+    
     public static String getQuotedName(final String name,
             final boolean excludeKeywords) {
         if (name.indexOf('-') != -1 || name.indexOf('.') != -1) {
@@ -515,22 +494,12 @@ public class PgDiffUtils {
         return name;
     }
 
-    /**
-     * If name contains only lower case characters and digits and is not
-     * keyword, it is returned not quoted, otherwise the string is returned
-     * quoted.
-     *
-     * @param name name
-     *
-     * @return quoted string if needed, otherwise not quoted string
-     */
+    
     public static String getQuotedName(final String name) {
         return getQuotedName(name, false);
     }
 
-    /**
-     * Creates a new PgDiffUtils object.
-     */
+    
     private PgDiffUtils() {
     }
 }

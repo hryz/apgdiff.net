@@ -1,8 +1,4 @@
-/**
- * Copyright 2006 StartNet s.r.o.
- *
- * Distributed under MIT license
- */
+
 package cz.startnet.utils.pgdiff;
 
 import cz.startnet.utils.pgdiff.schema.PgSchema;
@@ -12,21 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Diffs views.
- *
- * @author fordfrog
- */
+
 public class PgDiffViews {
 
-    /**
-     * Outputs statements for creation of views.
-     *
-     * @param writer           writer the output should be written to
-     * @param oldSchema        original schema
-     * @param newSchema        new schema
-     * @param searchPathHelper search path helper
-     */
+    
     public static void createViews(final PrintWriter writer,
             final PgSchema oldSchema, final PgSchema newSchema,
             final SearchPathHelper searchPathHelper) {
@@ -42,14 +27,7 @@ public class PgDiffViews {
         }
     }
 
-    /**
-     * Outputs statements for dropping views.
-     *
-     * @param writer           writer the output should be written to
-     * @param oldSchema        original schema
-     * @param newSchema        new schema
-     * @param searchPathHelper search path helper
-     */
+    
     public static void dropViews(final PrintWriter writer,
             final PgSchema oldSchema, final PgSchema newSchema,
             final SearchPathHelper searchPathHelper) {
@@ -68,15 +46,7 @@ public class PgDiffViews {
         }
     }
 
-    /**
-     * Returns true if either column names or query of the view has been
-     * modified.
-     *
-     * @param oldView old view
-     * @param newView new view
-     *
-     * @return true if view has been modified, otherwise false
-     */
+    
     private static boolean isViewModified(final PgView oldView,
             final PgView newView) {
         final String[] oldViewColumnNames;
@@ -106,14 +76,7 @@ public class PgDiffViews {
         }
     }
 
-    /**
-     * Outputs statements for altering view default values.
-     *
-     * @param writer           writer
-     * @param oldSchema        old schema
-     * @param newSchema        new schema
-     * @param searchPathHelper search path helper
-     */
+    
     public static void alterViews(final PrintWriter writer,
             final PgSchema oldSchema, final PgSchema newSchema,
             final SearchPathHelper searchPathHelper) {
@@ -217,14 +180,7 @@ public class PgDiffViews {
         }
     }
 
-    /**
-     * Diffs default values in views.
-     *
-     * @param writer           writer
-     * @param oldView          old view
-     * @param newView          new view
-     * @param searchPathHelper search path helper
-     */
+    
     private static void diffDefaultValues(final PrintWriter writer,
             final PgView oldView, final PgView newView,
             final SearchPathHelper searchPathHelper) {
@@ -299,9 +255,7 @@ public class PgDiffViews {
         }
     }
 
-    /**
-     * Creates a new instance of PgDiffViews.
-     */
+    
     private PgDiffViews() {
     }
 }
