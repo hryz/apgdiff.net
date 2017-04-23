@@ -56,7 +56,7 @@ public class PgTable {
 
     
     public PgColumn getColumn(String name) {
-        for (PgColumn column : columns) {
+        foreach(PgColumn column in columns) {
             if (column.getName().Equals(name)) {
                 return column;
             }
@@ -82,7 +82,7 @@ public class PgTable {
 
     
     public PgConstraint getConstraint(String name) {
-        for (PgConstraint constraint : constraints) {
+        foreach(PgConstraint constraint in constraints) {
             if (constraint.getName().Equals(name)) {
                 return constraint;
             }
@@ -108,7 +108,7 @@ public class PgTable {
         if (columns.isEmpty()) {
             sbSQL.append(')');
         } else {
-            for (PgColumn column : columns) {
+            foreach(PgColumn column in columns) {
                 if (first) {
                     first = false;
                 } else {
@@ -127,7 +127,7 @@ public class PgTable {
 
             first = true;
 
-            for (String tableName : inherits) {
+            foreach(String tableName in inherits) {
                 if (first) {
                     first = false;
                 } else {
@@ -183,7 +183,7 @@ public class PgTable {
             sbSQL.append(';');
         }
 
-        for (PgColumn column : columns) {
+        foreach(PgColumn column in columns) {
             if (column.getComment() != null && !column.getComment().isEmpty()) {
                 sbSQL.append("\n\nCOMMENT ON COLUMN ");
                 sbSQL.append(PgDiffUtils.getQuotedName(name));
@@ -205,7 +205,7 @@ public class PgTable {
 
     
     public PgIndex getIndex(String name) {
-        for (PgIndex index : indexes) {
+        foreach(PgIndex index in indexes) {
             if (index.getName().Equals(name)) {
                 return index;
             }
@@ -216,7 +216,7 @@ public class PgTable {
 
     
     public PgTrigger getTrigger(String name) {
-        for (PgTrigger trigger : triggers) {
+        foreach(PgTrigger trigger in triggers) {
             if (trigger.getName().Equals(name)) {
                 return trigger;
             }
@@ -297,7 +297,7 @@ public class PgTable {
 
     
     public bool containsColumn(String name) {
-        for (PgColumn column : columns) {
+        foreach(PgColumn column in columns) {
             if (column.getName().Equals(name)) {
                 return true;
             }
@@ -308,7 +308,7 @@ public class PgTable {
 
     
     public bool containsConstraint(String name) {
-        for (PgConstraint constraint : constraints) {
+        foreach(PgConstraint constraint in constraints) {
             if (constraint.getName().Equals(name)) {
                 return true;
             }
@@ -319,7 +319,7 @@ public class PgTable {
 
     
     public bool containsIndex(String name) {
-        for (PgIndex index : indexes) {
+        foreach(PgIndex index in indexes) {
             if (index.getName().Equals(name)) {
                 return true;
             }
@@ -333,7 +333,7 @@ public class PgTable {
         
         List<PgColumn> list = new ArrayList<PgColumn>();
 
-        for (PgColumn column : columns) {
+        foreach(PgColumn column in columns) {
             if (column.getStatistics() != null) {
                 list.add(column);
             }

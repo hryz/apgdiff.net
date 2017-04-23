@@ -76,7 +76,7 @@ public class PgView {
         sbSQL.append(query);
         sbSQL.append(';');
 
-        for (DefaultValue defaultValue : defaultValues) {
+        foreach(DefaultValue defaultValue in defaultValues) {
             sbSQL.append("\n\nALTER VIEW ");
             sbSQL.append(PgDiffUtils.getQuotedName(name));
             sbSQL.append(" ALTER COLUMN ");
@@ -95,7 +95,7 @@ public class PgView {
             sbSQL.append(';');
         }
 
-        for (ColumnComment columnComment : columnComments) {
+        foreach(ColumnComment columnComment in columnComments) {
             if (columnComment.getComment() != null
                     && !columnComment.getComment().isEmpty()) {
                 sbSQL.append("\n\nCOMMENT ON COLUMN ");
@@ -139,7 +139,7 @@ public class PgView {
 
     
     public void removeColumnDefaultValue(String columnName) {
-        for (DefaultValue item : defaultValues) {
+        foreach(DefaultValue item in defaultValues) {
             if (item.getColumnName().Equals(columnName)) {
                 defaultValues.remove(item);
                 return;
@@ -161,7 +161,7 @@ public class PgView {
 
     
     public void removeColumnComment(String columnName) {
-        for (ColumnComment item : columnComments) {
+        foreach(ColumnComment item in columnComments) {
             if (item.getColumnName().Equals(columnName)) {
                 columnComments.remove(item);
                 return;

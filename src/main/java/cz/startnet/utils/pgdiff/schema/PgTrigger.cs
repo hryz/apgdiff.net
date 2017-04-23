@@ -87,7 +87,7 @@ public class PgTrigger {
 
                 bool first = true;
 
-                for (String columnName : updateColumns) {
+                foreach(String columnName in updateColumns) {
                     if (first) {
                         first = false;
                     } else {

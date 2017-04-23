@@ -55,7 +55,7 @@ public class ParserUtils {
         } else {
             StringBuilder sbString = new StringBuilder(names.size() * 15);
 
-            for (String name : names) {
+            foreach(String name in names) {
                 if (sbString.length() > 0) {
                     sbString.append(',');
                 }

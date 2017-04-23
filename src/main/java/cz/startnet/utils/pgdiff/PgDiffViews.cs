@@ -185,10 +185,10 @@ public class PgDiffViews {
                 newView.getDefaultValues();
 
         // modify defaults that are in old view
-        for (PgView.DefaultValue oldValue : oldValues) {
+        foreach(PgView.DefaultValue oldValue in oldValues) {
             bool found = false;
 
-            for (PgView.DefaultValue newValue : newValues) {
+            foreach(PgView.DefaultValue newValue in newValues) {
                 if (oldValue.getColumnName().Equals(newValue.getColumnName())) {
                     found = true;
 
@@ -224,10 +224,10 @@ public class PgDiffViews {
         }
 
         // add new defaults
-        for (PgView.DefaultValue newValue : newValues) {
+        foreach(PgView.DefaultValue newValue in newValues) {
             bool found = false;
 
-            for (PgView.DefaultValue oldValue : oldValues) {
+            foreach(PgView.DefaultValue oldValue in oldValues) {
                 if (newValue.getColumnName().Equals(oldValue.getColumnName())) {
                     found = true;
                     break;

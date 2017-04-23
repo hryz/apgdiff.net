@@ -42,7 +42,7 @@ public class PgFunction {
 
         bool addComma = false;
 
-        for (Argument argument : arguments) {
+        foreach(Argument argument in arguments) {
             if (addComma) {
                 sbSQL.append(", ");
             }
@@ -63,7 +63,7 @@ public class PgFunction {
 
             addComma = false;
 
-            for (Argument argument : arguments) {
+            foreach(Argument argument in arguments) {
                 if (addComma) {
                     sbSQL.append(", ");
                 }
@@ -100,7 +100,7 @@ public class PgFunction {
 
         bool addComma = false;
 
-        for (Argument argument : arguments) {
+        foreach(Argument argument in arguments) {
             if ("OUT".equalsIgnoreCase(argument.getMode())) {
                 continue;
             }
@@ -147,7 +147,7 @@ public class PgFunction {
 
         bool addComma = false;
 
-        for (Argument argument : arguments) {
+        foreach(Argument argument in arguments) {
             if ("OUT".equalsIgnoreCase(argument.getMode())) {
                 continue;
             }
@@ -232,7 +232,7 @@ public class PgFunction {
         sbString.append('|');
         sbString.append(name);
 
-        for (Argument argument : arguments) {
+        foreach(Argument argument in arguments) {
             sbString.append('|');
             sbString.append(argument.getDeclaration(true));
         }

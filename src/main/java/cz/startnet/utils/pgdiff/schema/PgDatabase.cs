@@ -63,7 +63,7 @@ public class PgDatabase {
             return getDefaultSchema();
         }
 
-        for (PgSchema schema : schemas) {
+        foreach(PgSchema schema in schemas) {
             if (schema.getName().Equals(name)) {
                 return schema;
             }

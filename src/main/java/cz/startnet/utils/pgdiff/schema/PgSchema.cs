@@ -101,7 +101,7 @@ public class PgSchema {
 
     
     public PgFunction getFunction(String signature) {
-        for (PgFunction function : functions) {
+        foreach(PgFunction function in functions) {
             if (function.getSignature().Equals(signature)) {
                 return function;
             }
@@ -122,7 +122,7 @@ public class PgSchema {
 
     
     public PgIndex getIndex(String name) {
-        for (PgIndex index : indexes) {
+        foreach(PgIndex index in indexes) {
             if (index.getName().Equals(name)) {
                 return index;
             }
@@ -133,7 +133,7 @@ public class PgSchema {
 
     
     public PgConstraint getPrimaryKey(String name) {
-        for (PgConstraint constraint : primaryKeys) {
+        foreach(PgConstraint constraint in primaryKeys) {
             if (constraint.getName().Equals(name)) {
                 return constraint;
             }
@@ -144,7 +144,7 @@ public class PgSchema {
 
     
     public PgSequence getSequence(String name) {
-        for (PgSequence sequence : sequences) {
+        foreach(PgSequence sequence in sequences) {
             if (sequence.getName().Equals(name)) {
                 return sequence;
             }
@@ -170,7 +170,7 @@ public class PgSchema {
 
     
     public PgTable getTable(String name) {
-        for (PgTable table : tables) {
+        foreach(PgTable table in tables) {
             if (table.getName().Equals(name)) {
                 return table;
             }
@@ -186,7 +186,7 @@ public class PgSchema {
 
     
     public PgView getView(String name) {
-        for (PgView view : views) {
+        foreach(PgView view in views) {
             if (view.getName().Equals(name)) {
                 return view;
             }
@@ -232,7 +232,7 @@ public class PgSchema {
 
     
     public bool containsFunction(String signature) {
-        for (PgFunction function : functions) {
+        foreach(PgFunction function in functions) {
             if (function.getSignature().Equals(signature)) {
                 return true;
             }
@@ -243,7 +243,7 @@ public class PgSchema {
 
     
     public bool containsSequence(String name) {
-        for (PgSequence sequence : sequences) {
+        foreach(PgSequence sequence in sequences) {
             if (sequence.getName().Equals(name)) {
                 return true;
             }
@@ -254,7 +254,7 @@ public class PgSchema {
 
     
     public bool containsTable(String name) {
-        for (PgTable table : tables) {
+        foreach(PgTable table in tables) {
             if (table.getName().Equals(name)) {
                 return true;
             }
@@ -265,7 +265,7 @@ public class PgSchema {
 
     
     public bool containsView(String name) {
-        for (PgView view : views) {
+        foreach(PgView view in views) {
             if (view.getName().Equals(name)) {
                 return true;
             }

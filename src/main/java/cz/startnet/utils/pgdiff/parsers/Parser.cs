@@ -23,7 +23,7 @@ public class Parser {
 
     
     public void expect(String... words) {
-        for (String word : words) {
+        foreach(String word in words) {
             expect(word, false);
         }
     }
@@ -303,7 +303,7 @@ public class Parser {
 
   
     public String expectOptionalOneOf(String... words) {
-        for (String word : words) {
+        foreach(String word in words) {
             if (expectOptional(word)) {
                 return word;
             }
