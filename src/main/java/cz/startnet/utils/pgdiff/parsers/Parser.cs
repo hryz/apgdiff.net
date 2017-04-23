@@ -1,7 +1,6 @@
 
 namespace cz.startnet.utils.pgdiff.parsers {
 
-using cz.startnet.utils.pgdiff.Resources;
 
 
 

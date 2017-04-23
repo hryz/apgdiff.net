@@ -1,8 +1,6 @@
 
 namespace cz.startnet.utils.pgdiff {
 
-using cz.startnet.utils.pgdiff.schema.PgFunction;
-using cz.startnet.utils.pgdiff.schema.PgSchema;
 
 
 

@@ -1,8 +1,9 @@
 
+
 namespace cz.startnet.utils.pgdiff.loader {
 
 
-public class FileException extends RuntimeException {
+public class FileException : Exception {
 
     
     private static long serialVersionUID = 1L;

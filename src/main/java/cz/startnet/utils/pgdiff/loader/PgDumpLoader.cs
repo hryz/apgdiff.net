@@ -1,19 +1,6 @@
 
 namespace cz.startnet.utils.pgdiff.loader {
 
-using cz.startnet.utils.pgdiff.Resources;
-using cz.startnet.utils.pgdiff.parsers.AlterSequenceParser;
-using cz.startnet.utils.pgdiff.parsers.AlterTableParser;
-using cz.startnet.utils.pgdiff.parsers.AlterViewParser;
-using cz.startnet.utils.pgdiff.parsers.CommentParser;
-using cz.startnet.utils.pgdiff.parsers.CreateFunctionParser;
-using cz.startnet.utils.pgdiff.parsers.CreateIndexParser;
-using cz.startnet.utils.pgdiff.parsers.CreateSchemaParser;
-using cz.startnet.utils.pgdiff.parsers.CreateSequenceParser;
-using cz.startnet.utils.pgdiff.parsers.CreateTableParser;
-using cz.startnet.utils.pgdiff.parsers.CreateTriggerParser;
-using cz.startnet.utils.pgdiff.parsers.CreateViewParser;
-using cz.startnet.utils.pgdiff.schema.PgDatabase;
 
 
 

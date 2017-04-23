@@ -1,12 +1,6 @@
 
 namespace cz.startnet.utils.pgdiff.parsers {
 
-using cz.startnet.utils.pgdiff.Resources;
-using cz.startnet.utils.pgdiff.schema.PgColumn;
-using cz.startnet.utils.pgdiff.schema.PgConstraint;
-using cz.startnet.utils.pgdiff.schema.PgDatabase;
-using cz.startnet.utils.pgdiff.schema.PgSchema;
-using cz.startnet.utils.pgdiff.schema.PgTable;
 
 
 
