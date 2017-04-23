@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff.parsers;
+namespace cz.startnet.utils.pgdiff.parsers {
 
 import cz.startnet.utils.pgdiff.Resources;
 import cz.startnet.utils.pgdiff.schema.PgColumn;
@@ -298,4 +298,5 @@ public class CommentParser {
     
     private CommentParser() {
     }
+}
 }

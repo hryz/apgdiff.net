@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff.schema;
+namespace cz.startnet.utils.pgdiff.schema {
 
 import java.util.Locale;
 
@@ -43,4 +43,5 @@ public class PgColumnUtils {
     
     private PgColumnUtils() {
     }
+}
 }

@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff;
+namespace cz.startnet.utils.pgdiff {
 
 import java.util.Locale;
 
@@ -502,4 +502,5 @@ public class PgDiffUtils {
     
     private PgDiffUtils() {
     }
+}
 }

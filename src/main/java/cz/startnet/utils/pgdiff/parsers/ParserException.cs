@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff.parsers;
+namespace cz.startnet.utils.pgdiff.parsers {
 
 
 public class ParserException extends RuntimeException {
@@ -20,4 +20,5 @@ public class ParserException extends RuntimeException {
     public ParserException(String msg, Throwable cause) {
         super(msg, cause);
     }
+}
 }

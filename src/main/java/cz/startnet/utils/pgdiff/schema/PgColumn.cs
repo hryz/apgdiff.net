@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff.schema;
+namespace cz.startnet.utils.pgdiff.schema {
 
 import cz.startnet.utils.pgdiff.PgDiffUtils;
 import java.util.regex.Matcher;
@@ -160,4 +160,5 @@ public class PgColumn {
 
         setType(string);
     }
+}
 }

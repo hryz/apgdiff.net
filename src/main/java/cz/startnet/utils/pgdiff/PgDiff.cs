@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff;
+namespace cz.startnet.utils.pgdiff {
 
 import cz.startnet.utils.pgdiff.loader.PgDumpLoader;
 import cz.startnet.utils.pgdiff.schema.PgDatabase;
@@ -235,4 +235,5 @@ public class PgDiff {
     
     private PgDiff() {
     }
+}
 }

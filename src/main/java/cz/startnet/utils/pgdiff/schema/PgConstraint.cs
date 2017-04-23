@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff.schema;
+namespace cz.startnet.utils.pgdiff.schema {
 
 import cz.startnet.utils.pgdiff.PgDiffUtils;
 import java.util.regex.Pattern;
@@ -128,4 +128,5 @@ public class PgConstraint {
         return (getClass().getName() + "|" + definition + "|" + name + "|"
                 + tableName).hashCode();
     }
+}
 }

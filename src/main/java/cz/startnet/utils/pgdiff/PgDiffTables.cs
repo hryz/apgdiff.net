@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff;
+namespace cz.startnet.utils.pgdiff {
 
 import cz.startnet.utils.pgdiff.schema.PgColumn;
 import cz.startnet.utils.pgdiff.schema.PgColumnUtils;
@@ -479,4 +479,5 @@ public class PgDiffTables {
     
     private PgDiffTables() {
     }
+}
 }

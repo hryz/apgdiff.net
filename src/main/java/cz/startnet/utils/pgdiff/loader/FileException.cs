@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff.loader;
+namespace cz.startnet.utils.pgdiff.loader {
 
 
 public class FileException extends RuntimeException {
@@ -20,4 +20,5 @@ public class FileException extends RuntimeException {
     public FileException(String msg, Throwable cause) {
         super(msg, cause);
     }
+}
 }

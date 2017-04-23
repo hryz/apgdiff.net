@@ -1,2 +1,3 @@
 
-package cz.startnet.utils.pgdiff;
+namespace cz.startnet.utils.pgdiff {
+}

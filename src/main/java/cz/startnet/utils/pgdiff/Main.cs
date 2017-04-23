@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff;
+namespace cz.startnet.utils.pgdiff {
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -30,4 +30,5 @@ public class Main {
     
     private Main() {
     }
+}
 }

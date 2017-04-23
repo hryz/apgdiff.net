@@ -1,2 +1,3 @@
 
-package cz.startnet.utils.pgdiff.parsers;
+namespace cz.startnet.utils.pgdiff.parsers {
+}

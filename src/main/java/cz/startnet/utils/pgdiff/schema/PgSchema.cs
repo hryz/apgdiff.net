@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff.schema;
+namespace cz.startnet.utils.pgdiff.schema {
 
 import cz.startnet.utils.pgdiff.PgDiffUtils;
 import java.util.ArrayList;
@@ -270,4 +270,5 @@ public class PgSchema {
 
         return false;
     }
+}
 }

@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff;
+namespace cz.startnet.utils.pgdiff {
 
 import java.io.PrintWriter;
 
@@ -24,4 +24,5 @@ public class SearchPathHelper {
             wasOutput = true;
         }
     }
+}
 }

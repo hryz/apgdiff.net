@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff.schema;
+namespace cz.startnet.utils.pgdiff.schema {
 
 import cz.startnet.utils.pgdiff.PgDiffUtils;
 
@@ -197,4 +197,5 @@ public class PgSequence {
     public void setOwnedBy(String ownedBy) {
         this.ownedBy = ownedBy;
     }
+}
 }

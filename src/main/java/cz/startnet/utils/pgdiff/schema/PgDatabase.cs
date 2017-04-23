@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff.schema;
+namespace cz.startnet.utils.pgdiff.schema {
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,4 +78,5 @@ public class PgDatabase {
     public void addSchema(PgSchema schema) {
         schemas.add(schema);
     }
+}
 }

@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff.loader;
+namespace cz.startnet.utils.pgdiff.loader {
 
 import cz.startnet.utils.pgdiff.Resources;
 import cz.startnet.utils.pgdiff.parsers.AlterSequenceParser;
@@ -296,4 +296,5 @@ public class PgDumpLoader { //NOPMD
     
     private PgDumpLoader() {
     }
+}
 }

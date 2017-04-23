@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff;
+namespace cz.startnet.utils.pgdiff {
 
 import cz.startnet.utils.pgdiff.schema.PgIndex;
 import cz.startnet.utils.pgdiff.schema.PgSchema;
@@ -146,4 +146,5 @@ public class PgDiffIndexes {
     
     private PgDiffIndexes() {
     }
+}
 }

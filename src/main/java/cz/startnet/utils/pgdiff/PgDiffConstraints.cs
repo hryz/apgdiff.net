@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff;
+namespace cz.startnet.utils.pgdiff {
 
 import cz.startnet.utils.pgdiff.schema.PgConstraint;
 import cz.startnet.utils.pgdiff.schema.PgSchema;
@@ -184,4 +184,5 @@ public class PgDiffConstraints {
     
     private PgDiffConstraints() {
     }
+}
 }

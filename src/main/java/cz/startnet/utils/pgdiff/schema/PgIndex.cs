@@ -1,5 +1,5 @@
 
-package cz.startnet.utils.pgdiff.schema;
+namespace cz.startnet.utils.pgdiff.schema {
 
 import cz.startnet.utils.pgdiff.PgDiffUtils;
 
@@ -129,4 +129,5 @@ public class PgIndex {
     public void setUnique(boolean unique) {
         this.unique = unique;
     }
+}
 }
