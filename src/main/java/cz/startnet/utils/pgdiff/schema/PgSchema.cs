@@ -102,7 +102,7 @@ public class PgSchema {
     
     public PgFunction getFunction(String signature) {
         for (PgFunction function : functions) {
-            if (function.getSignature().equals(signature)) {
+            if (function.getSignature().Equals(signature)) {
                 return function;
             }
         }
@@ -123,7 +123,7 @@ public class PgSchema {
     
     public PgIndex getIndex(String name) {
         for (PgIndex index : indexes) {
-            if (index.getName().equals(name)) {
+            if (index.getName().Equals(name)) {
                 return index;
             }
         }
@@ -134,7 +134,7 @@ public class PgSchema {
     
     public PgConstraint getPrimaryKey(String name) {
         for (PgConstraint constraint : primaryKeys) {
-            if (constraint.getName().equals(name)) {
+            if (constraint.getName().Equals(name)) {
                 return constraint;
             }
         }
@@ -145,7 +145,7 @@ public class PgSchema {
     
     public PgSequence getSequence(String name) {
         for (PgSequence sequence : sequences) {
-            if (sequence.getName().equals(name)) {
+            if (sequence.getName().Equals(name)) {
                 return sequence;
             }
         }
@@ -171,7 +171,7 @@ public class PgSchema {
     
     public PgTable getTable(String name) {
         for (PgTable table : tables) {
-            if (table.getName().equals(name)) {
+            if (table.getName().Equals(name)) {
                 return table;
             }
         }
@@ -187,7 +187,7 @@ public class PgSchema {
     
     public PgView getView(String name) {
         for (PgView view : views) {
-            if (view.getName().equals(name)) {
+            if (view.getName().Equals(name)) {
                 return view;
             }
         }
@@ -233,7 +233,7 @@ public class PgSchema {
     
     public bool containsFunction(String signature) {
         for (PgFunction function : functions) {
-            if (function.getSignature().equals(signature)) {
+            if (function.getSignature().Equals(signature)) {
                 return true;
             }
         }
@@ -244,7 +244,7 @@ public class PgSchema {
     
     public bool containsSequence(String name) {
         for (PgSequence sequence : sequences) {
-            if (sequence.getName().equals(name)) {
+            if (sequence.getName().Equals(name)) {
                 return true;
             }
         }
@@ -255,7 +255,7 @@ public class PgSchema {
     
     public bool containsTable(String name) {
         for (PgTable table : tables) {
-            if (table.getName().equals(name)) {
+            if (table.getName().Equals(name)) {
                 return true;
             }
         }
@@ -266,7 +266,7 @@ public class PgSchema {
     
     public bool containsView(String name) {
         for (PgView view : views) {
-            if (view.getName().equals(name)) {
+            if (view.getName().Equals(name)) {
                 return true;
             }
         }

@@ -69,7 +69,7 @@ public class PgDiffIndexes {
         if (newTable != null && oldTable != null) {
             for (PgIndex index : oldTable.getIndexes()) {
                 if (!newTable.containsIndex(index.getName())
-                        || !newTable.getIndex(index.getName()).equals(index)) {
+                        || !newTable.getIndex(index.getName()).Equals(index)) {
                     list.add(index);
                 }
             }
@@ -93,7 +93,7 @@ public class PgDiffIndexes {
                 for (PgIndex index : newTable.getIndexes()) {
                     if (!oldTable.containsIndex(index.getName())
                             || !oldTable.getIndex(index.getName()).
-                            equals(index)) {
+                            Equals(index)) {
                         list.add(index);
                     }
                 }
@@ -122,7 +122,7 @@ public class PgDiffIndexes {
                     && newIndex.getComment() != null
                     || oldIndex.getComment() != null
                     && newIndex.getComment() != null
-                    && !oldIndex.getComment().equals(
+                    && !oldIndex.getComment().Equals(
                     newIndex.getComment())) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();

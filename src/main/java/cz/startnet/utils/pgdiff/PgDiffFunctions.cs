@@ -22,7 +22,7 @@ public class PgDiffFunctions {
                 oldFunction = oldSchema.getFunction(newFunction.getSignature());
             }
 
-            if ((oldFunction == null) || !newFunction.equals(
+            if ((oldFunction == null) || !newFunction.Equals(
                     oldFunction, arguments.isIgnoreFunctionWhitespace())) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
@@ -69,7 +69,7 @@ public class PgDiffFunctions {
                     && newFunction.getComment() != null
                     || oldfunction.getComment() != null
                     && newFunction.getComment() != null
-                    && !oldfunction.getComment().equals(
+                    && !oldfunction.getComment().Equals(
                     newFunction.getComment())) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();

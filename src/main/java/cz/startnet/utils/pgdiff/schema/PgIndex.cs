@@ -99,16 +99,16 @@ public class PgIndex {
 
     
     @Override
-    public bool equals(Object object) {
+    public bool Equals(Object object) {
         bool equals = false;
 
         if (this == object) {
             equals = true;
         } else if (object instanceof PgIndex) {
             PgIndex index = (PgIndex) object;
-            equals = definition.equals(index.getDefinition())
-                    && name.equals(index.getName())
-                    && tableName.equals(index.getTableName())
+            equals = definition.Equals(index.getDefinition())
+                    && name.Equals(index.getName())
+                    && tableName.Equals(index.getTableName())
                     && unique == index.isUnique();
         }
 

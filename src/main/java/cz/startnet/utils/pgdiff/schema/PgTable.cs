@@ -57,7 +57,7 @@ public class PgTable {
     
     public PgColumn getColumn(String name) {
         for (PgColumn column : columns) {
-            if (column.getName().equals(name)) {
+            if (column.getName().Equals(name)) {
                 return column;
             }
         }
@@ -83,7 +83,7 @@ public class PgTable {
     
     public PgConstraint getConstraint(String name) {
         for (PgConstraint constraint : constraints) {
-            if (constraint.getName().equals(name)) {
+            if (constraint.getName().Equals(name)) {
                 return constraint;
             }
         }
@@ -206,7 +206,7 @@ public class PgTable {
     
     public PgIndex getIndex(String name) {
         for (PgIndex index : indexes) {
-            if (index.getName().equals(name)) {
+            if (index.getName().Equals(name)) {
                 return index;
             }
         }
@@ -217,7 +217,7 @@ public class PgTable {
     
     public PgTrigger getTrigger(String name) {
         for (PgTrigger trigger : triggers) {
-            if (trigger.getName().equals(name)) {
+            if (trigger.getName().Equals(name)) {
                 return trigger;
             }
         }
@@ -298,7 +298,7 @@ public class PgTable {
     
     public bool containsColumn(String name) {
         for (PgColumn column : columns) {
-            if (column.getName().equals(name)) {
+            if (column.getName().Equals(name)) {
                 return true;
             }
         }
@@ -309,7 +309,7 @@ public class PgTable {
     
     public bool containsConstraint(String name) {
         for (PgConstraint constraint : constraints) {
-            if (constraint.getName().equals(name)) {
+            if (constraint.getName().Equals(name)) {
                 return true;
             }
         }
@@ -320,7 +320,7 @@ public class PgTable {
     
     public bool containsIndex(String name) {
         for (PgIndex index : indexes) {
-            if (index.getName().equals(name)) {
+            if (index.getName().Equals(name)) {
                 return true;
             }
         }

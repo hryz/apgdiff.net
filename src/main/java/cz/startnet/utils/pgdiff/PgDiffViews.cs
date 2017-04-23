@@ -72,7 +72,7 @@ public class PgDiffViews {
         if (oldViewColumnNames == null && newViewColumnNames == null) {
             return !oldView.getQuery().Trim().Equals(newView.getQuery().Trim());
         } else {
-            return !Arrays.equals(oldViewColumnNames, newViewColumnNames); //todo!
+            return !Arrays.Equals(oldViewColumnNames, newViewColumnNames); //todo!
         }
     }
 
@@ -148,7 +148,7 @@ public class PgDiffViews {
 
                 if (oldColumnComment == null && newColumnComment != null
                         || oldColumnComment != null && newColumnComment != null
-                        && !oldColumnComment.getComment().equals(
+                        && !oldColumnComment.getComment().Equals(
                         newColumnComment.getComment())) {
                     searchPathHelper.outputSearchPath(writer);
                     writer.println();
@@ -189,10 +189,10 @@ public class PgDiffViews {
             bool found = false;
 
             for (PgView.DefaultValue newValue : newValues) {
-                if (oldValue.getColumnName().equals(newValue.getColumnName())) {
+                if (oldValue.getColumnName().Equals(newValue.getColumnName())) {
                     found = true;
 
-                    if (!oldValue.getDefaultValue().equals(
+                    if (!oldValue.getDefaultValue().Equals(
                             newValue.getDefaultValue())) {
                         searchPathHelper.outputSearchPath(writer);
                         writer.println();
@@ -228,7 +228,7 @@ public class PgDiffViews {
             bool found = false;
 
             for (PgView.DefaultValue oldValue : oldValues) {
-                if (newValue.getColumnName().equals(oldValue.getColumnName())) {
+                if (newValue.getColumnName().Equals(oldValue.getColumnName())) {
                     found = true;
                     break;
                 }

@@ -82,8 +82,8 @@ public class CreateTriggerParser {
         trigger.setFunction(parser.getRest());
 
         bool ignoreSlonyTrigger = ignoreSlonyTriggers
-                && ("_slony_logtrigger".equals(trigger.getName())
-                || "_slony_denyaccess".equals(trigger.getName()));
+                && ("_slony_logtrigger".Equals(trigger.getName())
+                || "_slony_denyaccess".Equals(trigger.getName()));
 
         if (!ignoreSlonyTrigger) {
             PgSchema tableSchema = database.getSchema(

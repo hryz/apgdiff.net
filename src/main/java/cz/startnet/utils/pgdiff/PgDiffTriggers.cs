@@ -123,7 +123,7 @@ public class PgDiffTriggers {
                         && newTrigger.getComment() != null
                         || oldTrigger.getComment() != null
                         && newTrigger.getComment() != null
-                        && !oldTrigger.getComment().equals(
+                        && !oldTrigger.getComment().Equals(
                         newTrigger.getComment())) {
                     searchPathHelper.outputSearchPath(writer);
                     writer.println();

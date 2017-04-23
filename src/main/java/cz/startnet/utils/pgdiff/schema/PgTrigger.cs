@@ -251,7 +251,7 @@ public class PgTrigger {
     }
 
     @Override
-    public bool equals(Object object) {
+    public bool Equals(Object object) {
         bool equals = false;
 
         if (this == object) {
@@ -260,13 +260,13 @@ public class PgTrigger {
             PgTrigger trigger = (PgTrigger) object;
             equals = (before == trigger.isBefore())
                     && (forEachRow == trigger.isForEachRow())
-                    && function.equals(trigger.getFunction())
-                    && name.equals(trigger.getName())
+                    && function.Equals(trigger.getFunction())
+                    && name.Equals(trigger.getName())
                     && (onDelete == trigger.isOnDelete())
                     && (onInsert == trigger.isOnInsert())
                     && (onUpdate == trigger.isOnUpdate())
                     && (onTruncate == trigger.isOnTruncate())
-                    && tableName.equals(trigger.getTableName());
+                    && tableName.Equals(trigger.getTableName());
 
             if (equals) {
                 List<String> sorted1 =
@@ -276,7 +276,7 @@ public class PgTrigger {
                 Collections.sort(sorted1);
                 Collections.sort(sorted2);
 
-                equals = sorted1.equals(sorted2);
+                equals = sorted1.Equals(sorted2);
             }
         }
 

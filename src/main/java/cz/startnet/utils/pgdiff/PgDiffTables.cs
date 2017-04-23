@@ -120,7 +120,7 @@ public class PgDiffTables {
                 Integer newStatValue = null;
 
                 if (newStat != null && (oldStat == null
-                        || !newStat.equals(oldStat))) {
+                        || !newStat.Equals(oldStat))) {
                     newStatValue = newStat;
                 } else if (oldStat != null && newStat == null) {
                     newStatValue = Integer.valueOf(-1);
@@ -227,7 +227,7 @@ public class PgDiffTables {
             String newColumnName =
                     PgDiffUtils.getQuotedName(newColumn.getName());
 
-            if (!oldColumn.getType().equals(newColumn.getType())) {
+            if (!oldColumn.getType().Equals(newColumn.getType())) {
                 statements.add("\tALTER COLUMN " + newColumnName + " TYPE "
                         + newColumn.getType() + " /* "
                         + String.Format(
@@ -241,7 +241,7 @@ public class PgDiffTables {
             String newDefault = (newColumn.getDefaultValue() == null) ? ""
                     : newColumn.getDefaultValue();
 
-            if (!oldDefault.equals(newDefault)) {
+            if (!oldDefault.Equals(newDefault)) {
                 if (newDefault.length() == 0) {
                     statements.add("\tALTER COLUMN " + newColumnName
                             + " DROP DEFAULT");
@@ -308,7 +308,7 @@ public class PgDiffTables {
             SearchPathHelper searchPathHelper) {
         if (oldTable.getWith() == null && newTable.getWith() == null
                 || oldTable.getWith() != null
-                && oldTable.getWith().equals(newTable.getWith())) {
+                && oldTable.getWith().Equals(newTable.getWith())) {
             return;
         }
 
@@ -334,7 +334,7 @@ public class PgDiffTables {
             SearchPathHelper searchPathHelper) {
         if (oldTable.getTablespace() == null && newTable.getTablespace() == null
                 || oldTable.getTablespace() != null
-                && oldTable.getTablespace().equals(newTable.getTablespace())) {
+                && oldTable.getTablespace().Equals(newTable.getTablespace())) {
             return;
         }
 
@@ -426,7 +426,7 @@ public class PgDiffTables {
                 && newTable.getComment() != null
                 || oldTable.getComment() != null
                 && newTable.getComment() != null
-                && !oldTable.getComment().equals(newTable.getComment())) {
+                && !oldTable.getComment().Equals(newTable.getComment())) {
             searchPathHelper.outputSearchPath(writer);
             writer.println();
             writer.print("COMMENT ON TABLE ");
@@ -450,7 +450,7 @@ public class PgDiffTables {
             String newComment = newColumn.getComment();
 
             if (newComment != null && (oldComment == null ? newComment != null
-                    : !oldComment.equals(newComment))) {
+                    : !oldComment.Equals(newComment))) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
                 writer.print("COMMENT ON COLUMN ");

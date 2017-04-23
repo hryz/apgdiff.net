@@ -39,8 +39,8 @@ public class Parser {
                 || string.charAt(wordEnd) == ')'
                 || string.charAt(wordEnd) == ','
                 || string.charAt(wordEnd) == '['
-                || "(".equals(word) || ",".equals(word) || "[".equals(word)
-                || "]".equals(word))) {
+                || "(".Equals(word) || ",".Equals(word) || "[".Equals(word)
+                || "]".Equals(word))) {
             position = wordEnd;
             skipWhitespace();
 

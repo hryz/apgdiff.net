@@ -84,7 +84,7 @@ public class PgDiffSequences {
             String newIncrement = newSequence.getIncrement();
 
             if (newIncrement != null
-                    && !newIncrement.equals(oldIncrement)) {
+                    && !newIncrement.Equals(oldIncrement)) {
                 sbSQL.append("\n\tINCREMENT BY ");
                 sbSQL.append(newIncrement);
             }
@@ -95,7 +95,7 @@ public class PgDiffSequences {
             if (newMinValue == null && oldMinValue != null) {
                 sbSQL.append("\n\tNO MINVALUE");
             } else if (newMinValue != null
-                    && !newMinValue.equals(oldMinValue)) {
+                    && !newMinValue.Equals(oldMinValue)) {
                 sbSQL.append("\n\tMINVALUE ");
                 sbSQL.append(newMinValue);
             }
@@ -106,7 +106,7 @@ public class PgDiffSequences {
             if (newMaxValue == null && oldMaxValue != null) {
                 sbSQL.append("\n\tNO MAXVALUE");
             } else if (newMaxValue != null
-                    && !newMaxValue.equals(oldMaxValue)) {
+                    && !newMaxValue.Equals(oldMaxValue)) {
                 sbSQL.append("\n\tMAXVALUE ");
                 sbSQL.append(newMaxValue);
             }
@@ -115,7 +115,7 @@ public class PgDiffSequences {
                 String oldStart = oldSequence.getStartWith();
                 String newStart = newSequence.getStartWith();
 
-                if (newStart != null && !newStart.equals(oldStart)) {
+                if (newStart != null && !newStart.Equals(oldStart)) {
                     sbSQL.append("\n\tRESTART WITH ");
                     sbSQL.append(newStart);
                 }
@@ -124,7 +124,7 @@ public class PgDiffSequences {
             String oldCache = oldSequence.getCache();
             String newCache = newSequence.getCache();
 
-            if (newCache != null && !newCache.equals(oldCache)) {
+            if (newCache != null && !newCache.Equals(oldCache)) {
                 sbSQL.append("\n\tCACHE ");
                 sbSQL.append(newCache);
             }
@@ -141,7 +141,7 @@ public class PgDiffSequences {
             String oldOwnedBy = oldSequence.getOwnedBy();
             String newOwnedBy = newSequence.getOwnedBy();
 
-            if (newOwnedBy != null && !newOwnedBy.equals(oldOwnedBy)) {
+            if (newOwnedBy != null && !newOwnedBy.Equals(oldOwnedBy)) {
                 sbSQL.append("\n\tOWNED BY ");
                 sbSQL.append(newOwnedBy);
             }
@@ -159,7 +159,7 @@ public class PgDiffSequences {
                     && newSequence.getComment() != null
                     || oldSequence.getComment() != null
                     && newSequence.getComment() != null
-                    && !oldSequence.getComment().equals(
+                    && !oldSequence.getComment().Equals(
                     newSequence.getComment())) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();

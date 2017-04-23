@@ -13,27 +13,27 @@ public class PgColumnUtils {
         String defaultValue;
         String adjType = type.toLowerCase(Locale.ENGLISH);
 
-        if ("smallint".equals(adjType)
-                || "integer".equals(adjType)
-                || "bigint".equals(adjType)
+        if ("smallint".Equals(adjType)
+                || "integer".Equals(adjType)
+                || "bigint".Equals(adjType)
                 || adjType.startsWith("decimal")
                 || adjType.startsWith("numeric")
-                || "real".equals(adjType)
-                || "double precision".equals(adjType)
-                || "int2".equals(adjType)
-                || "int4".equals(adjType)
-                || "int8".equals(adjType)
+                || "real".Equals(adjType)
+                || "double precision".Equals(adjType)
+                || "int2".Equals(adjType)
+                || "int4".Equals(adjType)
+                || "int8".Equals(adjType)
                 || adjType.startsWith("float")
-                || "double".equals(adjType)
-                || "money".equals(adjType)) {
+                || "double".Equals(adjType)
+                || "money".Equals(adjType)) {
             defaultValue = "0";
         } else if (adjType.startsWith("character varying")
                 || adjType.startsWith("varchar")
                 || adjType.startsWith("character")
                 || adjType.startsWith("char")
-                || "text".equals(adjType)) {
+                || "text".Equals(adjType)) {
             defaultValue = "''";
-        } else if ("boolean".equals(adjType)) {
+        } else if ("boolean".Equals(adjType)) {
             defaultValue = "false";
         } else {
             defaultValue = null;

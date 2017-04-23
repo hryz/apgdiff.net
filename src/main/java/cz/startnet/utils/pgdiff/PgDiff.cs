@@ -65,7 +65,7 @@ public class PgDiff {
                 && newDatabase.getComment() != null
                 || oldDatabase.getComment() != null
                 && newDatabase.getComment() != null
-                && !oldDatabase.getComment().equals(newDatabase.getComment())) {
+                && !oldDatabase.getComment().Equals(newDatabase.getComment())) {
             writer.println();
             writer.print("COMMENT ON DATABASE current_database() IS ");
             writer.print(newDatabase.getComment());
@@ -136,7 +136,7 @@ public class PgDiff {
             PgDiffArguments arguments, PgDatabase oldDatabase,
             PgDatabase newDatabase) {
         bool setSearchPath = newDatabase.getSchemas().size() > 1
-                || !newDatabase.getSchemas().get(0).getName().equals("public");
+                || !newDatabase.getSchemas().get(0).getName().Equals("public");
 
         for (PgSchema newSchema : newDatabase.getSchemas()) {
             SearchPathHelper searchPathHelper;
@@ -157,7 +157,7 @@ public class PgDiff {
                         && newSchema.getComment() != null
                         || oldSchema.getComment() != null
                         && newSchema.getComment() != null
-                        && !oldSchema.getComment().equals(
+                        && !oldSchema.getComment().Equals(
                         newSchema.getComment())) {
                     writer.println();
                     writer.print("COMMENT ON SCHEMA ");

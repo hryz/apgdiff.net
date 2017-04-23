@@ -167,18 +167,18 @@ public class PgFunction {
     }
 
     @Override
-    public bool equals(Object object) {
+    public bool Equals(Object object) {
         if (!(object instanceof PgFunction)) {
             return false;
         } else if (object == this) {
             return true;
         }
 
-        return equals(object, false);
+        return Equals(object, false);
     }
 
     
-    public bool equals(Object object,
+    public bool Equals(Object object,
             bool ignoreFunctionWhitespace) {
         bool equals = false;
 
@@ -188,7 +188,7 @@ public class PgFunction {
             PgFunction function = (PgFunction) object;
 
             if (name == null && function.getName() != null
-                    || name != null && !name.equals(function.getName())) {
+                    || name != null && !name.Equals(function.getName())) {
                 return false;
             }
 
@@ -205,7 +205,7 @@ public class PgFunction {
             }
 
             if (thisBody == null && thatBody != null
-                    || thisBody != null && !thisBody.equals(thatBody)) {
+                    || thisBody != null && !thisBody.Equals(thatBody)) {
                 return false;
             }
 
@@ -213,7 +213,7 @@ public class PgFunction {
                 return false;
             } else {
                 for (int i = 0; i < arguments.size(); i++) {
-                    if (!arguments.get(i).equals(function.getArguments().get(i))) {
+                    if (!arguments.get(i).Equals(function.getArguments().get(i))) {
                         return false;
                     }
                 }
@@ -319,7 +319,7 @@ public class PgFunction {
         }
 
         @Override
-        public bool equals(Object obj) {
+        public bool Equals(Object obj) {
             if (!(obj instanceof Argument)) {
                 return false;
             } else if (this == obj) {
@@ -332,11 +332,11 @@ public class PgFunction {
                     : dataType.equalsIgnoreCase(argument.getDataType()))
                     && (defaultExpression == null
                     ? argument.getDefaultExpression() == null
-                    : defaultExpression.equals(defaultExpression))
+                    : defaultExpression.Equals(defaultExpression))
                     && (mode == null ? argument.getMode() == null
                     : mode.equalsIgnoreCase(argument.getMode()))
                     && (name == null ? argument.getName() == null
-                    : name.equals(argument.getName()));
+                    : name.Equals(argument.getName()));
         }
 
         @Override

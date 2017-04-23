@@ -64,7 +64,7 @@ public class PgDatabase {
         }
 
         for (PgSchema schema : schemas) {
-            if (schema.getName().equals(name)) {
+            if (schema.getName().Equals(name)) {
                 return schema;
             }
         }

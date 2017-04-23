@@ -109,16 +109,16 @@ public class PgConstraint {
 
     
     @Override
-    public bool equals(Object object) {
+    public bool Equals(Object object) {
         bool equals = false;
 
         if (this == object) {
             equals = true;
         } else if (object instanceof PgConstraint) {
             PgConstraint constraint = (PgConstraint) object;
-            equals = definition.equals(constraint.getDefinition())
-                    && name.equals(constraint.getName())
-                    && tableName.equals(constraint.getTableName());
+            equals = definition.Equals(constraint.getDefinition())
+                    && name.Equals(constraint.getName())
+                    && tableName.Equals(constraint.getTableName());
         }
 
         return equals;

@@ -140,7 +140,7 @@ public class PgView {
     
     public void removeColumnDefaultValue(String columnName) {
         for (DefaultValue item : defaultValues) {
-            if (item.getColumnName().equals(columnName)) {
+            if (item.getColumnName().Equals(columnName)) {
                 defaultValues.remove(item);
                 return;
             }
@@ -162,7 +162,7 @@ public class PgView {
     
     public void removeColumnComment(String columnName) {
         for (ColumnComment item : columnComments) {
-            if (item.getColumnName().equals(columnName)) {
+            if (item.getColumnName().Equals(columnName)) {
                 columnComments.remove(item);
                 return;
             }

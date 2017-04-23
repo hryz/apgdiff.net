@@ -130,27 +130,27 @@ public class PgDiffArguments {
         }
 
         for (int i = 0; i < argsLength; i++) {
-            if ("--add-defaults".equals(args[i])) {
+            if ("--add-defaults".Equals(args[i])) {
                 setAddDefaults(true);
-            } else if ("--add-transaction".equals(args[i])) {
+            } else if ("--add-transaction".Equals(args[i])) {
                 setAddTransaction(true);
-            } else if ("--ignore-function-whitespace".equals(args[i])) {
+            } else if ("--ignore-function-whitespace".Equals(args[i])) {
                 setIgnoreFunctionWhitespace(true);
-            } else if ("--ignore-slony-triggers".equals(args[i])) {
+            } else if ("--ignore-slony-triggers".Equals(args[i])) {
                 setIgnoreSlonyTriggers(true);
-            } else if ("--ignore-start-with".equals(args[i])) {
+            } else if ("--ignore-start-with".Equals(args[i])) {
                 setIgnoreStartWith(true);
-            } else if ("--in-charset-name".equals(args[i])) {
+            } else if ("--in-charset-name".Equals(args[i])) {
                 setInCharsetName(args[i + 1]);
                 i++;
-            } else if ("--list-charsets".equals(args[i])) {
+            } else if ("--list-charsets".Equals(args[i])) {
                 setListCharsets(true);
-            } else if ("--out-charset-name".equals(args[i])) {
+            } else if ("--out-charset-name".Equals(args[i])) {
                 setOutCharsetName(args[i + 1]);
                 i++;
-            } else if ("--output-ignored-statements".equals(args[i])) {
+            } else if ("--output-ignored-statements".Equals(args[i])) {
                 setOutputIgnoredStatements(true);
-            } else if ("--version".equals(args[i])) {
+            } else if ("--version".Equals(args[i])) {
                 setVersion(true);
             } else {
                 writer.print(Resources.getString("ErrorUnknownOption"));
