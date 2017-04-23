@@ -11,7 +11,7 @@ public class PgDatabase {
     
     private List<PgSchema> schemas = new ArrayList<PgSchema>(1);
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<String> ignoredStatements = new ArrayList<String>();
     
     private PgSchema defaultSchema;

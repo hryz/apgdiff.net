@@ -257,7 +257,7 @@ public class PgDumpLoader { //NOPMD
     }
 
     
-    @SuppressWarnings("AssignmentToForLoopParameter")
+    
     private static boolean isQuoted(StringBuilder sbString,
             int pos) {
         boolean isQuoted = false;

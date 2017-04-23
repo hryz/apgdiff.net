@@ -112,7 +112,7 @@ public class PgDiffTables {
     private static void addAlterStatistics(PrintWriter writer,
             PgTable oldTable, PgTable newTable,
             SearchPathHelper searchPathHelper) {
-        @SuppressWarnings("CollectionWithoutInitialCapacity")
+        
         Map<String, Integer> stats = new HashMap<String, Integer>();
 
         for (PgColumn newColumn : newTable.getColumns()) {
@@ -384,9 +384,9 @@ public class PgDiffTables {
     private static void updateTableColumns(PrintWriter writer,
             PgDiffArguments arguments, PgTable oldTable,
             PgTable newTable, SearchPathHelper searchPathHelper) {
-        @SuppressWarnings("CollectionWithoutInitialCapacity")
+        
         List<String> statements = new ArrayList<String>();
-        @SuppressWarnings("CollectionWithoutInitialCapacity")
+        
         List<PgColumn> dropDefaultsColumns = new ArrayList<PgColumn>();
         addDropTableColumns(statements, oldTable, newTable);
         addCreateTableColumns(

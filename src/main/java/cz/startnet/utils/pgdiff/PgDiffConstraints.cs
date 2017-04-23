@@ -59,7 +59,7 @@ public class PgDiffConstraints {
     
     private static List<PgConstraint> getDropConstraints(PgTable oldTable,
             PgTable newTable, boolean primaryKey) {
-        @SuppressWarnings("CollectionWithoutInitialCapacity")
+        
         List<PgConstraint> list = new ArrayList<PgConstraint>();
 
         if (newTable != null && oldTable != null) {
@@ -79,7 +79,7 @@ public class PgDiffConstraints {
     
     private static List<PgConstraint> getNewConstraints(PgTable oldTable,
             PgTable newTable, boolean primaryKey) {
-        @SuppressWarnings("CollectionWithoutInitialCapacity")
+        
         List<PgConstraint> list = new ArrayList<PgConstraint>();
 
         if (newTable != null) {

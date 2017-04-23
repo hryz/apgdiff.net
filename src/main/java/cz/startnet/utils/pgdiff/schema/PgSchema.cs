@@ -10,22 +10,22 @@ using cz.startnet.utils.pgdiff.PgDiffUtils;
 public class PgSchema {
 
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<PgFunction> functions = new ArrayList<PgFunction>();
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<PgSequence> sequences = new ArrayList<PgSequence>();
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<PgTable> tables = new ArrayList<PgTable>();
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<PgView> views = new ArrayList<PgView>();
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<PgIndex> indexes = new ArrayList<PgIndex>();
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<PgConstraint> primaryKeys =
             new ArrayList<PgConstraint>();
     

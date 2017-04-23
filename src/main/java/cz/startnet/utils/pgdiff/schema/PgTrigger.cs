@@ -28,7 +28,7 @@ public class PgTrigger {
     
     private boolean onTruncate;
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<String> updateColumns = new ArrayList<String>();
     
     private String when;

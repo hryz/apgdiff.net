@@ -116,7 +116,7 @@ public class PgDiffArguments {
     }
 
     
-    @SuppressWarnings("AssignmentToForLoopParameter")
+    
     public boolean parse(PrintWriter writer, String[] args) {
         boolean success = true;
         int argsLength;

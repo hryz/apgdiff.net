@@ -30,7 +30,7 @@ public class PgView {
     }
 
     
-    @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
+    
     public void setColumnNames(List<String> columnNames) {
         this.columnNames = columnNames;
     }
@@ -172,7 +172,7 @@ public class PgView {
     }
 
     
-    @SuppressWarnings("PublicInnerClass")
+    
     public class DefaultValue {
 
         
@@ -198,7 +198,7 @@ public class PgView {
     }
 
     
-    @SuppressWarnings("PublicInnerClass")
+    
     public class ColumnComment {
 
         

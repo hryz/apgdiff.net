@@ -6,7 +6,7 @@ using cz.startnet.utils.pgdiff.Resources;
 
 
 
-@SuppressWarnings("FinalClass")
+
 public class Parser {
 
     

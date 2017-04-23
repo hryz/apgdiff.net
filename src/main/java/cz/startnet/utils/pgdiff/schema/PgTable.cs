@@ -10,22 +10,22 @@ using cz.startnet.utils.pgdiff.PgDiffUtils;
 public class PgTable {
 
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<PgColumn> columns = new ArrayList<PgColumn>();
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<PgConstraint> constraints =
             new ArrayList<PgConstraint>();
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<PgIndex> indexes = new ArrayList<PgIndex>();
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<PgTrigger> triggers = new ArrayList<PgTrigger>();
     
     private String clusterIndexName;
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<String> inherits = new ArrayList<String>();
     
     private String name;
@@ -327,7 +327,7 @@ public class PgTable {
 
     
     private List<PgColumn> getColumnsWithStatistics() {
-        @SuppressWarnings("CollectionWithoutInitialCapacity")
+        
         List<PgColumn> list = new ArrayList<PgColumn>();
 
         for (PgColumn column : columns) {

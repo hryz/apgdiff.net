@@ -62,7 +62,7 @@ public class PgDiffIndexes {
     
     private static List<PgIndex> getDropIndexes(PgTable oldTable,
             PgTable newTable) {
-        @SuppressWarnings("CollectionWithoutInitialCapacity")
+        
         List<PgIndex> list = new ArrayList<PgIndex>();
 
         if (newTable != null && oldTable != null) {
@@ -80,7 +80,7 @@ public class PgDiffIndexes {
     
     private static List<PgIndex> getNewIndexes(PgTable oldTable,
             PgTable newTable) {
-        @SuppressWarnings("CollectionWithoutInitialCapacity")
+        
         List<PgIndex> list = new ArrayList<PgIndex>();
 
         if (newTable != null) {

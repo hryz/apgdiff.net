@@ -13,7 +13,7 @@ public class PgFunction {
     
     private String name;
     
-    @SuppressWarnings("CollectionWithoutInitialCapacity")
+    
     private List<Argument> arguments = new ArrayList<Argument>();
     
     private String body;
@@ -238,7 +238,7 @@ public class PgFunction {
     }
 
     
-    @SuppressWarnings("PublicInnerClass")
+    
     public static class Argument {
 
         
