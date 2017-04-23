@@ -12,7 +12,7 @@ namespace cz.startnet.utils.pgdiff {
 public class PgDiff {
 
     
-    public static void createDiff(PrintWriter writer,
+    public static void createDiff(TextWriter writer,
             PgDiffArguments arguments) {
         PgDatabase oldDatabase = PgDumpLoader.loadDatabaseSchema(
                 arguments.getOldDumpFile(), arguments.getInCharsetName(),
@@ -27,7 +27,7 @@ public class PgDiff {
     }
 
     
-    public static void createDiff(PrintWriter writer,
+    public static void createDiff(TextWriter writer,
             PgDiffArguments arguments, InputStream oldInputStream,
             InputStream newInputStream) {
         PgDatabase oldDatabase = PgDumpLoader.loadDatabaseSchema(
@@ -43,22 +43,22 @@ public class PgDiff {
     }
 
     
-    private static void createNewSchemas(PrintWriter writer,
+    private static void createNewSchemas(TextWriter writer,
             PgDatabase oldDatabase, PgDatabase newDatabase) {
         for (PgSchema newSchema : newDatabase.getSchemas()) {
             if (oldDatabase.getSchema(newSchema.getName()) == null) {
-                writer.println();
-                writer.println(newSchema.getCreationSQL());
+                writer.WriteLine();
+                writer.WriteLine(newSchema.getCreationSQL());
             }
         }
     }
 
     
-    private static void diffDatabaseSchemas(PrintWriter writer,
+    private static void diffDatabaseSchemas(TextWriter writer,
             PgDiffArguments arguments, PgDatabase oldDatabase,
             PgDatabase newDatabase) {
         if (arguments.isAddTransaction()) {
-            writer.println("START TRANSACTION;");
+            writer.WriteLine("START TRANSACTION;");
         }
 
         if (oldDatabase.getComment() == null
@@ -66,14 +66,14 @@ public class PgDiff {
                 || oldDatabase.getComment() != null
                 && newDatabase.getComment() != null
                 && !oldDatabase.getComment().Equals(newDatabase.getComment())) {
-            writer.println();
-            writer.print("COMMENT ON DATABASE current_database() IS ");
-            writer.print(newDatabase.getComment());
-            writer.println(';');
+            writer.WriteLine();
+            writer.Write("COMMENT ON DATABASE current_database() IS ");
+            writer.Write(newDatabase.getComment());
+            writer.WriteLine(';');
         } else if (oldDatabase.getComment() != null
                 && newDatabase.getComment() == null) {
-            writer.println();
-            writer.println("COMMENT ON DATABASE current_database() IS NULL;");
+            writer.WriteLine();
+            writer.WriteLine("COMMENT ON DATABASE current_database() IS NULL;");
         }
 
         dropOldSchemas(writer, oldDatabase, newDatabase);
@@ -81,50 +81,50 @@ public class PgDiff {
         updateSchemas(writer, arguments, oldDatabase, newDatabase);
 
         if (arguments.isAddTransaction()) {
-            writer.println();
-            writer.println("COMMIT TRANSACTION;");
+            writer.WriteLine();
+            writer.WriteLine("COMMIT TRANSACTION;");
         }
 
         if (arguments.isOutputIgnoredStatements()) {
             if (!oldDatabase.getIgnoredStatements().isEmpty()) {
-                writer.println();
-                writer.print("/* ");
-                writer.println(Resources.getString(
+                writer.WriteLine();
+                writer.Write("/* ");
+                writer.WriteLine(Resources.getString(
                         "OriginalDatabaseIgnoredStatements"));
 
                 for (String statement :
                         oldDatabase.getIgnoredStatements()) {
-                    writer.println();
-                    writer.println(statement);
+                    writer.WriteLine();
+                    writer.WriteLine(statement);
                 }
 
-                writer.println("*/");
+                writer.WriteLine("*/");
             }
 
             if (!newDatabase.getIgnoredStatements().isEmpty()) {
-                writer.println();
-                writer.print("/* ");
-                writer.println(
+                writer.WriteLine();
+                writer.Write("/* ");
+                writer.WriteLine(
                         Resources.getString("NewDatabaseIgnoredStatements"));
 
                 for (String statement :
                         newDatabase.getIgnoredStatements()) {
-                    writer.println();
-                    writer.println(statement);
+                    writer.WriteLine();
+                    writer.WriteLine(statement);
                 }
 
-                writer.println("*/");
+                writer.WriteLine("*/");
             }
         }
     }
 
     
-    private static void dropOldSchemas(PrintWriter writer,
+    private static void dropOldSchemas(TextWriter writer,
             PgDatabase oldDatabase, PgDatabase newDatabase) {
         for (PgSchema oldSchema : oldDatabase.getSchemas()) {
             if (newDatabase.getSchema(oldSchema.getName()) == null) {
-                writer.println();
-                writer.println("DROP SCHEMA "
+                writer.WriteLine();
+                writer.WriteLine("DROP SCHEMA "
                         + PgDiffUtils.getQuotedName(oldSchema.getName())
                         + " CASCADE;");
             }
@@ -132,7 +132,7 @@ public class PgDiff {
     }
 
     
-    private static void updateSchemas(PrintWriter writer,
+    private static void updateSchemas(TextWriter writer,
             PgDiffArguments arguments, PgDatabase oldDatabase,
             PgDatabase newDatabase) {
         bool setSearchPath = newDatabase.getSchemas().size() > 1
@@ -159,20 +159,20 @@ public class PgDiff {
                         && newSchema.getComment() != null
                         && !oldSchema.getComment().Equals(
                         newSchema.getComment())) {
-                    writer.println();
-                    writer.print("COMMENT ON SCHEMA ");
-                    writer.print(
+                    writer.WriteLine();
+                    writer.Write("COMMENT ON SCHEMA ");
+                    writer.Write(
                             PgDiffUtils.getQuotedName(newSchema.getName()));
-                    writer.print(" IS ");
-                    writer.print(newSchema.getComment());
-                    writer.println(';');
+                    writer.Write(" IS ");
+                    writer.Write(newSchema.getComment());
+                    writer.WriteLine(';');
                 } else if (oldSchema.getComment() != null
                         && newSchema.getComment() == null) {
-                    writer.println();
-                    writer.print("COMMENT ON SCHEMA ");
-                    writer.print(
+                    writer.WriteLine();
+                    writer.Write("COMMENT ON SCHEMA ");
+                    writer.Write(
                             PgDiffUtils.getQuotedName(newSchema.getName()));
-                    writer.println(" IS NULL;");
+                    writer.WriteLine(" IS NULL;");
                 }
             }
 

@@ -12,7 +12,7 @@ namespace cz.startnet.utils.pgdiff {
 public class PgDiffConstraints {
 
     
-    public static void createConstraints(PrintWriter writer,
+    public static void createConstraints(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             bool primaryKey, SearchPathHelper searchPathHelper) {
         for (PgTable newTable : newSchema.getTables()) {
@@ -28,13 +28,13 @@ public class PgDiffConstraints {
             for (PgConstraint constraint :
                     getNewConstraints(oldTable, newTable, primaryKey)) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(constraint.getCreationSQL());
+                writer.WriteLine();
+                writer.WriteLine(constraint.getCreationSQL());
             }
         }
     }
 
-    public static void dropConstraints(PrintWriter writer,
+    public static void dropConstraints(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             bool primaryKey, SearchPathHelper searchPathHelper) {
         for (PgTable newTable : newSchema.getTables()) {
@@ -50,8 +50,8 @@ public class PgDiffConstraints {
             for (PgConstraint constraint :
                     getDropConstraints(oldTable, newTable, primaryKey)) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(constraint.getDropSQL());
+                writer.WriteLine();
+                writer.WriteLine(constraint.getDropSQL());
             }
         }
     }
@@ -108,7 +108,7 @@ public class PgDiffConstraints {
     }
 
     
-    public static void alterComments(PrintWriter writer,
+    public static void alterComments(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
@@ -137,45 +137,45 @@ public class PgDiffConstraints {
                         && !oldConstraint.getComment().Equals(
                         newConstraint.getComment())) {
                     searchPathHelper.outputSearchPath(writer);
-                    writer.println();
-                    writer.print("COMMENT ON ");
+                    writer.WriteLine();
+                    writer.Write("COMMENT ON ");
 
                     if (newConstraint.isPrimaryKeyConstraint()) {
-                        writer.print("INDEX ");
-                        writer.print(PgDiffUtils.getQuotedName(
+                        writer.Write("INDEX ");
+                        writer.Write(PgDiffUtils.getQuotedName(
                                 newConstraint.getName()));
                     } else {
-                        writer.print("CONSTRAINT ");
-                        writer.print(PgDiffUtils.getQuotedName(
+                        writer.Write("CONSTRAINT ");
+                        writer.Write(PgDiffUtils.getQuotedName(
                                 newConstraint.getName()));
-                        writer.print(" ON ");
-                        writer.print(PgDiffUtils.getQuotedName(
+                        writer.Write(" ON ");
+                        writer.Write(PgDiffUtils.getQuotedName(
                                 newConstraint.getTableName()));
                     }
 
-                    writer.print(" IS ");
-                    writer.print(newConstraint.getComment());
-                    writer.println(';');
+                    writer.Write(" IS ");
+                    writer.Write(newConstraint.getComment());
+                    writer.WriteLine(';');
                 } else if (oldConstraint.getComment() != null
                         && newConstraint.getComment() == null) {
                     searchPathHelper.outputSearchPath(writer);
-                    writer.println();
-                    writer.print("COMMENT ON ");
+                    writer.WriteLine();
+                    writer.Write("COMMENT ON ");
 
                     if (newConstraint.isPrimaryKeyConstraint()) {
-                        writer.print("INDEX ");
-                        writer.print(PgDiffUtils.getQuotedName(
+                        writer.Write("INDEX ");
+                        writer.Write(PgDiffUtils.getQuotedName(
                                 newConstraint.getName()));
                     } else {
-                        writer.print("CONSTRAINT ");
-                        writer.print(PgDiffUtils.getQuotedName(
+                        writer.Write("CONSTRAINT ");
+                        writer.Write(PgDiffUtils.getQuotedName(
                                 newConstraint.getName()));
-                        writer.print(" ON ");
-                        writer.print(PgDiffUtils.getQuotedName(
+                        writer.Write(" ON ");
+                        writer.Write(PgDiffUtils.getQuotedName(
                                 newConstraint.getTableName()));
                     }
 
-                    writer.println(" IS NULL;");
+                    writer.WriteLine(" IS NULL;");
                 }
             }
         }

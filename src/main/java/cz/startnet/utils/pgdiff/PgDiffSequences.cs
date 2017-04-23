@@ -11,7 +11,7 @@ namespace cz.startnet.utils.pgdiff {
 public class PgDiffSequences {
 
     
-    public static void createSequences(PrintWriter writer,
+    public static void createSequences(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         // Add new sequences
@@ -19,14 +19,14 @@ public class PgDiffSequences {
             if (oldSchema == null
                     || !oldSchema.containsSequence(sequence.getName())) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(sequence.getCreationSQL());
+                writer.WriteLine();
+                writer.WriteLine(sequence.getCreationSQL());
             }
         }
     }
 
     
-    public static void alterCreatedSequences(PrintWriter writer,
+    public static void alterCreatedSequences(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         // Alter created sequences
@@ -36,14 +36,14 @@ public class PgDiffSequences {
                     && sequence.getOwnedBy() != null
                     && !sequence.getOwnedBy().isEmpty()) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(sequence.getOwnedBySQL());
+                writer.WriteLine();
+                writer.WriteLine(sequence.getOwnedBySQL());
             }
         }
     }
 
     
-    public static void dropSequences(PrintWriter writer,
+    public static void dropSequences(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
@@ -54,14 +54,14 @@ public class PgDiffSequences {
         for (PgSequence sequence : oldSchema.getSequences()) {
             if (!newSchema.containsSequence(sequence.getName())) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(sequence.getDropSQL());
+                writer.WriteLine();
+                writer.WriteLine(sequence.getDropSQL());
             }
         }
     }
 
     
-    public static void alterSequences(PrintWriter writer,
+    public static void alterSequences(TextWriter writer,
             PgDiffArguments arguments, PgSchema oldSchema,
             PgSchema newSchema, SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
@@ -148,11 +148,11 @@ public class PgDiffSequences {
 
             if (sbSQL.length() > 0) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("ALTER SEQUENCE "
+                writer.WriteLine();
+                writer.Write("ALTER SEQUENCE "
                         + PgDiffUtils.getQuotedName(newSequence.getName()));
-                writer.print(sbSQL.toString());
-                writer.println(';');
+                writer.Write(sbSQL.toString());
+                writer.WriteLine(';');
             }
 
             if (oldSequence.getComment() == null
@@ -162,19 +162,19 @@ public class PgDiffSequences {
                     && !oldSequence.getComment().Equals(
                     newSequence.getComment())) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("COMMENT ON SEQUENCE ");
-                writer.print(PgDiffUtils.getQuotedName(newSequence.getName()));
-                writer.print(" IS ");
-                writer.print(newSequence.getComment());
-                writer.println(';');
+                writer.WriteLine();
+                writer.Write("COMMENT ON SEQUENCE ");
+                writer.Write(PgDiffUtils.getQuotedName(newSequence.getName()));
+                writer.Write(" IS ");
+                writer.Write(newSequence.getComment());
+                writer.WriteLine(';');
             } else if (oldSequence.getComment() != null
                     && newSequence.getComment() == null) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("COMMENT ON SEQUENCE ");
-                writer.print(newSequence.getName());
-                writer.println(" IS NULL;");
+                writer.WriteLine();
+                writer.Write("COMMENT ON SEQUENCE ");
+                writer.Write(newSequence.getName());
+                writer.WriteLine(" IS NULL;");
             }
         }
     }

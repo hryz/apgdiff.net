@@ -151,25 +151,25 @@ public class PgDiffViews {
                         && !oldColumnComment.getComment().Equals(
                         newColumnComment.getComment())) {
                     searchPathHelper.outputSearchPath(writer);
-                    writer.println();
-                    writer.print("COMMENT ON COLUMN ");
-                    writer.print(PgDiffUtils.getQuotedName(newView.getName()));
-                    writer.print('.');
-                    writer.print(PgDiffUtils.getQuotedName(
+                    writer.WriteLine();
+                    writer.Write("COMMENT ON COLUMN ");
+                    writer.Write(PgDiffUtils.getQuotedName(newView.getName()));
+                    writer.Write('.');
+                    writer.Write(PgDiffUtils.getQuotedName(
                             newColumnComment.getColumnName()));
-                    writer.print(" IS ");
-                    writer.print(newColumnComment.getComment());
-                    writer.println(';');
+                    writer.Write(" IS ");
+                    writer.Write(newColumnComment.getComment());
+                    writer.WriteLine(';');
                 } else if (oldColumnComment != null
                         && newColumnComment == null) {
                     searchPathHelper.outputSearchPath(writer);
-                    writer.println();
-                    writer.print("COMMENT ON COLUMN ");
-                    writer.print(PgDiffUtils.getQuotedName(newView.getName()));
-                    writer.print('.');
-                    writer.print(PgDiffUtils.getQuotedName(
+                    writer.WriteLine();
+                    writer.Write("COMMENT ON COLUMN ");
+                    writer.Write(PgDiffUtils.getQuotedName(newView.getName()));
+                    writer.Write('.');
+                    writer.Write(PgDiffUtils.getQuotedName(
                             oldColumnComment.getColumnName()));
-                    writer.println(" IS NULL;");
+                    writer.WriteLine(" IS NULL;");
                 }
             }
         }
@@ -195,16 +195,16 @@ public class PgDiffViews {
                     if (!oldValue.getDefaultValue().Equals(
                             newValue.getDefaultValue())) {
                         searchPathHelper.outputSearchPath(writer);
-                        writer.println();
-                        writer.print("ALTER TABLE ");
-                        writer.print(
+                        writer.WriteLine();
+                        writer.Write("ALTER TABLE ");
+                        writer.Write(
                                 PgDiffUtils.getQuotedName(newView.getName()));
-                        writer.print(" ALTER COLUMN ");
-                        writer.print(PgDiffUtils.getQuotedName(
+                        writer.Write(" ALTER COLUMN ");
+                        writer.Write(PgDiffUtils.getQuotedName(
                                 newValue.getColumnName()));
-                        writer.print(" SET DEFAULT ");
-                        writer.print(newValue.getDefaultValue());
-                        writer.println(';');
+                        writer.Write(" SET DEFAULT ");
+                        writer.Write(newValue.getDefaultValue());
+                        writer.WriteLine(';');
                     }
 
                     break;
@@ -213,13 +213,13 @@ public class PgDiffViews {
 
             if (!found) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("ALTER TABLE ");
-                writer.print(PgDiffUtils.getQuotedName(newView.getName()));
-                writer.print(" ALTER COLUMN ");
-                writer.print(PgDiffUtils.getQuotedName(
+                writer.WriteLine();
+                writer.Write("ALTER TABLE ");
+                writer.Write(PgDiffUtils.getQuotedName(newView.getName()));
+                writer.Write(" ALTER COLUMN ");
+                writer.Write(PgDiffUtils.getQuotedName(
                         oldValue.getColumnName()));
-                writer.println(" DROP DEFAULT;");
+                writer.WriteLine(" DROP DEFAULT;");
             }
         }
 
@@ -239,14 +239,14 @@ public class PgDiffViews {
             }
 
             searchPathHelper.outputSearchPath(writer);
-            writer.println();
-            writer.print("ALTER TABLE ");
-            writer.print(PgDiffUtils.getQuotedName(newView.getName()));
-            writer.print(" ALTER COLUMN ");
-            writer.print(PgDiffUtils.getQuotedName(newValue.getColumnName()));
-            writer.print(" SET DEFAULT ");
-            writer.print(newValue.getDefaultValue());
-            writer.println(';');
+            writer.WriteLine();
+            writer.Write("ALTER TABLE ");
+            writer.Write(PgDiffUtils.getQuotedName(newView.getName()));
+            writer.Write(" ALTER COLUMN ");
+            writer.Write(PgDiffUtils.getQuotedName(newValue.getColumnName()));
+            writer.Write(" SET DEFAULT ");
+            writer.Write(newValue.getDefaultValue());
+            writer.WriteLine(';');
         }
     }
 

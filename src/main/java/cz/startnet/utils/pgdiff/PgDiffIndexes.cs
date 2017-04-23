@@ -13,7 +13,7 @@ namespace cz.startnet.utils.pgdiff {
 public class PgDiffIndexes {
 
     
-    public static void createIndexes(PrintWriter writer,
+    public static void createIndexes(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         for (PgTable newTable : newSchema.getTables()) {
@@ -23,22 +23,22 @@ public class PgDiffIndexes {
             if (oldSchema == null) {
                 for (PgIndex index : newTable.getIndexes()) {
                     searchPathHelper.outputSearchPath(writer);
-                    writer.println();
-                    writer.println(index.getCreationSQL());
+                    writer.WriteLine();
+                    writer.WriteLine(index.getCreationSQL());
                 }
             } else {
                 for (PgIndex index : getNewIndexes(
                         oldSchema.getTable(newTableName), newTable)) {
                     searchPathHelper.outputSearchPath(writer);
-                    writer.println();
-                    writer.println(index.getCreationSQL());
+                    writer.WriteLine();
+                    writer.WriteLine(index.getCreationSQL());
                 }
             }
         }
     }
 
     
-    public static void dropIndexes(PrintWriter writer,
+    public static void dropIndexes(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         for (PgTable newTable : newSchema.getTables()) {
@@ -54,8 +54,8 @@ public class PgDiffIndexes {
             // Drop indexes that do not exist in new schema or are modified
             for (PgIndex index : getDropIndexes(oldTable, newTable)) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(index.getDropSQL());
+                writer.WriteLine();
+                writer.WriteLine(index.getDropSQL());
             }
         }
     }
@@ -104,7 +104,7 @@ public class PgDiffIndexes {
     }
 
     
-    public static void alterComments(PrintWriter writer,
+    public static void alterComments(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
@@ -125,21 +125,21 @@ public class PgDiffIndexes {
                     && !oldIndex.getComment().Equals(
                     newIndex.getComment())) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("COMMENT ON INDEX ");
-                writer.print(
+                writer.WriteLine();
+                writer.Write("COMMENT ON INDEX ");
+                writer.Write(
                         PgDiffUtils.getQuotedName(newIndex.getName()));
-                writer.print(" IS ");
-                writer.print(newIndex.getComment());
-                writer.println(';');
+                writer.Write(" IS ");
+                writer.Write(newIndex.getComment());
+                writer.WriteLine(';');
             } else if (oldIndex.getComment() != null
                     && newIndex.getComment() == null) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("COMMENT ON INDEX ");
-                writer.print(
+                writer.WriteLine();
+                writer.Write("COMMENT ON INDEX ");
+                writer.Write(
                         PgDiffUtils.getQuotedName(newIndex.getName()));
-                writer.println(" IS NULL;");
+                writer.WriteLine(" IS NULL;");
             }
         }
     }

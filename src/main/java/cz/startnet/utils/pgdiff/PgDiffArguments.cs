@@ -119,7 +119,7 @@ public class PgDiffArguments {
 
     
     
-    public bool parse(PrintWriter writer, String[] args) {
+    public bool parse(TextWriter writer, String[] args) {
         bool success = true;
         int argsLength;
 
@@ -153,9 +153,9 @@ public class PgDiffArguments {
             } else if ("--version".Equals(args[i])) {
                 setVersion(true);
             } else {
-                writer.print(Resources.getString("ErrorUnknownOption"));
-                writer.print(": ");
-                writer.println(args[i]);
+                writer.Write(Resources.getString("ErrorUnknownOption"));
+                writer.Write(": ");
+                writer.WriteLine(args[i]);
                 success = false;
 
                 break;
@@ -180,16 +180,16 @@ public class PgDiffArguments {
     }
 
     
-    private void printUsage(PrintWriter writer) {
-        writer.println(
+    private void printUsage(TextWriter writer) {
+        writer.WriteLine(
                 Resources.getString("UsageHelp").replace("${tab}", "\t"));
     }
 
     
-    private void printVersion(PrintWriter writer) {
-        writer.print(Resources.getString("Version"));
-        writer.print(": ");
-        writer.println(Resources.getString("VersionNumber"));
+    private void printVersion(TextWriter writer) {
+        writer.Write(Resources.getString("Version"));
+        writer.Write(": ");
+        writer.WriteLine(Resources.getString("VersionNumber"));
     }
 
     
@@ -223,11 +223,11 @@ public class PgDiffArguments {
     }
 
     
-    private void listCharsets(PrintWriter writer) {
+    private void listCharsets(TextWriter writer) {
         SortedMap<String, Charset> charsets = Charset.availableCharsets();
 
         for (String name : charsets.keySet()) {
-            writer.println(name);
+            writer.WriteLine(name);
         }
     }
 

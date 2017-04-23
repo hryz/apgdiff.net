@@ -9,7 +9,7 @@ namespace cz.startnet.utils.pgdiff {
 public class PgDiffFunctions {
 
     
-    public static void createFunctions(PrintWriter writer,
+    public static void createFunctions(TextWriter writer,
             PgDiffArguments arguments, PgSchema oldSchema,
             PgSchema newSchema, SearchPathHelper searchPathHelper) {
         // Add new functions and replace modified functions
@@ -25,14 +25,14 @@ public class PgDiffFunctions {
             if ((oldFunction == null) || !newFunction.Equals(
                     oldFunction, arguments.isIgnoreFunctionWhitespace())) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(newFunction.getCreationSQL());
+                writer.WriteLine();
+                writer.WriteLine(newFunction.getCreationSQL());
             }
         }
     }
 
     
-    public static void dropFunctions(PrintWriter writer,
+    public static void dropFunctions(TextWriter writer,
             PgDiffArguments arguments, PgSchema oldSchema,
             PgSchema newSchema, SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
@@ -43,14 +43,14 @@ public class PgDiffFunctions {
         for (PgFunction oldFunction : oldSchema.getFunctions()) {
             if (!newSchema.containsFunction(oldFunction.getSignature())) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(oldFunction.getDropSQL());
+                writer.WriteLine();
+                writer.WriteLine(oldFunction.getDropSQL());
             }
         }
     }
 
     
-    public static void alterComments(PrintWriter writer,
+    public static void alterComments(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
@@ -72,49 +72,49 @@ public class PgDiffFunctions {
                     && !oldfunction.getComment().Equals(
                     newFunction.getComment())) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("COMMENT ON FUNCTION ");
-                writer.print(PgDiffUtils.getQuotedName(newFunction.getName()));
-                writer.print('(');
+                writer.WriteLine();
+                writer.Write("COMMENT ON FUNCTION ");
+                writer.Write(PgDiffUtils.getQuotedName(newFunction.getName()));
+                writer.Write('(');
 
                 bool addComma = false;
 
                 for (PgFunction.Argument argument :
                         newFunction.getArguments()) {
                     if (addComma) {
-                        writer.print(", ");
+                        writer.Write(", ");
                     } else {
                         addComma = true;
                     }
 
-                    writer.print(argument.getDeclaration(false));
+                    writer.Write(argument.getDeclaration(false));
                 }
 
-                writer.print(") IS ");
-                writer.print(newFunction.getComment());
-                writer.println(';');
+                writer.Write(") IS ");
+                writer.Write(newFunction.getComment());
+                writer.WriteLine(';');
             } else if (oldfunction.getComment() != null
                     && newFunction.getComment() == null) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("COMMENT ON FUNCTION ");
-                writer.print(PgDiffUtils.getQuotedName(newFunction.getName()));
-                writer.print('(');
+                writer.WriteLine();
+                writer.Write("COMMENT ON FUNCTION ");
+                writer.Write(PgDiffUtils.getQuotedName(newFunction.getName()));
+                writer.Write('(');
 
                 bool addComma = false;
 
                 for (PgFunction.Argument argument :
                         newFunction.getArguments()) {
                     if (addComma) {
-                        writer.print(", ");
+                        writer.Write(", ");
                     } else {
                         addComma = true;
                     }
 
-                    writer.print(argument.getDeclaration(false));
+                    writer.Write(argument.getDeclaration(false));
                 }
 
-                writer.println(") IS NULL;");
+                writer.WriteLine(") IS NULL;");
             }
         }
     }

@@ -12,7 +12,7 @@ namespace cz.startnet.utils.pgdiff {
 public class PgDiffTables {
 
     
-    public static void dropClusters(PrintWriter writer,
+    public static void dropClusters(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         for (PgTable newTable : newSchema.getTables()) {
@@ -37,16 +37,16 @@ public class PgDiffTables {
             if (oldCluster != null && newCluster == null
                     && newTable.containsIndex(oldCluster)) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("ALTER TABLE ");
-                writer.print(PgDiffUtils.getQuotedName(newTable.getName()));
-                writer.println(" SET WITHOUT CLUSTER;");
+                writer.WriteLine();
+                writer.Write("ALTER TABLE ");
+                writer.Write(PgDiffUtils.getQuotedName(newTable.getName()));
+                writer.WriteLine(" SET WITHOUT CLUSTER;");
             }
         }
     }
 
     
-    public static void createClusters(PrintWriter writer,
+    public static void createClusters(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         for (PgTable newTable : newSchema.getTables()) {
@@ -72,18 +72,18 @@ public class PgDiffTables {
                     || (oldCluster != null && newCluster != null
                     && newCluster.compareTo(oldCluster) != 0)) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("ALTER TABLE ");
-                writer.print(PgDiffUtils.getQuotedName(newTable.getName()));
-                writer.print(" CLUSTER ON ");
-                writer.print(PgDiffUtils.getQuotedName(newCluster));
-                writer.println(';');
+                writer.WriteLine();
+                writer.Write("ALTER TABLE ");
+                writer.Write(PgDiffUtils.getQuotedName(newTable.getName()));
+                writer.Write(" CLUSTER ON ");
+                writer.Write(PgDiffUtils.getQuotedName(newCluster));
+                writer.WriteLine(';');
             }
         }
     }
 
     
-    public static void alterTables(PrintWriter writer,
+    public static void alterTables(TextWriter writer,
             PgDiffArguments arguments, PgSchema oldSchema,
             PgSchema newSchema, SearchPathHelper searchPathHelper) {
         for (PgTable newTable : newSchema.getTables()) {
@@ -105,7 +105,7 @@ public class PgDiffTables {
     }
 
     
-    private static void addAlterStatistics(PrintWriter writer,
+    private static void addAlterStatistics(TextWriter writer,
             PgTable oldTable, PgTable newTable,
             SearchPathHelper searchPathHelper) {
         
@@ -134,19 +134,19 @@ public class PgDiffTables {
 
         for (Map.Entry<String, Integer> entry : stats.entrySet()) {
             searchPathHelper.outputSearchPath(writer);
-            writer.println();
-            writer.print("ALTER TABLE ONLY ");
-            writer.print(PgDiffUtils.getQuotedName(newTable.getName()));
-            writer.print(" ALTER COLUMN ");
-            writer.print(PgDiffUtils.getQuotedName(entry.getKey()));
-            writer.print(" SET STATISTICS ");
-            writer.print(entry.getValue());
-            writer.println(';');
+            writer.WriteLine();
+            writer.Write("ALTER TABLE ONLY ");
+            writer.Write(PgDiffUtils.getQuotedName(newTable.getName()));
+            writer.Write(" ALTER COLUMN ");
+            writer.Write(PgDiffUtils.getQuotedName(entry.getKey()));
+            writer.Write(" SET STATISTICS ");
+            writer.Write(entry.getValue());
+            writer.WriteLine(';');
         }
     }
 
     
-    private static void addAlterStorage(PrintWriter writer,
+    private static void addAlterStorage(TextWriter writer,
             PgTable oldTable, PgTable newTable,
             SearchPathHelper searchPathHelper) {
         for (PgColumn newColumn : newTable.getColumns()) {
@@ -161,8 +161,8 @@ public class PgDiffTables {
 
             if (newStorage == null && oldStorage != null) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(String.Format(Resources.getString(
+                writer.WriteLine();
+                writer.WriteLine(String.Format(Resources.getString(
                         "WarningUnableToDetermineStorageType"),
                         newTable.getName() + '.' + newColumn.getName()));
 
@@ -174,14 +174,14 @@ public class PgDiffTables {
             }
 
             searchPathHelper.outputSearchPath(writer);
-            writer.println();
-            writer.print("ALTER TABLE ONLY ");
-            writer.print(PgDiffUtils.getQuotedName(newTable.getName()));
-            writer.print(" ALTER COLUMN ");
-            writer.print(PgDiffUtils.getQuotedName(newColumn.getName()));
-            writer.print(" SET STORAGE ");
-            writer.print(newStorage);
-            writer.print(';');
+            writer.WriteLine();
+            writer.Write("ALTER TABLE ONLY ");
+            writer.Write(PgDiffUtils.getQuotedName(newTable.getName()));
+            writer.Write(" ALTER COLUMN ");
+            writer.Write(PgDiffUtils.getQuotedName(newColumn.getName()));
+            writer.Write(" SET STORAGE ");
+            writer.Write(newStorage);
+            writer.Write(';');
         }
     }
 
@@ -276,16 +276,16 @@ public class PgDiffTables {
     }
 
     
-    private static void checkInherits(PrintWriter writer,
+    private static void checkInherits(TextWriter writer,
             PgTable oldTable, PgTable newTable,
             SearchPathHelper searchPathHelper) {
         for (String tableName : oldTable.getInherits()) {
             if (!newTable.getInherits().contains(tableName)) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println("ALTER TABLE "
+                writer.WriteLine();
+                writer.WriteLine("ALTER TABLE "
                         + PgDiffUtils.getQuotedName(newTable.getName()));
-                writer.println("\tNO INHERIT "
+                writer.WriteLine("\tNO INHERIT "
                         + PgDiffUtils.getQuotedName(tableName) + ';');
             }
         }
@@ -293,17 +293,17 @@ public class PgDiffTables {
         for (String tableName : newTable.getInherits()) {
             if (!oldTable.getInherits().contains(tableName)) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println("ALTER TABLE "
+                writer.WriteLine();
+                writer.WriteLine("ALTER TABLE "
                         + PgDiffUtils.getQuotedName(newTable.getName()));
-                writer.println("\tINHERIT "
+                writer.WriteLine("\tINHERIT "
                         + PgDiffUtils.getQuotedName(tableName) + ';');
             }
         }
     }
 
     
-    private static void checkWithOIDS(PrintWriter writer,
+    private static void checkWithOIDS(TextWriter writer,
             PgTable oldTable, PgTable newTable,
             SearchPathHelper searchPathHelper) {
         if (oldTable.getWith() == null && newTable.getWith() == null
@@ -313,23 +313,23 @@ public class PgDiffTables {
         }
 
         searchPathHelper.outputSearchPath(writer);
-        writer.println();
-        writer.println("ALTER TABLE "
+        writer.WriteLine();
+        writer.WriteLine("ALTER TABLE "
                 + PgDiffUtils.getQuotedName(newTable.getName()));
 
         if (newTable.getWith() == null
                 || "OIDS=false".equalsIgnoreCase(newTable.getWith())) {
-            writer.println("\tSET WITHOUT OIDS;");
+            writer.WriteLine("\tSET WITHOUT OIDS;");
         } else if ("OIDS".equalsIgnoreCase(newTable.getWith())
                 || "OIDS=true".equalsIgnoreCase(newTable.getWith())) {
-            writer.println("\tSET WITH OIDS;");
+            writer.WriteLine("\tSET WITH OIDS;");
         } else {
-            writer.println("\tSET " + newTable.getWith() + ";");
+            writer.WriteLine("\tSET " + newTable.getWith() + ";");
         }
     }
 
     
-    private static void checkTablespace(PrintWriter writer,
+    private static void checkTablespace(TextWriter writer,
             PgTable oldTable, PgTable newTable,
             SearchPathHelper searchPathHelper) {
         if (oldTable.getTablespace() == null && newTable.getTablespace() == null
@@ -339,28 +339,28 @@ public class PgDiffTables {
         }
 
         searchPathHelper.outputSearchPath(writer);
-        writer.println();
-        writer.println("ALTER TABLE "
+        writer.WriteLine();
+        writer.WriteLine("ALTER TABLE "
                 + PgDiffUtils.getQuotedName(newTable.getName()));
-        writer.println("\tTABLESPACE " + newTable.getTablespace() + ';');
+        writer.WriteLine("\tTABLESPACE " + newTable.getTablespace() + ';');
     }
 
     
-    public static void createTables(PrintWriter writer,
+    public static void createTables(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         for (PgTable table : newSchema.getTables()) {
             if (oldSchema == null
                     || !oldSchema.containsTable(table.getName())) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(table.getCreationSQL());
+                writer.WriteLine();
+                writer.WriteLine(table.getCreationSQL());
             }
         }
     }
 
     
-    public static void dropTables(PrintWriter writer,
+    public static void dropTables(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
@@ -370,14 +370,14 @@ public class PgDiffTables {
         for (PgTable table : oldSchema.getTables()) {
             if (!newSchema.containsTable(table.getName())) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.println(table.getDropSQL());
+                writer.WriteLine();
+                writer.WriteLine(table.getDropSQL());
             }
         }
     }
 
     
-    private static void updateTableColumns(PrintWriter writer,
+    private static void updateTableColumns(TextWriter writer,
             PgDiffArguments arguments, PgTable oldTable,
             PgTable newTable, SearchPathHelper searchPathHelper) {
         
@@ -394,24 +394,24 @@ public class PgDiffTables {
             String quotedTableName =
                     PgDiffUtils.getQuotedName(newTable.getName());
             searchPathHelper.outputSearchPath(writer);
-            writer.println();
-            writer.println("ALTER TABLE " + quotedTableName);
+            writer.WriteLine();
+            writer.WriteLine("ALTER TABLE " + quotedTableName);
 
             for (int i = 0; i < statements.size(); i++) {
-                writer.print(statements.get(i));
-                writer.println((i + 1) < statements.size() ? "," : ";");
+                writer.Write(statements.get(i));
+                writer.WriteLine((i + 1) < statements.size() ? "," : ";");
             }
 
             if (!dropDefaultsColumns.isEmpty()) {
-                writer.println();
-                writer.println("ALTER TABLE " + quotedTableName);
+                writer.WriteLine();
+                writer.WriteLine("ALTER TABLE " + quotedTableName);
 
                 for (int i = 0; i < dropDefaultsColumns.size(); i++) {
-                    writer.print("\tALTER COLUMN ");
-                    writer.print(PgDiffUtils.getQuotedName(
+                    writer.Write("\tALTER COLUMN ");
+                    writer.Write(PgDiffUtils.getQuotedName(
                             dropDefaultsColumns.get(i).getName()));
-                    writer.print(" DROP DEFAULT");
-                    writer.println(
+                    writer.Write(" DROP DEFAULT");
+                    writer.WriteLine(
                             (i + 1) < dropDefaultsColumns.size() ? "," : ";");
                 }
             }
@@ -419,7 +419,7 @@ public class PgDiffTables {
     }
 
     
-    private static void alterComments(PrintWriter writer,
+    private static void alterComments(TextWriter writer,
             PgTable oldTable, PgTable newTable,
             SearchPathHelper searchPathHelper) {
         if (oldTable.getComment() == null
@@ -428,19 +428,19 @@ public class PgDiffTables {
                 && newTable.getComment() != null
                 && !oldTable.getComment().Equals(newTable.getComment())) {
             searchPathHelper.outputSearchPath(writer);
-            writer.println();
-            writer.print("COMMENT ON TABLE ");
-            writer.print(PgDiffUtils.getQuotedName(newTable.getName()));
-            writer.print(" IS ");
-            writer.print(newTable.getComment());
-            writer.println(';');
+            writer.WriteLine();
+            writer.Write("COMMENT ON TABLE ");
+            writer.Write(PgDiffUtils.getQuotedName(newTable.getName()));
+            writer.Write(" IS ");
+            writer.Write(newTable.getComment());
+            writer.WriteLine(';');
         } else if (oldTable.getComment() != null
                 && newTable.getComment() == null) {
             searchPathHelper.outputSearchPath(writer);
-            writer.println();
-            writer.print("COMMENT ON TABLE ");
-            writer.print(PgDiffUtils.getQuotedName(newTable.getName()));
-            writer.println(" IS NULL;");
+            writer.WriteLine();
+            writer.Write("COMMENT ON TABLE ");
+            writer.Write(PgDiffUtils.getQuotedName(newTable.getName()));
+            writer.WriteLine(" IS NULL;");
         }
 
         for (PgColumn newColumn : newTable.getColumns()) {
@@ -452,22 +452,22 @@ public class PgDiffTables {
             if (newComment != null && (oldComment == null ? newComment != null
                     : !oldComment.Equals(newComment))) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("COMMENT ON COLUMN ");
-                writer.print(PgDiffUtils.getQuotedName(newTable.getName()));
-                writer.print('.');
-                writer.print(PgDiffUtils.getQuotedName(newColumn.getName()));
-                writer.print(" IS ");
-                writer.print(newColumn.getComment());
-                writer.println(';');
+                writer.WriteLine();
+                writer.Write("COMMENT ON COLUMN ");
+                writer.Write(PgDiffUtils.getQuotedName(newTable.getName()));
+                writer.Write('.');
+                writer.Write(PgDiffUtils.getQuotedName(newColumn.getName()));
+                writer.Write(" IS ");
+                writer.Write(newColumn.getComment());
+                writer.WriteLine(';');
             } else if (oldComment != null && newComment == null) {
                 searchPathHelper.outputSearchPath(writer);
-                writer.println();
-                writer.print("COMMENT ON COLUMN ");
-                writer.print(PgDiffUtils.getQuotedName(newTable.getName()));
-                writer.print('.');
-                writer.print(PgDiffUtils.getQuotedName(newColumn.getName()));
-                writer.println(" IS NULL;");
+                writer.WriteLine();
+                writer.Write("COMMENT ON COLUMN ");
+                writer.Write(PgDiffUtils.getQuotedName(newTable.getName()));
+                writer.Write('.');
+                writer.Write(PgDiffUtils.getQuotedName(newColumn.getName()));
+                writer.WriteLine(" IS NULL;");
             }
         }
     }
