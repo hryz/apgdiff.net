@@ -1,7 +1,7 @@
 
 namespace cz.startnet.utils.pgdiff.schema {
 
-import cz.startnet.utils.pgdiff.PgDiffUtils;
+using cz.startnet.utils.pgdiff.PgDiffUtils;
 
 
 public class PgIndex {

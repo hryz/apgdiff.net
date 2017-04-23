@@ -1,9 +1,9 @@
 
 namespace cz.startnet.utils.pgdiff.parsers {
 
-import cz.startnet.utils.pgdiff.schema.PgDatabase;
-import cz.startnet.utils.pgdiff.schema.PgSchema;
-import cz.startnet.utils.pgdiff.schema.PgTrigger;
+using cz.startnet.utils.pgdiff.schema.PgDatabase;
+using cz.startnet.utils.pgdiff.schema.PgSchema;
+using cz.startnet.utils.pgdiff.schema.PgTrigger;
 
 
 public class CreateTriggerParser {

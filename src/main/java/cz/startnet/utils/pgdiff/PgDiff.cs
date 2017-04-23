@@ -1,9 +1,9 @@
 
 namespace cz.startnet.utils.pgdiff {
 
-import cz.startnet.utils.pgdiff.loader.PgDumpLoader;
-import cz.startnet.utils.pgdiff.schema.PgDatabase;
-import cz.startnet.utils.pgdiff.schema.PgSchema;
+using cz.startnet.utils.pgdiff.loader.PgDumpLoader;
+using cz.startnet.utils.pgdiff.schema.PgDatabase;
+using cz.startnet.utils.pgdiff.schema.PgSchema;
 
 
 

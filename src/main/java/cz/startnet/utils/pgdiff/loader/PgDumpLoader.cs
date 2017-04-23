@@ -1,19 +1,19 @@
 
 namespace cz.startnet.utils.pgdiff.loader {
 
-import cz.startnet.utils.pgdiff.Resources;
-import cz.startnet.utils.pgdiff.parsers.AlterSequenceParser;
-import cz.startnet.utils.pgdiff.parsers.AlterTableParser;
-import cz.startnet.utils.pgdiff.parsers.AlterViewParser;
-import cz.startnet.utils.pgdiff.parsers.CommentParser;
-import cz.startnet.utils.pgdiff.parsers.CreateFunctionParser;
-import cz.startnet.utils.pgdiff.parsers.CreateIndexParser;
-import cz.startnet.utils.pgdiff.parsers.CreateSchemaParser;
-import cz.startnet.utils.pgdiff.parsers.CreateSequenceParser;
-import cz.startnet.utils.pgdiff.parsers.CreateTableParser;
-import cz.startnet.utils.pgdiff.parsers.CreateTriggerParser;
-import cz.startnet.utils.pgdiff.parsers.CreateViewParser;
-import cz.startnet.utils.pgdiff.schema.PgDatabase;
+using cz.startnet.utils.pgdiff.Resources;
+using cz.startnet.utils.pgdiff.parsers.AlterSequenceParser;
+using cz.startnet.utils.pgdiff.parsers.AlterTableParser;
+using cz.startnet.utils.pgdiff.parsers.AlterViewParser;
+using cz.startnet.utils.pgdiff.parsers.CommentParser;
+using cz.startnet.utils.pgdiff.parsers.CreateFunctionParser;
+using cz.startnet.utils.pgdiff.parsers.CreateIndexParser;
+using cz.startnet.utils.pgdiff.parsers.CreateSchemaParser;
+using cz.startnet.utils.pgdiff.parsers.CreateSequenceParser;
+using cz.startnet.utils.pgdiff.parsers.CreateTableParser;
+using cz.startnet.utils.pgdiff.parsers.CreateTriggerParser;
+using cz.startnet.utils.pgdiff.parsers.CreateViewParser;
+using cz.startnet.utils.pgdiff.schema.PgDatabase;
 
 
 
