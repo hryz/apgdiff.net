@@ -227,7 +227,7 @@ public class PgSchema {
     }
 
     
-    public boolean containsFunction(String signature) {
+    public bool containsFunction(String signature) {
         for (PgFunction function : functions) {
             if (function.getSignature().equals(signature)) {
                 return true;
@@ -238,7 +238,7 @@ public class PgSchema {
     }
 
     
-    public boolean containsSequence(String name) {
+    public bool containsSequence(String name) {
         for (PgSequence sequence : sequences) {
             if (sequence.getName().equals(name)) {
                 return true;
@@ -249,7 +249,7 @@ public class PgSchema {
     }
 
     
-    public boolean containsTable(String name) {
+    public bool containsTable(String name) {
         for (PgTable table : tables) {
             if (table.getName().equals(name)) {
                 return true;
@@ -260,7 +260,7 @@ public class PgSchema {
     }
 
     
-    public boolean containsView(String name) {
+    public bool containsView(String name) {
         for (PgView view : views) {
             if (view.getName().equals(name)) {
                 return true;

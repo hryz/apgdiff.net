@@ -17,60 +17,60 @@ public class PgDiffArguments {
     
     private String outCharsetName = "UTF-8";
     
-    private boolean addDefaults;
+    private bool addDefaults;
     
-    private boolean addTransaction;
+    private bool addTransaction;
     
-    private boolean ignoreFunctionWhitespace;
+    private bool ignoreFunctionWhitespace;
     
-    private boolean ignoreStartWith;
+    private bool ignoreStartWith;
     
-    private boolean version;
+    private bool version;
     
-    private boolean outputIgnoredStatements;
+    private bool outputIgnoredStatements;
     
-    private boolean listCharsets;
+    private bool listCharsets;
     
-    private boolean ignoreSlonyTriggers;
+    private bool ignoreSlonyTriggers;
 
     
-    public void setAddDefaults(boolean addDefaults) {
+    public void setAddDefaults(bool addDefaults) {
         this.addDefaults = addDefaults;
     }
 
     
-    public boolean isAddDefaults() {
+    public bool isAddDefaults() {
         return addDefaults;
     }
 
     
-    public void setAddTransaction(boolean addTransaction) {
+    public void setAddTransaction(bool addTransaction) {
         this.addTransaction = addTransaction;
     }
 
     
-    public boolean isAddTransaction() {
+    public bool isAddTransaction() {
         return addTransaction;
     }
 
     
     public void setIgnoreFunctionWhitespace(
-            boolean ignoreFunctionWhitespace) {
+            bool ignoreFunctionWhitespace) {
         this.ignoreFunctionWhitespace = ignoreFunctionWhitespace;
     }
 
     
-    public boolean isIgnoreFunctionWhitespace() {
+    public bool isIgnoreFunctionWhitespace() {
         return ignoreFunctionWhitespace;
     }
 
     
-    public void setIgnoreStartWith(boolean ignoreStartWith) {
+    public void setIgnoreStartWith(bool ignoreStartWith) {
         this.ignoreStartWith = ignoreStartWith;
     }
 
     
-    public boolean isIgnoreStartWith() {
+    public bool isIgnoreStartWith() {
         return ignoreStartWith;
     }
 
@@ -95,30 +95,30 @@ public class PgDiffArguments {
     }
 
     
-    public boolean isOutputIgnoredStatements() {
+    public bool isOutputIgnoredStatements() {
         return outputIgnoredStatements;
     }
 
     
     public void setOutputIgnoredStatements(
-            boolean outputIgnoredStatements) {
+            bool outputIgnoredStatements) {
         this.outputIgnoredStatements = outputIgnoredStatements;
     }
 
     
-    public void setVersion(boolean version) {
+    public void setVersion(bool version) {
         this.version = version;
     }
 
     
-    public boolean isVersion() {
+    public bool isVersion() {
         return version;
     }
 
     
     
-    public boolean parse(PrintWriter writer, String[] args) {
-        boolean success = true;
+    public bool parse(PrintWriter writer, String[] args) {
+        bool success = true;
         int argsLength;
 
         if (args.length >= 2) {
@@ -211,12 +211,12 @@ public class PgDiffArguments {
     }
 
     
-    public boolean isListCharsets() {
+    public bool isListCharsets() {
         return listCharsets;
     }
 
     
-    public void setListCharsets(boolean listCharsets) {
+    public void setListCharsets(bool listCharsets) {
         this.listCharsets = listCharsets;
     }
 
@@ -230,12 +230,12 @@ public class PgDiffArguments {
     }
 
     
-    public boolean isIgnoreSlonyTriggers() {
+    public bool isIgnoreSlonyTriggers() {
         return ignoreSlonyTriggers;
     }
 
     
-    public void setIgnoreSlonyTriggers(boolean ignoreSlonyTriggers) {
+    public void setIgnoreSlonyTriggers(bool ignoreSlonyTriggers) {
         this.ignoreSlonyTriggers = ignoreSlonyTriggers;
     }
 }

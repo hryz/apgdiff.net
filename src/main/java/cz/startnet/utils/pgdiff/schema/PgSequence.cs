@@ -18,7 +18,7 @@ public class PgSequence {
     
     private String startWith;
     
-    private boolean cycle;
+    private bool cycle;
     
     private String ownedBy;
     
@@ -123,12 +123,12 @@ public class PgSequence {
     }
 
     
-    public void setCycle(boolean cycle) {
+    public void setCycle(bool cycle) {
         this.cycle = cycle;
     }
 
     
-    public boolean isCycle() {
+    public bool isCycle() {
         return cycle;
     }
 

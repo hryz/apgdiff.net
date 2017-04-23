@@ -12,7 +12,7 @@ public class PgIndex {
     
     private String tableName;
     
-    private boolean unique;
+    private bool unique;
     
     private String comment;
 
@@ -96,8 +96,8 @@ public class PgIndex {
 
     
     @Override
-    public boolean equals(Object object) {
-        boolean equals = false;
+    public bool equals(Object object) {
+        bool equals = false;
 
         if (this == object) {
             equals = true;
@@ -120,12 +120,12 @@ public class PgIndex {
     }
 
     
-    public boolean isUnique() {
+    public bool isUnique() {
         return unique;
     }
 
     
-    public void setUnique(boolean unique) {
+    public void setUnique(bool unique) {
         this.unique = unique;
     }
 }

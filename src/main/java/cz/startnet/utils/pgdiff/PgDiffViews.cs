@@ -45,7 +45,7 @@ public class PgDiffViews {
     }
 
     
-    private static boolean isViewModified(PgView oldView,
+    private static bool isViewModified(PgView oldView,
             PgView newView) {
         String[] oldViewColumnNames;
 
@@ -189,7 +189,7 @@ public class PgDiffViews {
 
         // modify defaults that are in old view
         for (PgView.DefaultValue oldValue : oldValues) {
-            boolean found = false;
+            bool found = false;
 
             for (PgView.DefaultValue newValue : newValues) {
                 if (oldValue.getColumnName().equals(newValue.getColumnName())) {
@@ -228,7 +228,7 @@ public class PgDiffViews {
 
         // add new defaults
         for (PgView.DefaultValue newValue : newValues) {
-            boolean found = false;
+            bool found = false;
 
             for (PgView.DefaultValue oldValue : oldValues) {
                 if (newValue.getColumnName().equals(oldValue.getColumnName())) {

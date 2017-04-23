@@ -75,7 +75,7 @@ public class PgDiffFunctions {
                 writer.print(PgDiffUtils.getQuotedName(newFunction.getName()));
                 writer.print('(');
 
-                boolean addComma = false;
+                bool addComma = false;
 
                 for (PgFunction.Argument argument :
                         newFunction.getArguments()) {
@@ -99,7 +99,7 @@ public class PgDiffFunctions {
                 writer.print(PgDiffUtils.getQuotedName(newFunction.getName()));
                 writer.print('(');
 
-                boolean addComma = false;
+                bool addComma = false;
 
                 for (PgFunction.Argument argument :
                         newFunction.getArguments()) {

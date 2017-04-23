@@ -12,7 +12,7 @@ public class CreateIndexParser {
         Parser parser = new Parser(statement);
         parser.expect("CREATE");
 
-        boolean unique = parser.expectOptional("UNIQUE");
+        bool unique = parser.expectOptional("UNIQUE");
 
         parser.expect("INDEX");
         parser.expectOptional("CONCURRENTLY");

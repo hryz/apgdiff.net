@@ -125,8 +125,8 @@ public class PgDiffSequences {
                 sbSQL.append(newCache);
             }
 
-            boolean oldCycle = oldSequence.isCycle();
-            boolean newCycle = newSequence.isCycle();
+            bool oldCycle = oldSequence.isCycle();
+            bool newCycle = newSequence.isCycle();
 
             if (oldCycle && !newCycle) {
                 sbSQL.append("\n\tNO CYCLE");

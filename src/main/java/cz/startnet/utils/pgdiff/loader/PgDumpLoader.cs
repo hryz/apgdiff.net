@@ -82,8 +82,8 @@ public class PgDumpLoader { //NOPMD
 
     
     public static PgDatabase loadDatabaseSchema(InputStream inputStream,
-            String charsetName, boolean outputIgnoredStatements,
-            boolean ignoreSlonyTriggers) {
+            String charsetName, bool outputIgnoredStatements,
+            bool ignoreSlonyTriggers) {
 
         PgDatabase database = new PgDatabase();
         BufferedReader reader = null;
@@ -152,8 +152,8 @@ public class PgDumpLoader { //NOPMD
 
     
     public static PgDatabase loadDatabaseSchema(String file,
-            String charsetName, boolean outputIgnoredStatements,
-            boolean ignoreSlonyTriggers) {
+            String charsetName, bool outputIgnoredStatements,
+            bool ignoreSlonyTriggers) {
         try {
             return loadDatabaseSchema(new FileInputStream(file), charsetName,
                     outputIgnoredStatements, ignoreSlonyTriggers);
@@ -245,9 +245,9 @@ public class PgDumpLoader { //NOPMD
 
     
     
-    private static boolean isQuoted(StringBuilder sbString,
+    private static bool isQuoted(StringBuilder sbString,
             int pos) {
-        boolean isQuoted = false;
+        bool isQuoted = false;
 
         for (int curPos = 0; curPos < pos; curPos++) {
             if (sbString.charAt(curPos) == '\'') {

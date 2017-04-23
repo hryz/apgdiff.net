@@ -7,7 +7,7 @@ public class CreateTriggerParser {
 
     
     public static void parse(PgDatabase database,
-            String statement, boolean ignoreSlonyTriggers) {
+            String statement, bool ignoreSlonyTriggers) {
         Parser parser = new Parser(statement);
         parser.expect("CREATE", "TRIGGER");
 
@@ -23,7 +23,7 @@ public class CreateTriggerParser {
             trigger.setBefore(false);
         }
 
-        boolean first = true;
+        bool first = true;
 
         while (true) {
             if (!first && !parser.expectOptional("OR")) {
@@ -78,7 +78,7 @@ public class CreateTriggerParser {
         parser.expect("EXECUTE", "PROCEDURE");
         trigger.setFunction(parser.getRest());
 
-        boolean ignoreSlonyTrigger = ignoreSlonyTriggers
+        bool ignoreSlonyTrigger = ignoreSlonyTriggers
                 && ("_slony_logtrigger".equals(trigger.getName())
                 || "_slony_denyaccess".equals(trigger.getName()));
 

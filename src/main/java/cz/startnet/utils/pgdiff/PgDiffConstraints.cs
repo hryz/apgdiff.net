@@ -11,7 +11,7 @@ public class PgDiffConstraints {
     
     public static void createConstraints(PrintWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
-            boolean primaryKey, SearchPathHelper searchPathHelper) {
+            bool primaryKey, SearchPathHelper searchPathHelper) {
         for (PgTable newTable : newSchema.getTables()) {
             PgTable oldTable;
 
@@ -33,7 +33,7 @@ public class PgDiffConstraints {
 
     public static void dropConstraints(PrintWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
-            boolean primaryKey, SearchPathHelper searchPathHelper) {
+            bool primaryKey, SearchPathHelper searchPathHelper) {
         for (PgTable newTable : newSchema.getTables()) {
             PgTable oldTable;
 
@@ -55,7 +55,7 @@ public class PgDiffConstraints {
 
     
     private static List<PgConstraint> getDropConstraints(PgTable oldTable,
-            PgTable newTable, boolean primaryKey) {
+            PgTable newTable, bool primaryKey) {
         
         List<PgConstraint> list = new ArrayList<PgConstraint>();
 
@@ -75,7 +75,7 @@ public class PgDiffConstraints {
 
     
     private static List<PgConstraint> getNewConstraints(PgTable oldTable,
-            PgTable newTable, boolean primaryKey) {
+            PgTable newTable, bool primaryKey) {
         
         List<PgConstraint> list = new ArrayList<PgConstraint>();
 

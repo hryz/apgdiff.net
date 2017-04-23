@@ -99,7 +99,7 @@ public class PgTable {
         sbSQL.append(PgDiffUtils.getQuotedName(name));
         sbSQL.append(" (\n");
 
-        boolean first = true;
+        bool first = true;
 
         if (columns.isEmpty()) {
             sbSQL.append(')');
@@ -292,7 +292,7 @@ public class PgTable {
     }
 
     
-    public boolean containsColumn(String name) {
+    public bool containsColumn(String name) {
         for (PgColumn column : columns) {
             if (column.getName().equals(name)) {
                 return true;
@@ -303,7 +303,7 @@ public class PgTable {
     }
 
     
-    public boolean containsConstraint(String name) {
+    public bool containsConstraint(String name) {
         for (PgConstraint constraint : constraints) {
             if (constraint.getName().equals(name)) {
                 return true;
@@ -314,7 +314,7 @@ public class PgTable {
     }
 
     
-    public boolean containsIndex(String name) {
+    public bool containsIndex(String name) {
         for (PgIndex index : indexes) {
             if (index.getName().equals(name)) {
                 return true;

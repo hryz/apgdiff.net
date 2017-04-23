@@ -18,7 +18,7 @@ public class CreateViewParser {
 
         String viewName = parser.parseIdentifier();
 
-        boolean columnsExist = parser.expectOptional("(");
+        bool columnsExist = parser.expectOptional("(");
         List<String> columnNames = new ArrayList<String>(10);
 
         if (columnsExist) {

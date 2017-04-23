@@ -9,7 +9,7 @@ public class SearchPathHelper {
     
     private String searchPath;
     
-    private boolean wasOutput;
+    private bool wasOutput;
 
     
     public SearchPathHelper(String searchPath) {

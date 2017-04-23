@@ -8,7 +8,7 @@ public class AlterViewParser {
 
     
     public static void parse(PgDatabase database,
-            String statement, boolean outputIgnoredStatements) {
+            String statement, bool outputIgnoredStatements) {
         Parser parser = new Parser(statement);
         parser.expect("ALTER", "VIEW");
 

@@ -15,17 +15,17 @@ public class PgTrigger {
     
     private String tableName;
     
-    private boolean before = true;
+    private bool before = true;
     
-    private boolean forEachRow;
+    private bool forEachRow;
     
-    private boolean onDelete;
+    private bool onDelete;
     
-    private boolean onInsert;
+    private bool onInsert;
     
-    private boolean onUpdate;
+    private bool onUpdate;
     
-    private boolean onTruncate;
+    private bool onTruncate;
     
     
     private List<String> updateColumns = new ArrayList<String>();
@@ -35,12 +35,12 @@ public class PgTrigger {
     private String comment;
 
     
-    public void setBefore(boolean before) {
+    public void setBefore(bool before) {
         this.before = before;
     }
 
     
-    public boolean isBefore() {
+    public bool isBefore() {
         return before;
     }
 
@@ -62,7 +62,7 @@ public class PgTrigger {
         sbSQL.append("\n\t");
         sbSQL.append(isBefore() ? "BEFORE" : "AFTER");
 
-        boolean firstEvent = true;
+        bool firstEvent = true;
 
         if (isOnInsert()) {
             sbSQL.append(" INSERT");
@@ -81,7 +81,7 @@ public class PgTrigger {
             if (!updateColumns.isEmpty()) {
                 sbSQL.append(" OF");
 
-                boolean first = true;
+                bool first = true;
 
                 for (String columnName : updateColumns) {
                     if (first) {
@@ -147,12 +147,12 @@ public class PgTrigger {
     }
 
     
-    public void setForEachRow(boolean forEachRow) {
+    public void setForEachRow(bool forEachRow) {
         this.forEachRow = forEachRow;
     }
 
     
-    public boolean isForEachRow() {
+    public bool isForEachRow() {
         return forEachRow;
     }
 
@@ -177,42 +177,42 @@ public class PgTrigger {
     }
 
     
-    public void setOnDelete(boolean onDelete) {
+    public void setOnDelete(bool onDelete) {
         this.onDelete = onDelete;
     }
 
     
-    public boolean isOnDelete() {
+    public bool isOnDelete() {
         return onDelete;
     }
 
     
-    public void setOnInsert(boolean onInsert) {
+    public void setOnInsert(bool onInsert) {
         this.onInsert = onInsert;
     }
 
     
-    public boolean isOnInsert() {
+    public bool isOnInsert() {
         return onInsert;
     }
 
     
-    public void setOnUpdate(boolean onUpdate) {
+    public void setOnUpdate(bool onUpdate) {
         this.onUpdate = onUpdate;
     }
 
     
-    public boolean isOnUpdate() {
+    public bool isOnUpdate() {
         return onUpdate;
     }
 
     
-    public boolean isOnTruncate() {
+    public bool isOnTruncate() {
         return onTruncate;
     }
 
     
-    public void setOnTruncate(boolean onTruncate) {
+    public void setOnTruncate(bool onTruncate) {
         this.onTruncate = onTruncate;
     }
 
@@ -247,8 +247,8 @@ public class PgTrigger {
     }
 
     @Override
-    public boolean equals(Object object) {
-        boolean equals = false;
+    public bool equals(Object object) {
+        bool equals = false;
 
         if (this == object) {
             equals = true;

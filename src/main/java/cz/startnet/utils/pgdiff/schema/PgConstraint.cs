@@ -90,7 +90,7 @@ public class PgConstraint {
     }
 
     
-    public boolean isPrimaryKeyConstraint() {
+    public bool isPrimaryKeyConstraint() {
         return PATTERN_PRIMARY_KEY.matcher(definition).matches();
     }
 
@@ -106,8 +106,8 @@ public class PgConstraint {
 
     
     @Override
-    public boolean equals(Object object) {
-        boolean equals = false;
+    public bool equals(Object object) {
+        bool equals = false;
 
         if (this == object) {
             equals = true;

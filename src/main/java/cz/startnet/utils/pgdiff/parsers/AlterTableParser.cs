@@ -10,7 +10,7 @@ public class AlterTableParser {
 
     
     public static void parse(PgDatabase database,
-            String statement, boolean outputIgnoredStatements) {
+            String statement, bool outputIgnoredStatements) {
         Parser parser = new Parser(statement);
         parser.expect("ALTER", "TABLE");
         parser.expectOptional("ONLY");
@@ -93,7 +93,7 @@ public class AlterTableParser {
 
     
     private static void parseEnable(Parser parser,
-            boolean outputIgnoredStatements, String tableName,
+            bool outputIgnoredStatements, String tableName,
             PgDatabase database) {
         if (parser.expectOptional("REPLICA")) {
             if (parser.expectOptional("TRIGGER")) {
@@ -139,7 +139,7 @@ public class AlterTableParser {
 
     
     private static void parseDisable(Parser parser,
-            boolean outputIgnoredStatements, String tableName,
+            bool outputIgnoredStatements, String tableName,
             PgDatabase database) {
         if (parser.expectOptional("TRIGGER")) {
             if (outputIgnoredStatements) {
@@ -271,7 +271,7 @@ public class AlterTableParser {
 
     
     private static void parseView(Parser parser, PgView view,
-            boolean outputIgnoredStatements, String viewName,
+            bool outputIgnoredStatements, String viewName,
             PgDatabase database) {
         while (!parser.expectOptional(";")) {
             if (parser.expectOptional("ALTER")) {
@@ -304,7 +304,7 @@ public class AlterTableParser {
 
     
     private static void parseSequence(Parser parser,
-            PgSequence sequence, boolean outputIgnoredStatements,
+            PgSequence sequence, bool outputIgnoredStatements,
             String sequenceName, PgDatabase database) {
         while (!parser.expectOptional(";")) {
             if (parser.expectOptional("OWNER", "TO")) {

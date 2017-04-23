@@ -25,7 +25,7 @@ public class PgColumn {
     
     private String type;
     
-    private boolean nullValue = true;
+    private bool nullValue = true;
     
     private String storage;
     
@@ -57,7 +57,7 @@ public class PgColumn {
     }
 
     
-    public String getFullDefinition(boolean addDefaults) {
+    public String getFullDefinition(bool addDefaults) {
         StringBuilder sbDefinition = new StringBuilder(100);
         sbDefinition.append(PgDiffUtils.getQuotedName(name));
         sbDefinition.append(' ');
@@ -93,12 +93,12 @@ public class PgColumn {
     }
 
     
-    public void setNullValue(boolean nullValue) {
+    public void setNullValue(bool nullValue) {
         this.nullValue = nullValue;
     }
 
     
-    public boolean getNullValue() {
+    public bool getNullValue() {
         return nullValue;
     }
 

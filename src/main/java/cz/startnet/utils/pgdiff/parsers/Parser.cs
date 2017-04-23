@@ -26,7 +26,7 @@ public class Parser {
         }
     }
 
-    public boolean expect(String word, boolean optional) {
+    public bool expect(String word, bool optional) {
         int wordEnd = position + word.length();
 
         if (wordEnd <= string.length()
@@ -55,8 +55,8 @@ public class Parser {
     }
 
     
-    public boolean expectOptional(String... words) {
-        boolean found = expect(words[0], true);
+    public bool expectOptional(String... words) {
+        bool found = expect(words[0], true);
 
         if (!found) {
             return false;
@@ -95,7 +95,7 @@ public class Parser {
 
     
     private String parseIdentifierInternal() {
-        boolean quoted = string.charAt(position) == '"';
+        bool quoted = string.charAt(position) == '"';
 
         if (quoted) {
             int endPos = string.indexOf('"', position + 1);
@@ -172,10 +172,10 @@ public class Parser {
 
     
     public String parseString() {
-        boolean quoted = string.charAt(position) == '\'';
+        bool quoted = string.charAt(position) == '\'';
 
         if (quoted) {
-            boolean escape = false;
+            bool escape = false;
             int endPos = position + 1;
 
             for (; endPos < string.length(); endPos++) {
@@ -255,7 +255,7 @@ public class Parser {
     
     private int getExpressionEnd() {
         int bracesCount = 0;
-        boolean singleQuoteOn = false;
+        bool singleQuoteOn = false;
         int charPos = position;
 
         for (; charPos < string.length(); charPos++) {
@@ -352,7 +352,7 @@ public class Parser {
             dataType = "double precision";
         }
 
-        boolean timestamp = "timestamp".equalsIgnoreCase(dataType)
+        bool timestamp = "timestamp".equalsIgnoreCase(dataType)
                 || "time".equalsIgnoreCase(dataType);
 
         if (string.charAt(position) == '(') {
@@ -376,7 +376,7 @@ public class Parser {
     }
 
     
-    public boolean isConsumed() {
+    public bool isConsumed() {
         return position == string.length()
                 || position + 1 == string.length()
                 && string.charAt(position) == ';';

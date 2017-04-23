@@ -36,7 +36,7 @@ public class PgFunction {
         sbSQL.append(PgDiffUtils.getQuotedName(name));
         sbSQL.append('(');
 
-        boolean addComma = false;
+        bool addComma = false;
 
         for (Argument argument : arguments) {
             if (addComma) {
@@ -94,7 +94,7 @@ public class PgFunction {
         sbString.append(name);
         sbString.append('(');
 
-        boolean addComma = false;
+        bool addComma = false;
 
         for (Argument argument : arguments) {
             if ("OUT".equalsIgnoreCase(argument.getMode())) {
@@ -141,7 +141,7 @@ public class PgFunction {
         sbString.append(name);
         sbString.append('(');
 
-        boolean addComma = false;
+        bool addComma = false;
 
         for (Argument argument : arguments) {
             if ("OUT".equalsIgnoreCase(argument.getMode())) {
@@ -163,7 +163,7 @@ public class PgFunction {
     }
 
     @Override
-    public boolean equals(Object object) {
+    public bool equals(Object object) {
         if (!(object instanceof PgFunction)) {
             return false;
         } else if (object == this) {
@@ -174,9 +174,9 @@ public class PgFunction {
     }
 
     
-    public boolean equals(Object object,
-            boolean ignoreFunctionWhitespace) {
-        boolean equals = false;
+    public bool equals(Object object,
+            bool ignoreFunctionWhitespace) {
+        bool equals = false;
 
         if (this == object) {
             equals = true;
@@ -290,7 +290,7 @@ public class PgFunction {
         }
 
         
-        public String getDeclaration(boolean includeDefaultValue) {
+        public String getDeclaration(bool includeDefaultValue) {
             StringBuilder sbString = new StringBuilder(50);
 
             if (mode != null && !"IN".equalsIgnoreCase(mode)) {
@@ -315,7 +315,7 @@ public class PgFunction {
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public bool equals(Object obj) {
             if (!(obj instanceof Argument)) {
                 return false;
             } else if (this == obj) {
