@@ -32,7 +32,7 @@ public class PgTrigger {
     private bool onTruncate;
     
     
-    private List<String> updateColumns = new ArrayList<String>();
+    private List<String> updateColumns = new List<string>();
     
     private String when;
     
@@ -61,15 +61,15 @@ public class PgTrigger {
     
     public String getCreationSQL() {
         StringBuilder sbSQL = new StringBuilder(100);
-        sbSQL.append("CREATE TRIGGER ");
-        sbSQL.append(PgDiffUtils.getQuotedName(getName()));
-        sbSQL.append("\n\t");
-        sbSQL.append(isBefore() ? "BEFORE" : "AFTER");
+        sbSQL.Append("CREATE TRIGGER ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(getName()));
+        sbSQL.Append("\n\t");
+        sbSQL.Append(isBefore() ? "BEFORE" : "AFTER");
 
         bool firstEvent = true;
 
         if (isOnInsert()) {
-            sbSQL.append(" INSERT");
+            sbSQL.Append(" INSERT");
             firstEvent = false;
         }
 
@@ -77,13 +77,13 @@ public class PgTrigger {
             if (firstEvent) {
                 firstEvent = false;
             } else {
-                sbSQL.append(" OR");
+                sbSQL.Append(" OR");
             }
 
-            sbSQL.append(" UPDATE");
+            sbSQL.Append(" UPDATE");
 
-            if (!updateColumns.isEmpty()) {
-                sbSQL.append(" OF");
+            if (updateColumns.Count > 0) {
+                sbSQL.Append(" OF");
 
                 bool first = true;
 
@@ -91,57 +91,57 @@ public class PgTrigger {
                     if (first) {
                         first = false;
                     } else {
-                        sbSQL.append(',');
+                        sbSQL.Append(',');
                     }
 
-                    sbSQL.append(' ');
-                    sbSQL.append(columnName);
+                    sbSQL.Append(' ');
+                    sbSQL.Append(columnName);
                 }
             }
         }
 
         if (isOnDelete()) {
             if (!firstEvent) {
-                sbSQL.append(" OR");
+                sbSQL.Append(" OR");
             }
 
-            sbSQL.append(" DELETE");
+            sbSQL.Append(" DELETE");
         }
 
         if (isOnTruncate()) {
             if (!firstEvent) {
-                sbSQL.append(" OR");
+                sbSQL.Append(" OR");
             }
 
-            sbSQL.append(" TRUNCATE");
+            sbSQL.Append(" TRUNCATE");
         }
 
-        sbSQL.append(" ON ");
-        sbSQL.append(PgDiffUtils.getQuotedName(getTableName()));
-        sbSQL.append("\n\tFOR EACH ");
-        sbSQL.append(isForEachRow() ? "ROW" : "STATEMENT");
+        sbSQL.Append(" ON ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(getTableName()));
+        sbSQL.Append("\n\tFOR EACH ");
+        sbSQL.Append(isForEachRow() ? "ROW" : "STATEMENT");
 
-        if (when != null && !when.isEmpty()) {
-            sbSQL.append("\n\tWHEN (");
-            sbSQL.append(when);
-            sbSQL.append(')');
+        if (!String.IsNullOrEmpty(when)) {
+            sbSQL.Append("\n\tWHEN (");
+            sbSQL.Append(when);
+            sbSQL.Append(')');
         }
 
-        sbSQL.append("\n\tEXECUTE PROCEDURE ");
-        sbSQL.append(getFunction());
-        sbSQL.append(';');
+        sbSQL.Append("\n\tEXECUTE PROCEDURE ");
+        sbSQL.Append(getFunction());
+        sbSQL.Append(';');
 
-        if (comment != null && !comment.isEmpty()) {
-            sbSQL.append("\n\nCOMMENT ON TRIGGER ");
-            sbSQL.append(PgDiffUtils.getQuotedName(name));
-            sbSQL.append(" ON ");
-            sbSQL.append(PgDiffUtils.getQuotedName(tableName));
-            sbSQL.append(" IS ");
-            sbSQL.append(comment);
-            sbSQL.append(';');
+        if (!String.IsNullOrEmpty(comment)) {
+            sbSQL.Append("\n\nCOMMENT ON TRIGGER ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(name));
+            sbSQL.Append(" ON ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(tableName));
+            sbSQL.Append(" IS ");
+            sbSQL.Append(comment);
+            sbSQL.Append(';');
         }
 
-        return sbSQL.toString();
+        return sbSQL.ToString();
     }
 
     
@@ -232,12 +232,12 @@ public class PgTrigger {
 
     
     public List<String> getUpdateColumns() {
-        return Collections.unmodifiableList(updateColumns);
+        return new List<string>(updateColumns);
     }
 
     
     public void addUpdateColumn(String columnName) {
-        updateColumns.add(columnName);
+        updateColumns.Add(columnName);
     }
 
     
@@ -250,14 +250,13 @@ public class PgTrigger {
         this.when = when;
     }
 
-    @Override
-    public bool Equals(Object object) {
+    public override bool Equals(Object @object) {
         bool equals = false;
 
-        if (this == object) {
+        if (this == @object) {
             equals = true;
-        } else if (object instanceof PgTrigger) {
-            PgTrigger trigger = (PgTrigger) object;
+        } else if (@object is PgTrigger) {
+            PgTrigger trigger = (PgTrigger) @object;
             equals = (before == trigger.isBefore())
                     && (forEachRow == trigger.isForEachRow())
                     && function.Equals(trigger.getFunction())
@@ -269,12 +268,10 @@ public class PgTrigger {
                     && tableName.Equals(trigger.getTableName());
 
             if (equals) {
-                List<String> sorted1 =
-                        new ArrayList<String>(updateColumns);
-                List<String> sorted2 =
-                        new ArrayList<String>(trigger.getUpdateColumns());
-                Collections.sort(sorted1);
-                Collections.sort(sorted2);
+                List<String> sorted1 = new List<string>(updateColumns);
+                List<String> sorted2 = new List<String>(trigger.getUpdateColumns());
+                sorted1.Sort();
+                sorted2.Sort();
 
                 equals = sorted1.Equals(sorted2);
             }
@@ -283,11 +280,10 @@ public class PgTrigger {
         return equals;
     }
 
-    @Override
-    public int hashCode() {
-        return (getClass().getName() + "|" + before + "|" + forEachRow + "|"
+    public override int GetHashCode() {
+        return (GetType().Name + "|" + before + "|" + forEachRow + "|"
                 + function + "|" + name + "|" + onDelete + "|" + onInsert + "|"
-                + onUpdate + "|" + onTruncate + "|" + tableName).hashCode();
+                + onUpdate + "|" + onTruncate + "|" + tableName).GetHashCode();
     }
 }
 }

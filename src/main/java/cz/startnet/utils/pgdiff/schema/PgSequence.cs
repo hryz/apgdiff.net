@@ -55,74 +55,74 @@ public class PgSequence {
     
     public String getCreationSQL() {
         StringBuilder sbSQL = new StringBuilder(100);
-        sbSQL.append("CREATE SEQUENCE ");
-        sbSQL.append(PgDiffUtils.getQuotedName(name));
+        sbSQL.Append("CREATE SEQUENCE ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(name));
 
         if (startWith != null) {
-            sbSQL.append("\n\tSTART WITH ");
-            sbSQL.append(startWith);
+            sbSQL.Append("\n\tSTART WITH ");
+            sbSQL.Append(startWith);
         }
 
         if (increment != null) {
-            sbSQL.append("\n\tINCREMENT BY ");
-            sbSQL.append(increment);
+            sbSQL.Append("\n\tINCREMENT BY ");
+            sbSQL.Append(increment);
         }
 
-        sbSQL.append("\n\t");
+        sbSQL.Append("\n\t");
 
         if (maxValue == null) {
-            sbSQL.append("NO MAXVALUE");
+            sbSQL.Append("NO MAXVALUE");
         } else {
-            sbSQL.append("MAXVALUE ");
-            sbSQL.append(maxValue);
+            sbSQL.Append("MAXVALUE ");
+            sbSQL.Append(maxValue);
         }
 
-        sbSQL.append("\n\t");
+        sbSQL.Append("\n\t");
 
         if (minValue == null) {
-            sbSQL.append("NO MINVALUE");
+            sbSQL.Append("NO MINVALUE");
         } else {
-            sbSQL.append("MINVALUE ");
-            sbSQL.append(minValue);
+            sbSQL.Append("MINVALUE ");
+            sbSQL.Append(minValue);
         }
 
         if (cache != null) {
-            sbSQL.append("\n\tCACHE ");
-            sbSQL.append(cache);
+            sbSQL.Append("\n\tCACHE ");
+            sbSQL.Append(cache);
         }
 
         if (cycle) {
-            sbSQL.append("\n\tCYCLE");
+            sbSQL.Append("\n\tCYCLE");
         }
 
-        sbSQL.append(';');
+        sbSQL.Append(';');
 
-        if (comment != null && !comment.isEmpty()) {
-            sbSQL.append("\n\nCOMMENT ON SEQUENCE ");
-            sbSQL.append(PgDiffUtils.getQuotedName(name));
-            sbSQL.append(" IS ");
-            sbSQL.append(comment);
-            sbSQL.append(';');
+        if ( !String.IsNullOrEmpty(comment)) {
+            sbSQL.Append("\n\nCOMMENT ON SEQUENCE ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(name));
+            sbSQL.Append(" IS ");
+            sbSQL.Append(comment);
+            sbSQL.Append(';');
         }
 
-        return sbSQL.toString();
+        return sbSQL.ToString();
     }
 
     
     public String getOwnedBySQL() {
         StringBuilder sbSQL = new StringBuilder(100);
 
-        sbSQL.append("ALTER SEQUENCE ");
-        sbSQL.append(PgDiffUtils.getQuotedName(name));
+        sbSQL.Append("ALTER SEQUENCE ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(name));
 
-        if (ownedBy != null && !ownedBy.isEmpty()) {
-            sbSQL.append("\n\tOWNED BY ");
-            sbSQL.append(ownedBy);
+        if ( !String.IsNullOrEmpty(ownedBy)) {
+            sbSQL.Append("\n\tOWNED BY ");
+            sbSQL.Append(ownedBy);
         }
 
-        sbSQL.append(';');
+        sbSQL.Append(';');
 
-        return sbSQL.toString();
+        return sbSQL.ToString();
     }
 
     

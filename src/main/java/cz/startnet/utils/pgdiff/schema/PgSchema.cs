@@ -14,23 +14,22 @@ public class PgSchema {
 
     
     
-    private List<PgFunction> functions = new ArrayList<PgFunction>();
+    private List<PgFunction> functions = new List<PgFunction>();
     
     
-    private List<PgSequence> sequences = new ArrayList<PgSequence>();
+    private List<PgSequence> sequences = new List<PgSequence>();
     
     
-    private List<PgTable> tables = new ArrayList<PgTable>();
+    private List<PgTable> tables = new List<PgTable>();
     
     
-    private List<PgView> views = new ArrayList<PgView>();
+    private List<PgView> views = new List<PgView>();
     
     
-    private List<PgIndex> indexes = new ArrayList<PgIndex>();
+    private List<PgIndex> indexes = new List<PgIndex>();
     
     
-    private List<PgConstraint> primaryKeys =
-            new ArrayList<PgConstraint>();
+    private List<PgConstraint> primaryKeys = new List<PgConstraint>();
     
     private String name;
     
@@ -78,25 +77,25 @@ public class PgSchema {
     
     public String getCreationSQL() {
         StringBuilder sbSQL = new StringBuilder(50);
-        sbSQL.append("CREATE SCHEMA ");
-        sbSQL.append(PgDiffUtils.getQuotedName(getName()));
+        sbSQL.Append("CREATE SCHEMA ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(getName()));
 
         if (getAuthorization() != null) {
-            sbSQL.append(" AUTHORIZATION ");
-            sbSQL.append(PgDiffUtils.getQuotedName(getAuthorization()));
+            sbSQL.Append(" AUTHORIZATION ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(getAuthorization()));
         }
 
-        sbSQL.append(';');
+        sbSQL.Append(';');
 
-        if (comment != null && !comment.isEmpty()) {
-            sbSQL.append("\n\nCOMMENT ON SCHEMA ");
-            sbSQL.append(PgDiffUtils.getQuotedName(name));
-            sbSQL.append(" IS ");
-            sbSQL.append(comment);
-            sbSQL.append(';');
+        if ( !String.IsNullOrEmpty(comment)) {
+            sbSQL.Append("\n\nCOMMENT ON SCHEMA ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(name));
+            sbSQL.Append(" IS ");
+            sbSQL.Append(comment);
+            sbSQL.Append(';');
         }
 
-        return sbSQL.toString();
+        return sbSQL.ToString();
     }
 
     
@@ -112,7 +111,7 @@ public class PgSchema {
 
     
     public List<PgFunction> getFunctions() {
-        return Collections.unmodifiableList(functions);
+        return new List<PgFunction>(functions);
     }
 
     
@@ -155,17 +154,17 @@ public class PgSchema {
 
     
     public List<PgIndex> getIndexes() {
-        return Collections.unmodifiableList(indexes);
+        return new List<PgIndex>(indexes);
     }
 
     
     public List<PgConstraint> getPrimaryKeys() {
-        return Collections.unmodifiableList(primaryKeys);
+        return new List<PgConstraint>(primaryKeys);
     }
 
     
     public List<PgSequence> getSequences() {
-        return Collections.unmodifiableList(sequences);
+        return new List<PgSequence>(sequences);
     }
 
     
@@ -181,7 +180,7 @@ public class PgSchema {
 
     
     public List<PgTable> getTables() {
-        return Collections.unmodifiableList(tables);
+        return new List<PgTable>(tables);
     }
 
     
@@ -197,37 +196,37 @@ public class PgSchema {
 
     
     public List<PgView> getViews() {
-        return Collections.unmodifiableList(views);
+        return new List<PgView>(views);
     }
 
     
     public void addIndex(PgIndex index) {
-        indexes.add(index);
+        indexes.Add(index);
     }
 
     
     public void addPrimaryKey(PgConstraint primaryKey) {
-        primaryKeys.add(primaryKey);
+        primaryKeys.Add(primaryKey);
     }
 
     
     public void addFunction(PgFunction function) {
-        functions.add(function);
+        functions.Add(function);
     }
 
     
     public void addSequence(PgSequence sequence) {
-        sequences.add(sequence);
+        sequences.Add(sequence);
     }
 
     
     public void addTable(PgTable table) {
-        tables.add(table);
+        tables.Add(table);
     }
 
     
     public void addView(PgView view) {
-        views.add(view);
+        views.Add(view);
     }
 
     

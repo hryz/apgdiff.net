@@ -37,29 +37,29 @@ public class PgIndex {
     
     public String getCreationSQL() {
         StringBuilder sbSQL = new StringBuilder(100);
-        sbSQL.append("CREATE ");
+        sbSQL.Append("CREATE ");
 
         if (isUnique()) {
-            sbSQL.append("UNIQUE ");
+            sbSQL.Append("UNIQUE ");
         }
 
-        sbSQL.append("INDEX ");
-        sbSQL.append(PgDiffUtils.getQuotedName(getName()));
-        sbSQL.append(" ON ");
-        sbSQL.append(PgDiffUtils.getQuotedName(getTableName()));
-        sbSQL.append(' ');
-        sbSQL.append(getDefinition());
-        sbSQL.append(';');
+        sbSQL.Append("INDEX ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(getName()));
+        sbSQL.Append(" ON ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(getTableName()));
+        sbSQL.Append(' ');
+        sbSQL.Append(getDefinition());
+        sbSQL.Append(';');
 
-        if (comment != null && !comment.isEmpty()) {
-            sbSQL.append("\n\nCOMMENT ON INDEX ");
-            sbSQL.append(PgDiffUtils.getQuotedName(name));
-            sbSQL.append(" IS ");
-            sbSQL.append(comment);
-            sbSQL.append(';');
+        if ( !String.IsNullOrEmpty(comment)) {
+            sbSQL.Append("\n\nCOMMENT ON INDEX ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(name));
+            sbSQL.Append(" IS ");
+            sbSQL.Append(comment);
+            sbSQL.Append(';');
         }
 
-        return sbSQL.toString();
+        return sbSQL.ToString();
     }
 
     
@@ -98,14 +98,14 @@ public class PgIndex {
     }
 
     
-    @Override
-    public bool Equals(Object object) {
+    
+    public override bool Equals(Object @object) {
         bool equals = false;
 
-        if (this == object) {
+        if (this == @object) {
             equals = true;
-        } else if (object instanceof PgIndex) {
-            PgIndex index = (PgIndex) object;
+        } else if (@object is PgIndex) {
+            PgIndex index = (PgIndex) @object;
             equals = definition.Equals(index.getDefinition())
                     && name.Equals(index.getName())
                     && tableName.Equals(index.getTableName())
@@ -116,10 +116,9 @@ public class PgIndex {
     }
 
     
-    @Override
-    public int hashCode() {
-        return (getClass().getName() + "|" + definition + "|" + name + "|"
-                + tableName + "|" + unique).hashCode();
+    
+    public override int GetHashCode() {
+        return (GetType().Name + "|" + definition + "|" + name + "|" + tableName + "|" + unique).GetHashCode();
     }
 
     

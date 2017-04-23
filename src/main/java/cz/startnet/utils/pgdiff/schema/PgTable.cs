@@ -10,26 +10,26 @@ namespace cz.startnet.utils.pgdiff.schema {
 
 
 
-public class PgTable {
+public class PgTable
+{
 
+
+
+    private List<PgColumn> columns = new List<PgColumn>();
     
     
-    private List<PgColumn> columns = new ArrayList<PgColumn>();
+    private List<PgConstraint> constraints = new List<PgConstraint>();
     
     
-    private List<PgConstraint> constraints =
-            new ArrayList<PgConstraint>();
+    private List<PgIndex> indexes = new List<PgIndex>();
     
     
-    private List<PgIndex> indexes = new ArrayList<PgIndex>();
-    
-    
-    private List<PgTrigger> triggers = new ArrayList<PgTrigger>();
+    private List<PgTrigger> triggers = new List<PgTrigger>();
     
     private String clusterIndexName;
     
     
-    private List<String> inherits = new ArrayList<String>();
+    private List<String> inherits = new List<String>();
     
     private String name;
     
@@ -67,7 +67,7 @@ public class PgTable {
 
     
     public List<PgColumn> getColumns() {
-        return Collections.unmodifiableList(columns);
+        return new List<PgColumn>(columns);
     }
 
     
@@ -93,37 +93,37 @@ public class PgTable {
 
     
     public List<PgConstraint> getConstraints() {
-        return Collections.unmodifiableList(constraints);
+        return new List<PgConstraint>(constraints);
     }
 
     
     public String getCreationSQL() {
         StringBuilder sbSQL = new StringBuilder(1000);
-        sbSQL.append("CREATE TABLE ");
-        sbSQL.append(PgDiffUtils.getQuotedName(name));
-        sbSQL.append(" (\n");
+        sbSQL.Append("CREATE TABLE ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(name));
+        sbSQL.Append(" (\n");
 
         bool first = true;
 
-        if (columns.isEmpty()) {
-            sbSQL.append(')');
+        if (columns.Count == 0) {
+            sbSQL.Append(')');
         } else {
             foreach(PgColumn column in columns) {
                 if (first) {
                     first = false;
                 } else {
-                    sbSQL.append(",\n");
+                    sbSQL.Append(",\n");
                 }
 
-                sbSQL.append("\t");
-                sbSQL.append(column.getFullDefinition(false));
+                sbSQL.Append("\t");
+                sbSQL.Append(column.getFullDefinition(false));
             }
 
-            sbSQL.append("\n)");
+            sbSQL.Append("\n)");
         }
 
-        if (inherits != null && !inherits.isEmpty()) {
-            sbSQL.append("\nINHERITS (");
+        if (inherits != null && inherits.Count != 0) {
+            sbSQL.Append("\nINHERITS (");
 
             first = true;
 
@@ -131,71 +131,71 @@ public class PgTable {
                 if (first) {
                     first = false;
                 } else {
-                    sbSQL.append(", ");
+                    sbSQL.Append(", ");
                 }
 
-                sbSQL.append(tableName);
+                sbSQL.Append(tableName);
             }
 
-            sbSQL.append(")");
+            sbSQL.Append(")");
         }
 
-        if (with != null && !with.isEmpty()) {
-            sbSQL.append("\n");
+        if (!string.IsNullOrEmpty(with)) {
+            sbSQL.Append("\n");
 
-            if ("OIDS=false".equalsIgnoreCase(with)) {
-                sbSQL.append("WITHOUT OIDS");
+            if ("OIDS=false".Equals(with,StringComparison.InvariantCultureIgnoreCase)) {
+                sbSQL.Append("WITHOUT OIDS");
             } else {
-                sbSQL.append("WITH ");
+                sbSQL.Append("WITH ");
 
-                if ("OIDS".equalsIgnoreCase(with)
-                        || "OIDS=true".equalsIgnoreCase(with)) {
-                    sbSQL.append("OIDS");
+                if ("OIDS".Equals(with,StringComparison.InvariantCultureIgnoreCase)
+                        || "OIDS=true".Equals(with,StringComparison.InvariantCultureIgnoreCase)) {
+                    sbSQL.Append("OIDS");
                 } else {
-                    sbSQL.append(with);
+                    sbSQL.Append(with);
                 }
             }
         }
 
-        if (tablespace != null && !tablespace.isEmpty()) {
-            sbSQL.append("\nTABLESPACE ");
-            sbSQL.append(tablespace);
+        if (!String.IsNullOrEmpty(tablespace)) {
+            sbSQL.Append("\nTABLESPACE ");
+            sbSQL.Append(tablespace);
         }
 
-        sbSQL.append(';');
+        sbSQL.Append(';');
 
-        for (PgColumn column : getColumnsWithStatistics()) {
-            sbSQL.append("\nALTER TABLE ONLY ");
-            sbSQL.append(PgDiffUtils.getQuotedName(name));
-            sbSQL.append(" ALTER COLUMN ");
-            sbSQL.append(
+        foreach (PgColumn column in getColumnsWithStatistics()) {
+            sbSQL.Append("\nALTER TABLE ONLY ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(name));
+            sbSQL.Append(" ALTER COLUMN ");
+            sbSQL.Append(
                     PgDiffUtils.getQuotedName(column.getName()));
-            sbSQL.append(" SET STATISTICS ");
-            sbSQL.append(column.getStatistics());
-            sbSQL.append(';');
+            sbSQL.Append(" SET STATISTICS ");
+            sbSQL.Append(column.getStatistics());
+            sbSQL.Append(';');
         }
 
-        if (comment != null && !comment.isEmpty()) {
-            sbSQL.append("\n\nCOMMENT ON TABLE ");
-            sbSQL.append(PgDiffUtils.getQuotedName(name));
-            sbSQL.append(" IS ");
-            sbSQL.append(comment);
-            sbSQL.append(';');
+        if (String.IsNullOrEmpty(comment)) {
+            sbSQL.Append("\n\nCOMMENT ON TABLE ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(name));
+            sbSQL.Append(" IS ");
+            sbSQL.Append(comment);
+            sbSQL.Append(';');
         }
 
         foreach(PgColumn column in columns) {
-            if (column.getComment() != null && !column.getComment().isEmpty()) {
-                sbSQL.append("\n\nCOMMENT ON COLUMN ");
-                sbSQL.append(PgDiffUtils.getQuotedName(name));
-                sbSQL.append('.');
-                sbSQL.append(PgDiffUtils.getQuotedName(column.getName()));
-                sbSQL.append(" IS ");
-                sbSQL.append(column.getComment());
-                sbSQL.append(';');
+            if ( !String.IsNullOrEmpty(column.getComment())) {
+                sbSQL.Append("\n\nCOMMENT ON COLUMN ");
+                sbSQL.Append(PgDiffUtils.getQuotedName(name));
+                sbSQL.Append('.');
+                sbSQL.Append(PgDiffUtils.getQuotedName(column.getName()));
+                sbSQL.Append(" IS ");
+                sbSQL.Append(column.getComment());
+                sbSQL.Append(';');
             }
         }
 
-        return sbSQL.toString();
+        return sbSQL.ToString();
     }
 
     
@@ -227,17 +227,17 @@ public class PgTable {
 
     
     public List<PgIndex> getIndexes() {
-        return Collections.unmodifiableList(indexes);
+        return new List<PgIndex>(indexes);
     }
 
     
     public void addInherits(String tableName) {
-        inherits.add(tableName);
+        inherits.Add(tableName);
     }
 
     
     public List<String> getInherits() {
-        return Collections.unmodifiableList(inherits);
+        return new List<string>(inherits);
     }
 
     
@@ -252,7 +252,7 @@ public class PgTable {
 
     
     public List<PgTrigger> getTriggers() {
-        return Collections.unmodifiableList(triggers);
+        return new List<PgTrigger>(triggers);
     }
 
     
@@ -277,22 +277,22 @@ public class PgTable {
 
     
     public void addColumn(PgColumn column) {
-        columns.add(column);
+        columns.Add(column);
     }
 
     
     public void addConstraint(PgConstraint constraint) {
-        constraints.add(constraint);
+        constraints.Add(constraint);
     }
 
     
     public void addIndex(PgIndex index) {
-        indexes.add(index);
+        indexes.Add(index);
     }
 
     
     public void addTrigger(PgTrigger trigger) {
-        triggers.add(trigger);
+        triggers.Add(trigger);
     }
 
     
@@ -331,11 +331,11 @@ public class PgTable {
     
     private List<PgColumn> getColumnsWithStatistics() {
         
-        List<PgColumn> list = new ArrayList<PgColumn>();
+        List<PgColumn> list = new List<PgColumn>();
 
         foreach(PgColumn column in columns) {
             if (column.getStatistics() != null) {
-                list.add(column);
+                list.Add(column);
             }
         }
 

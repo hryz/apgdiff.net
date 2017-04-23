@@ -19,11 +19,9 @@ public class PgView {
     
     private String query;
     
-    private List<DefaultValue> defaultValues =
-            new ArrayList<DefaultValue>(0);
+    private List<DefaultValue> defaultValues = new List<DefaultValue>();
     
-    private List<ColumnComment> columnComments =
-            new ArrayList<ColumnComment>(0);
+    private List<ColumnComment> columnComments = new List<ColumnComment>();
     
     private String comment;
 
@@ -40,7 +38,7 @@ public class PgView {
 
     
     public List<String> getColumnNames() {
-        return Collections.unmodifiableList(columnNames);
+        return new List<string>(columnNames);
     }
 
     
@@ -55,59 +53,57 @@ public class PgView {
 
     
     public String getCreationSQL() {
-        StringBuilder sbSQL = new StringBuilder(query.length() * 2);
-        sbSQL.append("CREATE VIEW ");
-        sbSQL.append(PgDiffUtils.getQuotedName(name));
+        StringBuilder sbSQL = new StringBuilder(query.Length * 2);
+        sbSQL.Append("CREATE VIEW ");
+        sbSQL.Append(PgDiffUtils.getQuotedName(name));
 
-        if (columnNames != null && !columnNames.isEmpty()) {
-            sbSQL.append(" (");
+        if (columnNames != null && columnNames.Count >0) {
+            sbSQL.Append(" (");
 
-            for (int i = 0; i < columnNames.size(); i++) {
+            for (int i = 0; i < columnNames.Count; i++) {
                 if (i > 0) {
-                    sbSQL.append(", ");
+                    sbSQL.Append(", ");
                 }
 
-                sbSQL.append(PgDiffUtils.getQuotedName(columnNames.get(i)));
+                sbSQL.Append(PgDiffUtils.getQuotedName(columnNames[i]));
             }
-            sbSQL.append(')');
+            sbSQL.Append(')');
         }
 
-        sbSQL.append(" AS\n\t");
-        sbSQL.append(query);
-        sbSQL.append(';');
+        sbSQL.Append(" AS\n\t");
+        sbSQL.Append(query);
+        sbSQL.Append(';');
 
         foreach(DefaultValue defaultValue in defaultValues) {
-            sbSQL.append("\n\nALTER VIEW ");
-            sbSQL.append(PgDiffUtils.getQuotedName(name));
-            sbSQL.append(" ALTER COLUMN ");
-            sbSQL.append(
+            sbSQL.Append("\n\nALTER VIEW ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(name));
+            sbSQL.Append(" ALTER COLUMN ");
+            sbSQL.Append(
                     PgDiffUtils.getQuotedName(defaultValue.getColumnName()));
-            sbSQL.append(" SET DEFAULT ");
-            sbSQL.append(defaultValue.getDefaultValue());
-            sbSQL.append(';');
+            sbSQL.Append(" SET DEFAULT ");
+            sbSQL.Append(defaultValue.getDefaultValue());
+            sbSQL.Append(';');
         }
 
-        if (comment != null && !comment.isEmpty()) {
-            sbSQL.append("\n\nCOMMENT ON VIEW ");
-            sbSQL.append(PgDiffUtils.getQuotedName(name));
-            sbSQL.append(" IS ");
-            sbSQL.append(comment);
-            sbSQL.append(';');
+        if (!String.IsNullOrEmpty(comment)) {
+            sbSQL.Append("\n\nCOMMENT ON VIEW ");
+            sbSQL.Append(PgDiffUtils.getQuotedName(name));
+            sbSQL.Append(" IS ");
+            sbSQL.Append(comment);
+            sbSQL.Append(';');
         }
 
         foreach(ColumnComment columnComment in columnComments) {
-            if (columnComment.getComment() != null
-                    && !columnComment.getComment().isEmpty()) {
-                sbSQL.append("\n\nCOMMENT ON COLUMN ");
-                sbSQL.append(PgDiffUtils.getQuotedName(
-                        columnComment.getColumnName()));
-                sbSQL.append(" IS ");
-                sbSQL.append(columnComment.getComment());
-                sbSQL.append(';');
+            if (!String.IsNullOrEmpty(columnComment.getComment())) {
+                sbSQL.Append("\n\nCOMMENT ON COLUMN ");
+                sbSQL.Append(PgDiffUtils.getQuotedName(columnComment.getColumnName()));
+                sbSQL.Append(" IS ");
+                sbSQL.Append(columnComment.getComment());
+                sbSQL.Append(';');
             }
         }
 
-        return sbSQL.toString();
+        return sbSQL.ToString();
     }
 
     
@@ -134,14 +130,14 @@ public class PgView {
     public void addColumnDefaultValue(String columnName,
             String defaultValue) {
         removeColumnDefaultValue(columnName);
-        defaultValues.add(new DefaultValue(columnName, defaultValue));
+        defaultValues.Add(new DefaultValue(columnName, defaultValue));
     }
 
     
     public void removeColumnDefaultValue(String columnName) {
         foreach(DefaultValue item in defaultValues) {
             if (item.getColumnName().Equals(columnName)) {
-                defaultValues.remove(item);
+                defaultValues.Remove(item);
                 return;
             }
         }
@@ -149,21 +145,21 @@ public class PgView {
 
     
     public List<DefaultValue> getDefaultValues() {
-        return Collections.unmodifiableList(defaultValues);
+        return new List<DefaultValue>(defaultValues);
     }
 
     
     public void addColumnComment(String columnName,
             String comment) {
         removeColumnDefaultValue(columnName);
-        columnComments.add(new ColumnComment(columnName, comment));
+        columnComments.Add(new ColumnComment(columnName, comment));
     }
 
     
     public void removeColumnComment(String columnName) {
         foreach(ColumnComment item in columnComments) {
             if (item.getColumnName().Equals(columnName)) {
-                columnComments.remove(item);
+                columnComments.Remove(item);
                 return;
             }
         }
@@ -171,7 +167,7 @@ public class PgView {
 
     
     public List<ColumnComment> getColumnComments() {
-        return Collections.unmodifiableList(columnComments);
+        return new List<ColumnComment>(columnComments);
     }
 
     
@@ -184,7 +180,7 @@ public class PgView {
         private String defaultValue;
 
         
-        DefaultValue(String columnName, String defaultValue) {
+        public DefaultValue(String columnName, String defaultValue) {
             this.columnName = columnName;
             this.defaultValue = defaultValue;
         }
@@ -210,7 +206,7 @@ public class PgView {
         private String comment;
 
         
-        ColumnComment(String columnName, String comment) {
+        public ColumnComment(String columnName, String comment) {
             this.columnName = columnName;
             this.comment = comment;
         }
