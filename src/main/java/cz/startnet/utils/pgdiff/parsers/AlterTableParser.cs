@@ -1,4 +1,8 @@
 
+using System;
+using System.Collections.Generic;
+using cz.startnet.utils.pgdiff.schema;
+
 namespace cz.startnet.utils.pgdiff.parsers {
 
 
@@ -21,7 +25,7 @@ public class AlterTableParser {
         PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
-            throw new RuntimeException(MessageFormat.format(
+            throw new Exception(String.Format(
                     Resources.getString("CannotFindSchema"), schemaName,
                     statement));
         }
@@ -46,7 +50,7 @@ public class AlterTableParser {
                 return;
             }
 
-            throw new RuntimeException(MessageFormat.format(
+            throw new Exception(String.Format(
                     Resources.getString("CannotFindObject"), tableName,
                     statement));
         }
@@ -190,7 +194,7 @@ public class AlterTableParser {
                 PgColumn column = table.getColumn(columnName);
 
                 if (column == null) {
-                    throw new RuntimeException(MessageFormat.format(
+                    throw new Exception(String.Format(
                             Resources.getString("CannotFindTableColumn"),
                             columnName, table.getName(), parser.getString()));
                 }
@@ -203,7 +207,7 @@ public class AlterTableParser {
                     PgColumn column = table.getColumn(columnName);
 
                     if (column == null) {
-                        throw new RuntimeException(MessageFormat.format(
+                        throw new Exception(String.Format(
                                 Resources.getString("CannotFindTableColumn"),
                                 columnName, table.getName(),
                                 parser.getString()));
@@ -211,7 +215,7 @@ public class AlterTableParser {
 
                     column.setDefaultValue(defaultValue);
                 } else {
-                    throw new ParserException(MessageFormat.format(
+                    throw new ParserException(String.Format(
                             Resources.getString("CannotFindColumnInTable"),
                             columnName, table.getName()));
                 }
@@ -219,7 +223,7 @@ public class AlterTableParser {
                 PgColumn column = table.getColumn(columnName);
 
                 if (column == null) {
-                    throw new RuntimeException(MessageFormat.format(
+                    throw new Exception(String.Format(
                             Resources.getString("CannotFindTableColumn"),
                             columnName, table.getName(), parser.getString()));
                 }

@@ -1,4 +1,6 @@
 
+using System;
+
 namespace cz.startnet.utils.pgdiff {
 
 
@@ -466,7 +468,7 @@ public class PgDiffUtils {
 
     
     public static String getQuotedName(String name,
-            boolean excludeKeywords) {
+            bool excludeKeywords) {
         if (name.indexOf('-') != -1 || name.indexOf('.') != -1) {
             return '"' + name + '"';
         }

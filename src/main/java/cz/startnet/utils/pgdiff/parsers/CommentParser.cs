@@ -1,4 +1,7 @@
 
+using System;
+using cz.startnet.utils.pgdiff.schema;
+
 namespace cz.startnet.utils.pgdiff.parsers {
 
 
@@ -197,7 +200,7 @@ public class CommentParser {
             PgColumn column = table.getColumn(objectName);
 
             if (column == null) {
-                throw new ParserException(MessageFormat.format(
+                throw new ParserException(String.Format(
                         Resources.getString("CannotFindColumnInTable"),
                         columnName, table.getName()));
             }

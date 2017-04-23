@@ -1,8 +1,10 @@
 
+using System;
+
 namespace cz.startnet.utils.pgdiff.parsers {
 
 
-public class ParserException extends RuntimeException {
+public class ParserException : Exception {
 
     
     private static long serialVersionUID = 1L;

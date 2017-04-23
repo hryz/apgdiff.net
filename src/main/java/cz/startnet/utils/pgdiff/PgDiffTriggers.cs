@@ -1,4 +1,7 @@
 
+using System.Collections.Generic;
+using cz.startnet.utils.pgdiff.schema;
+
 namespace cz.startnet.utils.pgdiff {
 
 

@@ -1,4 +1,6 @@
 
+using System;
+
 namespace cz.startnet.utils.pgdiff {
 
 
@@ -9,8 +11,7 @@ namespace cz.startnet.utils.pgdiff {
 public class Main {
 
     
-    public static void main(String[] args)
-            throws UnsupportedEncodingException {
+    public static void main(String[] args) {
         
         PrintWriter writer = new PrintWriter(System.out, true);
         PgDiffArguments arguments = new PgDiffArguments();

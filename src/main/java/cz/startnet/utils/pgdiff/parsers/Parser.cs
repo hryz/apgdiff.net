@@ -1,4 +1,6 @@
 
+using System;
+
 namespace cz.startnet.utils.pgdiff.parsers {
 
 
@@ -49,7 +51,7 @@ public class Parser {
             return false;
         }
 
-        throw new ParserException(MessageFormat.format(
+        throw new ParserException(String.Format(
                 Resources.getString("CannotParseStringExpectedWord"), string,
                 word, position + 1, string.substring(position, position + 20)));
     }
@@ -163,7 +165,7 @@ public class Parser {
 
             return result;
         } catch (NumberFormatException ex) {
-            throw new ParserException(MessageFormat.format(
+            throw new ParserException(String.Format(
                     Resources.getString("CannotParseStringExpectedInteger"),
                     string, position + 1,
                     string.substring(position, position + 20)), ex);
@@ -198,7 +200,7 @@ public class Parser {
             try {
                 result = string.substring(position, endPos + 1);
             } catch (Throwable ex) {
-                throw new RuntimeException("Failed to get substring: " + string
+                throw new Exception("Failed to get substring: " + string
                         + " start pos: " + position + " end pos: "
                         + (endPos + 1), ex);
             }
@@ -220,7 +222,7 @@ public class Parser {
             }
 
             if (position == endPos) {
-                throw new ParserException(MessageFormat.format(
+                throw new ParserException(String.Format(
                         Resources.getString("CannotParseStringExpectedString"),
                         string, position + 1));
             }
@@ -239,7 +241,7 @@ public class Parser {
         int endPos = getExpressionEnd();
 
         if (position == endPos) {
-            throw new ParserException(MessageFormat.format(
+            throw new ParserException(String.Format(
                     Resources.getString("CannotParseStringExpectedExpression"),
                     string, position + 1,
                     string.substring(position, position + 20)));
@@ -293,7 +295,7 @@ public class Parser {
 
     
     public void throwUnsupportedCommand() {
-        throw new ParserException(MessageFormat.format(
+        throw new ParserException(String.Format(
                 Resources.getString("CannotParseStringUnsupportedCommand"),
                 string, position + 1,
                 string.substring(position, position + 20)));
@@ -333,7 +335,7 @@ public class Parser {
         }
 
         if (endPos == position) {
-            throw new ParserException(MessageFormat.format(
+            throw new ParserException(String.Format(
                     Resources.getString("CannotParseStringExpectedDataType"),
                     string, position + 1,
                     string.substring(position, position + 20)));

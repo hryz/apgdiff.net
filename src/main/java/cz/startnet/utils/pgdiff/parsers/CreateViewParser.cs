@@ -1,4 +1,8 @@
 
+using System;
+using System.Collections.Generic;
+using cz.startnet.utils.pgdiff.schema;
+
 namespace cz.startnet.utils.pgdiff.parsers {
 
 
@@ -41,7 +45,7 @@ public class CreateViewParser {
         PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
-            throw new RuntimeException(MessageFormat.format(
+            throw new Exception(String.Format(
                     Resources.getString("CannotFindSchema"), schemaName,
                     statement));
         }

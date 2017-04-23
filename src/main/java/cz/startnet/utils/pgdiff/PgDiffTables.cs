@@ -162,7 +162,7 @@ public class PgDiffTables {
             if (newStorage == null && oldStorage != null) {
                 searchPathHelper.outputSearchPath(writer);
                 writer.println();
-                writer.println(MessageFormat.format(Resources.getString(
+                writer.println(String.Format(Resources.getString(
                         "WarningUnableToDetermineStorageType"),
                         newTable.getName() + '.' + newColumn.getName()));
 
@@ -230,7 +230,7 @@ public class PgDiffTables {
             if (!oldColumn.getType().equals(newColumn.getType())) {
                 statements.add("\tALTER COLUMN " + newColumnName + " TYPE "
                         + newColumn.getType() + " /* "
-                        + MessageFormat.format(
+                        + String.Format(
                         Resources.getString("TypeParameterChange"),
                         newTable.getName(), oldColumn.getType(),
                         newColumn.getType()) + " */");

@@ -42,8 +42,48 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="loader\FileException.cs" />
+    <Compile Include="loader\PgDumpLoader.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="parsers\AlterSequenceParser.cs" />
+    <Compile Include="parsers\AlterTableParser.cs" />
+    <Compile Include="parsers\AlterViewParser.cs" />
+    <Compile Include="parsers\CommentParser.cs" />
+    <Compile Include="parsers\CreateFunctionParser.cs" />
+    <Compile Include="parsers\CreateIndexParser.cs" />
+    <Compile Include="parsers\CreateSchemaParser.cs" />
+    <Compile Include="parsers\CreateSequenceParser.cs" />
+    <Compile Include="parsers\CreateTableParser.cs" />
+    <Compile Include="parsers\CreateTriggerParser.cs" />
+    <Compile Include="parsers\CreateViewParser.cs" />
+    <Compile Include="parsers\Parser.cs" />
+    <Compile Include="parsers\ParserException.cs" />
+    <Compile Include="parsers\ParserUtils.cs" />
+    <Compile Include="PgDiff.cs" />
+    <Compile Include="PgDiffArguments.cs" />
+    <Compile Include="PgDiffConstraints.cs" />
+    <Compile Include="PgDiffFunctions.cs" />
+    <Compile Include="PgDiffIndexes.cs" />
+    <Compile Include="PgDiffSequences.cs" />
+    <Compile Include="PgDiffTables.cs" />
+    <Compile Include="PgDiffTriggers.cs" />
+    <Compile Include="PgDiffUtils.cs" />
+    <Compile Include="PgDiffViews.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.cs" />
+    <Compile Include="schema\PgColumn.cs" />
+    <Compile Include="schema\PgColumnUtils.cs" />
+    <Compile Include="schema\PgConstraint.cs" />
+    <Compile Include="schema\PgDatabase.cs" />
+    <Compile Include="schema\PgFunction.cs" />
+    <Compile Include="schema\PgIndex.cs" />
+    <Compile Include="schema\PgSchema.cs" />
+    <Compile Include="schema\PgSequence.cs" />
+    <Compile Include="schema\PgTable.cs" />
+    <Compile Include="schema\PgTrigger.cs" />
+    <Compile Include="schema\PgView.cs" />
+    <Compile Include="SearchPathHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

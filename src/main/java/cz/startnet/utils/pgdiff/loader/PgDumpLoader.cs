@@ -1,4 +1,10 @@
 
+using System;
+using System.IO;
+using System.Text;
+using cz.startnet.utils.pgdiff.parsers;
+using cz.startnet.utils.pgdiff.schema;
+
 namespace cz.startnet.utils.pgdiff.loader {
 
 
@@ -158,7 +164,7 @@ public class PgDumpLoader { //NOPMD
             return loadDatabaseSchema(new FileInputStream(file), charsetName,
                     outputIgnoredStatements, ignoreSlonyTriggers);
         } catch (FileNotFoundException ex) {
-            throw new FileException(MessageFormat.format(
+            throw new FileException(String.Format(
                     Resources.getString("FileNotFound"), file), ex);
         }
     }
@@ -190,7 +196,7 @@ public class PgDumpLoader { //NOPMD
                     if (sbStatement.toString().trim().length() == 0) {
                         return null;
                     } else {
-                        throw new RuntimeException(MessageFormat.format(
+                        throw new Exception(String.Format(
                                 Resources.getString("EndOfStatementNotFound"),
                                 sbStatement.toString()));
                     }
