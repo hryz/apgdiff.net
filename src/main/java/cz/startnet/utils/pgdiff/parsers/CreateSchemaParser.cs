@@ -22,7 +22,7 @@ public class CreateSchemaParser {
 
             String definition = parser.getRest();
 
-            if (definition != null && !definition.isEmpty()) {
+            if (!String.IsNullOrEmpty(definition)) {
                 schema.setDefinition(definition);
             }
         } else {
@@ -37,7 +37,7 @@ public class CreateSchemaParser {
 
             String definition = parser.getRest();
 
-            if (definition != null && !definition.isEmpty()) {
+            if (!String.IsNullOrEmpty(definition)) {
                 schema.setDefinition(definition);
             }
         }

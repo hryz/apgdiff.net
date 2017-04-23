@@ -23,12 +23,11 @@ public class CreateViewParser {
         String viewName = parser.parseIdentifier();
 
         bool columnsExist = parser.expectOptional("(");
-        List<String> columnNames = new ArrayList<String>(10);
+        List<String> columnNames = new List<string>();
 
         if (columnsExist) {
             while (!parser.expectOptional(")")) {
-                columnNames.add(
-                        ParserUtils.getObjectName(parser.parseIdentifier()));
+                columnNames.Add(ParserUtils.getObjectName(parser.parseIdentifier()));
                 parser.expectOptional(",");
             }
         }

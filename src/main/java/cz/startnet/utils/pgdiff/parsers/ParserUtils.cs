@@ -16,21 +16,21 @@ public class ParserUtils {
     public static String getObjectName(String name) {
         String[] names = splitNames(name);
 
-        return names[names.length - 1];
+        return names[names.Length - 1];
     }
 
     
     public static String getSecondObjectName(String name) {
         String[] names = splitNames(name);
 
-        return names[names.length - 2];
+        return names[names.Length - 2];
     }
 
     
     public static String getThirdObjectName(String name) {
         String[] names = splitNames(name);
 
-        return names.length >= 3 ? names[names.length - 3] : null;
+        return names.Length >= 3 ? names[names.Length - 3] : null;
     }
 
     
@@ -38,7 +38,7 @@ public class ParserUtils {
             PgDatabase database) {
         String[] names = splitNames(name);
 
-        if (names.length < 2) {
+        if (names.Length < 2) {
             return database.getDefaultSchema().getName();
         } else {
             return names[0];
@@ -50,71 +50,71 @@ public class ParserUtils {
             List<String> names, String postfix) {
         String adjName;
 
-        if (names.size() == 1) {
-            adjName = names.get(0);
+        if (names.Count == 1) {
+            adjName = names[0];
         } else {
-            StringBuilder sbString = new StringBuilder(names.size() * 15);
+            StringBuilder sbString = new StringBuilder(names.Count * 15);
 
             foreach(String name in names) {
-                if (sbString.length() > 0) {
-                    sbString.append(',');
+                if (sbString.Length > 0) {
+                    sbString.Append(',');
                 }
 
-                sbString.append(name);
+                sbString.Append(name);
             }
 
-            adjName = Integer.toHexString(sbString.toString().hashCode());
+            adjName = sbString.ToString().GetHashCode().ToString("X4");
         }
 
         StringBuilder sbResult = new StringBuilder(30);
 
-        if (prefix != null && !prefix.isEmpty()) {
-            sbResult.append(prefix);
+        if (!String.IsNullOrEmpty(prefix)) {
+            sbResult.Append(prefix);
         }
 
-        sbResult.append(adjName);
+        sbResult.Append(adjName);
 
-        if (postfix != null && !postfix.isEmpty()) {
-            sbResult.append(postfix);
+        if (!String.IsNullOrEmpty(postfix)) {
+            sbResult.Append(postfix);
         }
 
-        return sbResult.toString();
+        return sbResult.ToString();
     }
 
     
-    private static String[] splitNames(String string) {
-        if (string.indexOf('"') == -1) {
-            return string.split("\\.");
+    private static String[] splitNames(String @string) {
+        if (@string.IndexOf('"') == -1) {
+            return @string.Split('.');
         } else {
-            List<String> strings = new ArrayList<String>(2);
+            List<String> strings = new List<string>();
             int startPos = 0;
 
             while (true) {
-                if (string.charAt(startPos) == '"') {
-                    int endPos = string.indexOf('"', startPos + 1);
-                    strings.add(string.substring(startPos + 1, endPos));
+                if (@string[startPos] == '"') {
+                    int endPos = @string.IndexOf('"', startPos + 1);
+                    strings.Add(@string.Substring(startPos + 1, endPos));
 
-                    if (endPos + 1 == string.length()) {
+                    if (endPos + 1 == @string.Length) {
                         break;
-                    } else if (string.charAt(endPos + 1) == '.') {
+                    } else if (@string[endPos + 1] == '.') {
                         startPos = endPos + 2;
                     } else {
                         startPos = endPos + 1;
                     }
                 } else {
-                    int endPos = string.indexOf('.', startPos);
+                    int endPos = @string.IndexOf('.', startPos);
 
                     if (endPos == -1) {
-                        strings.add(string.substring(startPos));
+                        strings.Add(@string.Substring(startPos));
                         break;
                     } else {
-                        strings.add(string.substring(startPos, endPos));
+                        strings.Add(@string.Substring(startPos, endPos));
                         startPos = endPos + 1;
                     }
                 }
             }
 
-            return strings.toArray(new String[strings.size()]);
+            return strings.ToArray();
         }
     }
 

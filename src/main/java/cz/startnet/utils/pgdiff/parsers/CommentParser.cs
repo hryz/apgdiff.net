@@ -280,7 +280,7 @@ public class CommentParser {
     private static String getComment(Parser parser) {
         String comment = parser.parseString();
 
-        if ("null".equalsIgnoreCase(comment)) {
+        if ("null".Equals(comment,StringComparison.InvariantCultureIgnoreCase)) {
             return null;
         }
 

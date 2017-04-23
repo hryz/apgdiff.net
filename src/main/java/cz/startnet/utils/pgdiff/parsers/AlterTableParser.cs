@@ -250,12 +250,11 @@ public class AlterTableParser {
     
     private static void parseAddForeignKey(Parser parser,
             PgTable table) {
-        List<String> columnNames = new ArrayList<String>(1);
+        List<String> columnNames = new List<string>();
         parser.expect("(");
 
         while (!parser.expectOptional(")")) {
-            columnNames.add(
-                    ParserUtils.getObjectName(parser.parseIdentifier()));
+            columnNames.Add(ParserUtils.getObjectName(parser.parseIdentifier()));
 
             if (parser.expectOptional(")")) {
                 break;
