@@ -7,7 +7,7 @@ import cz.startnet.utils.pgdiff.schema.PgConstraint;
 import cz.startnet.utils.pgdiff.schema.PgDatabase;
 import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgTable;
-import java.text.MessageFormat;
+
 
 
 public class CreateTableParser {

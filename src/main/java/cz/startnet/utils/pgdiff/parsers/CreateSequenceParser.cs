@@ -5,7 +5,7 @@ import cz.startnet.utils.pgdiff.Resources;
 import cz.startnet.utils.pgdiff.schema.PgDatabase;
 import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgSequence;
-import java.text.MessageFormat;
+
 
 
 public class CreateSequenceParser {

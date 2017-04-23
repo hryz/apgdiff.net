@@ -1,7 +1,7 @@
 
 namespace cz.startnet.utils.pgdiff {
 
-import java.util.Locale;
+
 
 
 public class PgDiffUtils {

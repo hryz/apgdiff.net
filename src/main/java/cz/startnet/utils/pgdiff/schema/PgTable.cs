@@ -2,9 +2,9 @@
 namespace cz.startnet.utils.pgdiff.schema {
 
 import cz.startnet.utils.pgdiff.PgDiffUtils;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
+
+
 
 
 public class PgTable {

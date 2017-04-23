@@ -9,9 +9,9 @@ import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgSequence;
 import cz.startnet.utils.pgdiff.schema.PgTable;
 import cz.startnet.utils.pgdiff.schema.PgView;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
+
+
+
 
 
 public class AlterTableParser {

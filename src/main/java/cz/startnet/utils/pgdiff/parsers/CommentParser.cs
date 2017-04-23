@@ -12,7 +12,7 @@ import cz.startnet.utils.pgdiff.schema.PgSequence;
 import cz.startnet.utils.pgdiff.schema.PgTable;
 import cz.startnet.utils.pgdiff.schema.PgTrigger;
 import cz.startnet.utils.pgdiff.schema.PgView;
-import java.text.MessageFormat;
+
 
 
 public class CommentParser {

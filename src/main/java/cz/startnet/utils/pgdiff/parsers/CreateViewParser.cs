@@ -5,9 +5,9 @@ import cz.startnet.utils.pgdiff.Resources;
 import cz.startnet.utils.pgdiff.schema.PgDatabase;
 import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgView;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
+
+
+
 
 
 public class CreateViewParser {

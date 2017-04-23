@@ -1,9 +1,9 @@
 
-package cz.startnet.utils.pgdiff;
+namespace cz.startnet.utils.pgdiff {
 
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.util.SortedMap;
+
+
+
 
 
 public class PgDiffArguments {
@@ -238,4 +238,5 @@ public class PgDiffArguments {
     public void setIgnoreSlonyTriggers(boolean ignoreSlonyTriggers) {
         this.ignoreSlonyTriggers = ignoreSlonyTriggers;
     }
+}
 }

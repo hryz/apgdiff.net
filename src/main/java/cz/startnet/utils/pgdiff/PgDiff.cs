@@ -4,8 +4,8 @@ namespace cz.startnet.utils.pgdiff {
 import cz.startnet.utils.pgdiff.loader.PgDumpLoader;
 import cz.startnet.utils.pgdiff.schema.PgDatabase;
 import cz.startnet.utils.pgdiff.schema.PgSchema;
-import java.io.InputStream;
-import java.io.PrintWriter;
+
+
 
 
 public class PgDiff {

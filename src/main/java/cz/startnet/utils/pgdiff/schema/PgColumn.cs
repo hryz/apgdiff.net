@@ -2,8 +2,8 @@
 namespace cz.startnet.utils.pgdiff.schema {
 
 import cz.startnet.utils.pgdiff.PgDiffUtils;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+
 
 
 public class PgColumn {

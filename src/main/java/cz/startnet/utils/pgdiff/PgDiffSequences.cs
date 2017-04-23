@@ -3,7 +3,7 @@ namespace cz.startnet.utils.pgdiff {
 
 import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgSequence;
-import java.io.PrintWriter;
+
 
 
 public class PgDiffSequences {

@@ -2,8 +2,8 @@
 namespace cz.startnet.utils.pgdiff.parsers {
 
 import cz.startnet.utils.pgdiff.Resources;
-import java.text.MessageFormat;
-import java.util.Locale;
+
+
 
 
 @SuppressWarnings("FinalClass")

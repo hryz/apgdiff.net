@@ -4,9 +4,9 @@ namespace cz.startnet.utils.pgdiff {
 import cz.startnet.utils.pgdiff.schema.PgIndex;
 import cz.startnet.utils.pgdiff.schema.PgSchema;
 import cz.startnet.utils.pgdiff.schema.PgTable;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+
+
+
 
 
 public class PgDiffIndexes {
