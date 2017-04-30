@@ -13,115 +13,115 @@ namespace pgdiff {
 public class PgDiffArguments {
 
     
-    private String inCharsetName = "UTF-8";
+    private String _inCharsetName = "UTF-8";
     
-    private String newDumpFile;
+    private String _newDumpFile;
     
-    private String oldDumpFile;
+    private String _oldDumpFile;
     
-    private String outCharsetName = "UTF-8";
+    private String _outCharsetName = "UTF-8";
     
-    private bool addDefaults;
+    private bool _addDefaults;
     
-    private bool addTransaction;
+    private bool _addTransaction;
     
-    private bool ignoreFunctionWhitespace;
+    private bool _ignoreFunctionWhitespace;
     
-    private bool ignoreStartWith;
+    private bool _ignoreStartWith;
     
-    private bool version;
+    private bool _version;
     
-    private bool outputIgnoredStatements;
+    private bool _outputIgnoredStatements;
     
-    private bool listCharsets;
+    private bool _listCharsets;
     
-    private bool ignoreSlonyTriggers;
+    private bool _ignoreSlonyTriggers;
 
     
-    public void setAddDefaults(bool addDefaults) {
-        this.addDefaults = addDefaults;
+    public void SetAddDefaults(bool addDefaults) {
+        this._addDefaults = addDefaults;
     }
 
     
-    public bool isAddDefaults() {
-        return addDefaults;
+    public bool IsAddDefaults() {
+        return _addDefaults;
     }
 
     
-    public void setAddTransaction(bool addTransaction) {
-        this.addTransaction = addTransaction;
+    public void SetAddTransaction(bool addTransaction) {
+        this._addTransaction = addTransaction;
     }
 
     
-    public bool isAddTransaction() {
-        return addTransaction;
+    public bool IsAddTransaction() {
+        return _addTransaction;
     }
 
     
-    public void setIgnoreFunctionWhitespace(
+    public void SetIgnoreFunctionWhitespace(
             bool ignoreFunctionWhitespace) {
-        this.ignoreFunctionWhitespace = ignoreFunctionWhitespace;
+        this._ignoreFunctionWhitespace = ignoreFunctionWhitespace;
     }
 
     
-    public bool isIgnoreFunctionWhitespace() {
-        return ignoreFunctionWhitespace;
+    public bool IsIgnoreFunctionWhitespace() {
+        return _ignoreFunctionWhitespace;
     }
 
     
-    public void setIgnoreStartWith(bool ignoreStartWith) {
-        this.ignoreStartWith = ignoreStartWith;
+    public void SetIgnoreStartWith(bool ignoreStartWith) {
+        this._ignoreStartWith = ignoreStartWith;
     }
 
     
-    public bool isIgnoreStartWith() {
-        return ignoreStartWith;
+    public bool IsIgnoreStartWith() {
+        return _ignoreStartWith;
     }
 
     
-    public void setNewDumpFile(String newDumpFile) {
-        this.newDumpFile = newDumpFile;
+    public void SetNewDumpFile(String newDumpFile) {
+        this._newDumpFile = newDumpFile;
     }
 
     
-    public String getNewDumpFile() {
-        return newDumpFile;
+    public String GetNewDumpFile() {
+        return _newDumpFile;
     }
 
     
-    public void setOldDumpFile(String oldDumpFile) {
-        this.oldDumpFile = oldDumpFile;
+    public void SetOldDumpFile(String oldDumpFile) {
+        this._oldDumpFile = oldDumpFile;
     }
 
     
-    public String getOldDumpFile() {
-        return oldDumpFile;
+    public String GetOldDumpFile() {
+        return _oldDumpFile;
     }
 
     
-    public bool isOutputIgnoredStatements() {
-        return outputIgnoredStatements;
+    public bool IsOutputIgnoredStatements() {
+        return _outputIgnoredStatements;
     }
 
     
-    public void setOutputIgnoredStatements(
+    public void SetOutputIgnoredStatements(
             bool outputIgnoredStatements) {
-        this.outputIgnoredStatements = outputIgnoredStatements;
+        this._outputIgnoredStatements = outputIgnoredStatements;
     }
 
     
-    public void setVersion(bool version) {
-        this.version = version;
+    public void SetVersion(bool version) {
+        this._version = version;
     }
 
     
-    public bool isVersion() {
-        return version;
+    public bool IsVersion() {
+        return _version;
     }
 
     
     
-    public bool parse(TextReader reader, TextWriter writer, String[] args) {
+    public bool Parse(TextReader reader, TextWriter writer, String[] args) {
         bool success = true;
         int argsLength;
 
@@ -133,27 +133,27 @@ public class PgDiffArguments {
 
         for (int i = 0; i < argsLength; i++) {
             if ("--add-defaults".Equals(args[i])) {
-                setAddDefaults(true);
+                SetAddDefaults(true);
             } else if ("--add-transaction".Equals(args[i])) {
-                setAddTransaction(true);
+                SetAddTransaction(true);
             } else if ("--ignore-function-whitespace".Equals(args[i])) {
-                setIgnoreFunctionWhitespace(true);
+                SetIgnoreFunctionWhitespace(true);
             } else if ("--ignore-slony-triggers".Equals(args[i])) {
-                setIgnoreSlonyTriggers(true);
+                SetIgnoreSlonyTriggers(true);
             } else if ("--ignore-start-with".Equals(args[i])) {
-                setIgnoreStartWith(true);
+                SetIgnoreStartWith(true);
             } else if ("--in-charset-name".Equals(args[i])) {
-                setInCharsetName(args[i + 1]);
+                SetInCharsetName(args[i + 1]);
                 i++;
             } else if ("--list-charsets".Equals(args[i])) {
-                setListCharsets(true);
+                SetListCharsets(true);
             } else if ("--out-charset-name".Equals(args[i])) {
-                setOutCharsetName(args[i + 1]);
+                SetOutCharsetName(args[i + 1]);
                 i++;
             } else if ("--output-ignored-statements".Equals(args[i])) {
-                setOutputIgnoredStatements(true);
+                SetOutputIgnoredStatements(true);
             } else if ("--version".Equals(args[i])) {
-                setVersion(true);
+                SetVersion(true);
             } else {
                 writer.Write(Resources.ErrorUnknownOption);
                 writer.Write(": ");
@@ -164,63 +164,63 @@ public class PgDiffArguments {
             }
         }
 
-        if (args.Length == 1 && isVersion()) {
-            printVersion(writer);
+        if (args.Length == 1 && IsVersion()) {
+            PrintVersion(writer);
             success = false;
-        } else if (args.Length == 1 && isListCharsets()) {
+        } else if (args.Length == 1 && IsListCharsets()) {
             ListCharsets(writer);
             success = false;
         } else if (args.Length < 2) {
-            printUsage(writer);
+            PrintUsage(writer);
             success = false;
         } else if (success) {
-            setOldDumpFile(args[args.Length - 2]);
-            setNewDumpFile(args[args.Length - 1]);
+            SetOldDumpFile(args[args.Length - 2]);
+            SetNewDumpFile(args[args.Length - 1]);
         }
 
         return success;
     }
 
     
-    private void printUsage(TextWriter writer) {
+    private void PrintUsage(TextWriter writer) {
         writer.WriteLine(Resources.UsageHelp);
     }
 
     
-    private void printVersion(TextWriter writer) {
+    private void PrintVersion(TextWriter writer) {
         writer.Write(Resources.Version);
         writer.Write(": ");
         writer.WriteLine(Resources.VersionNumber);
     }
 
     
-    public String getInCharsetName() {
-        return inCharsetName;
+    public String GetInCharsetName() {
+        return _inCharsetName;
     }
 
     
-    public void setInCharsetName(String inCharsetName) {
-        this.inCharsetName = inCharsetName;
+    public void SetInCharsetName(String inCharsetName) {
+        this._inCharsetName = inCharsetName;
     }
 
     
-    public String getOutCharsetName() {
-        return outCharsetName;
+    public String GetOutCharsetName() {
+        return _outCharsetName;
     }
 
     
-    public void setOutCharsetName(String outCharsetName) {
-        this.outCharsetName = outCharsetName;
+    public void SetOutCharsetName(String outCharsetName) {
+        this._outCharsetName = outCharsetName;
     }
 
     
-    public bool isListCharsets() {
-        return listCharsets;
+    public bool IsListCharsets() {
+        return _listCharsets;
     }
 
     
-    public void setListCharsets(bool listCharsets) {
-        this.listCharsets = listCharsets;
+    public void SetListCharsets(bool listCharsets) {
+        this._listCharsets = listCharsets;
     }
 
     
@@ -233,13 +233,13 @@ public class PgDiffArguments {
     }
 
     
-    public bool isIgnoreSlonyTriggers() {
-        return ignoreSlonyTriggers;
+    public bool IsIgnoreSlonyTriggers() {
+        return _ignoreSlonyTriggers;
     }
 
     
-    public void setIgnoreSlonyTriggers(bool ignoreSlonyTriggers) {
-        this.ignoreSlonyTriggers = ignoreSlonyTriggers;
+    public void SetIgnoreSlonyTriggers(bool ignoreSlonyTriggers) {
+        this._ignoreSlonyTriggers = ignoreSlonyTriggers;
     }
 }
 }

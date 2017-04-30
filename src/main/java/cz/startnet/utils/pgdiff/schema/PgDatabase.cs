@@ -11,59 +11,59 @@ namespace pgdiff.schema {
 public class PgDatabase {
 
     
-    private List<PgSchema> schemas = new List<PgSchema>();
+    private List<PgSchema> _schemas = new List<PgSchema>();
 
 
-    private List<String> ignoredStatements = new List<string>();
+    private List<String> _ignoredStatements = new List<string>();
     
-    private PgSchema defaultSchema;
+    private PgSchema _defaultSchema;
     
-    private String comment;
+    private String _comment;
 
     
     public PgDatabase() {
-        schemas.Add(new PgSchema("public"));
-        defaultSchema = schemas[0];
+        _schemas.Add(new PgSchema("public"));
+        _defaultSchema = _schemas[0];
     }
 
     
-    public String getComment() {
-        return comment;
+    public String GetComment() {
+        return _comment;
     }
 
     
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void SetComment(String comment) {
+        this._comment = comment;
     }
 
     
-    public void setDefaultSchema(String name) {
-        defaultSchema = getSchema(name);
+    public void SetDefaultSchema(String name) {
+        _defaultSchema = GetSchema(name);
     }
 
     
-    public PgSchema getDefaultSchema() {
-        return defaultSchema;
+    public PgSchema GetDefaultSchema() {
+        return _defaultSchema;
     }
 
     
-    public List<String> getIgnoredStatements() {
-        return new List<string>(ignoredStatements);
+    public List<String> GetIgnoredStatements() {
+        return new List<string>(_ignoredStatements);
     }
 
     
-    public void addIgnoredStatement(String ignoredStatement) {
-        ignoredStatements.Add(ignoredStatement);
+    public void AddIgnoredStatement(String ignoredStatement) {
+        _ignoredStatements.Add(ignoredStatement);
     }
 
     
-    public PgSchema getSchema(String name) {
+    public PgSchema GetSchema(String name) {
         if (name == null) {
-            return getDefaultSchema();
+            return GetDefaultSchema();
         }
 
-        foreach(PgSchema schema in schemas) {
-            if (schema.getName().Equals(name)) {
+        foreach(PgSchema schema in _schemas) {
+            if (schema.GetName().Equals(name)) {
                 return schema;
             }
         }
@@ -72,13 +72,13 @@ public class PgDatabase {
     }
 
     
-    public List<PgSchema> getSchemas() {
-        return new List<PgSchema>(schemas);
+    public List<PgSchema> GetSchemas() {
+        return new List<PgSchema>(_schemas);
     }
 
     
-    public void addSchema(PgSchema schema) {
-        schemas.Add(schema);
+    public void AddSchema(PgSchema schema) {
+        _schemas.Add(schema);
     }
 }
 }

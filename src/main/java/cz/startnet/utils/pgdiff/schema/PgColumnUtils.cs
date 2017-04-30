@@ -9,7 +9,7 @@ namespace pgdiff.schema {
 public class PgColumnUtils {
 
     
-    public static String getDefaultValue(String type) {
+    public static String GetDefaultValue(String type) {
         String defaultValue;
         String adjType = type.ToLower();
 

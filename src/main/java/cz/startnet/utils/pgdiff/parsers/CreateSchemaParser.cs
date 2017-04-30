@@ -8,36 +8,36 @@ namespace pgdiff.parsers {
 public class CreateSchemaParser {
 
     
-    public static void parse(PgDatabase database,
+    public static void Parse(PgDatabase database,
             String statement) {
         Parser parser = new Parser(statement);
-        parser.expect("CREATE", "SCHEMA");
+        parser.Expect("CREATE", "SCHEMA");
 
-        if (parser.expectOptional("AUTHORIZATION")) {
+        if (parser.ExpectOptional("AUTHORIZATION")) {
             PgSchema schema = new PgSchema(
-                    ParserUtils.getObjectName(parser.parseIdentifier()));
-            database.addSchema(schema);
-            schema.setAuthorization(schema.getName());
+                    ParserUtils.GetObjectName(parser.ParseIdentifier()));
+            database.AddSchema(schema);
+            schema.SetAuthorization(schema.GetName());
 
-            String definition = parser.getRest();
+            String definition = parser.GetRest();
 
             if (!String.IsNullOrEmpty(definition)) {
-                schema.setDefinition(definition);
+                schema.SetDefinition(definition);
             }
         } else {
             PgSchema schema = new PgSchema(
-                    ParserUtils.getObjectName(parser.parseIdentifier()));
-            database.addSchema(schema);
+                    ParserUtils.GetObjectName(parser.ParseIdentifier()));
+            database.AddSchema(schema);
 
-            if (parser.expectOptional("AUTHORIZATION")) {
-                schema.setAuthorization(
-                        ParserUtils.getObjectName(parser.parseIdentifier()));
+            if (parser.ExpectOptional("AUTHORIZATION")) {
+                schema.SetAuthorization(
+                        ParserUtils.GetObjectName(parser.ParseIdentifier()));
             }
 
-            String definition = parser.getRest();
+            String definition = parser.GetRest();
 
             if (!String.IsNullOrEmpty(definition)) {
-                schema.setDefinition(definition);
+                schema.SetDefinition(definition);
             }
         }
     }

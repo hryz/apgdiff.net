@@ -25,145 +25,145 @@ namespace pgdiff.loader {
         //NOPMD
 
 
-        private static Regex PATTERN_CREATE_SCHEMA = new Regex(
+        private static Regex _patternCreateSchema = new Regex(
             "^CREATE[\\s]+SCHEMA[\\s]+.*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline); 
     
 
     
 
-    private static Regex PATTERN_DEFAULT_SCHEMA = new Regex(
+    private static Regex _patternDefaultSchema = new Regex(
             "^SET[\\s]+search_path[\\s]*=[\\s]*\"?([^,\\s\"]+)\"?"
             + "(?:,[\\s]+.*)?;$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_CREATE_TABLE = new Regex(
+    private static Regex _patternCreateTable = new Regex(
             "^CREATE[\\s]+TABLE[\\s]+.*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_CREATE_VIEW = new Regex(
+    private static Regex _patternCreateView = new Regex(
             "^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?VIEW[\\s]+.*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_ALTER_TABLE =
+    private static Regex _patternAlterTable =
             new Regex("^ALTER[\\s]+TABLE[\\s]+.*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_CREATE_SEQUENCE = new Regex(
+    private static Regex _patternCreateSequence = new Regex(
             "^CREATE[\\s]+SEQUENCE[\\s]+.*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_ALTER_SEQUENCE =
+    private static Regex _patternAlterSequence =
             new Regex("^ALTER[\\s]+SEQUENCE[\\s]+.*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_CREATE_INDEX = new Regex(
+    private static Regex _patternCreateIndex = new Regex(
             "^CREATE[\\s]+(?:UNIQUE[\\s]+)?INDEX[\\s]+.*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_SELECT = new Regex(
+    private static Regex _patternSelect = new Regex(
             "^SELECT[\\s]+.*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_INSERT_INTO = new Regex(
+    private static Regex _patternInsertInto = new Regex(
             "^INSERT[\\s]+INTO[\\s]+.*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_UPDATE = new Regex(
+    private static Regex _patternUpdate = new Regex(
             "^UPDATE[\\s].*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_DELETE_FROM = new Regex(
+    private static Regex _patternDeleteFrom = new Regex(
             "^DELETE[\\s]+FROM[\\s]+.*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_CREATE_TRIGGER = new Regex(
+    private static Regex _patternCreateTrigger = new Regex(
             "^CREATE[\\s]+TRIGGER[\\s]+.*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_CREATE_FUNCTION = new Regex(
+    private static Regex _patternCreateFunction = new Regex(
             "^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?FUNCTION[\\s]+.*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_ALTER_VIEW = new Regex(
+    private static Regex _patternAlterView = new Regex(
             "^ALTER[\\s]+VIEW[\\s]+.*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static Regex PATTERN_COMMENT = new Regex(
+    private static Regex _patternComment = new Regex(
             "^COMMENT[\\s]+ON[\\s]+.*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
-    private static String lineBuffer;
+    private static String _lineBuffer;
 
     
-    public static PgDatabase loadDatabaseSchema(TextReader reader, String charsetName, bool outputIgnoredStatements, bool ignoreSlonyTriggers) {
+    public static PgDatabase LoadDatabaseSchema(TextReader reader, String charsetName, bool outputIgnoredStatements, bool ignoreSlonyTriggers) {
 
         PgDatabase database = new PgDatabase();
 
-        String statement = getWholeStatement(reader);
+        String statement = GetWholeStatement(reader);
 
         while (statement != null) {
-            if (PATTERN_CREATE_SCHEMA.IsMatch(statement)) {
-                CreateSchemaParser.parse(database, statement);
-            } else if (PATTERN_DEFAULT_SCHEMA.IsMatch(statement)) {
-                var matches = PATTERN_DEFAULT_SCHEMA.Matches(statement);
-                database.setDefaultSchema(matches[0].Groups[1].Value);
-            } else if (PATTERN_CREATE_TABLE.IsMatch(statement)) {
-                CreateTableParser.parse(database, statement);
-            } else if (PATTERN_ALTER_TABLE.IsMatch(statement)) {
-                AlterTableParser.parse(
+            if (_patternCreateSchema.IsMatch(statement)) {
+                CreateSchemaParser.Parse(database, statement);
+            } else if (_patternDefaultSchema.IsMatch(statement)) {
+                var matches = _patternDefaultSchema.Matches(statement);
+                database.SetDefaultSchema(matches[0].Groups[1].Value);
+            } else if (_patternCreateTable.IsMatch(statement)) {
+                CreateTableParser.Parse(database, statement);
+            } else if (_patternAlterTable.IsMatch(statement)) {
+                AlterTableParser.Parse(
                         database, statement, outputIgnoredStatements);
-            } else if (PATTERN_CREATE_SEQUENCE.IsMatch(statement)) {
-                CreateSequenceParser.parse(database, statement);
-            } else if (PATTERN_ALTER_SEQUENCE.IsMatch(statement)) {
-                AlterSequenceParser.parse(
+            } else if (_patternCreateSequence.IsMatch(statement)) {
+                CreateSequenceParser.Parse(database, statement);
+            } else if (_patternAlterSequence.IsMatch(statement)) {
+                AlterSequenceParser.Parse(
                         database, statement, outputIgnoredStatements);
-            } else if (PATTERN_CREATE_INDEX.IsMatch(statement)) {
-                CreateIndexParser.parse(database, statement);
-            } else if (PATTERN_CREATE_VIEW.IsMatch(statement)) {
-                CreateViewParser.parse(database, statement);
-            } else if (PATTERN_ALTER_VIEW.IsMatch(statement)) {
-                AlterViewParser.parse(
+            } else if (_patternCreateIndex.IsMatch(statement)) {
+                CreateIndexParser.Parse(database, statement);
+            } else if (_patternCreateView.IsMatch(statement)) {
+                CreateViewParser.Parse(database, statement);
+            } else if (_patternAlterView.IsMatch(statement)) {
+                AlterViewParser.Parse(
                         database, statement, outputIgnoredStatements);
-            } else if (PATTERN_CREATE_TRIGGER.IsMatch(statement)) {
-                CreateTriggerParser.parse(
+            } else if (_patternCreateTrigger.IsMatch(statement)) {
+                CreateTriggerParser.Parse(
                         database, statement, ignoreSlonyTriggers);
-            } else if (PATTERN_CREATE_FUNCTION.IsMatch(statement)) {
-                CreateFunctionParser.parse(database, statement);
-            } else if (PATTERN_COMMENT.IsMatch(statement)) {
-                CommentParser.parse(
+            } else if (_patternCreateFunction.IsMatch(statement)) {
+                CreateFunctionParser.Parse(database, statement);
+            } else if (_patternComment.IsMatch(statement)) {
+                CommentParser.Parse(
                         database, statement, outputIgnoredStatements);
-            } else if (PATTERN_SELECT.IsMatch(statement)
-                    || PATTERN_INSERT_INTO.IsMatch(statement)
-                    || PATTERN_UPDATE.IsMatch(statement)
-                    || PATTERN_DELETE_FROM.IsMatch(statement)) {
+            } else if (_patternSelect.IsMatch(statement)
+                    || _patternInsertInto.IsMatch(statement)
+                    || _patternUpdate.IsMatch(statement)
+                    || _patternDeleteFrom.IsMatch(statement)) {
                 // we just ignore these statements
             } else if (outputIgnoredStatements) {
-                database.addIgnoredStatement(statement);
+                database.AddIgnoredStatement(statement);
             } else {
                 // these statements are ignored if outputIgnoredStatements
                 // is false
             }
 
-            statement = getWholeStatement(reader);
+            statement = GetWholeStatement(reader);
         }
 
         return database;
     }
 
     
-    public static PgDatabase loadDatabaseSchema(String file, String charsetName, bool outputIgnoredStatements, bool ignoreSlonyTriggers) {
+    public static PgDatabase LoadDatabaseSchema(String file, String charsetName, bool outputIgnoredStatements, bool ignoreSlonyTriggers) {
         try {
-            return loadDatabaseSchema(File.OpenText(file), charsetName, outputIgnoredStatements, ignoreSlonyTriggers);
+            return LoadDatabaseSchema(File.OpenText(file), charsetName, outputIgnoredStatements, ignoreSlonyTriggers);
         } catch (FileNotFoundException ex) {
             throw new FileException(String.Format(Resources.FileNotFound, file), ex);
         }
     }
 
 
-    private static String getWholeStatement(TextReader reader) {
+    private static String GetWholeStatement(TextReader reader) {
         StringBuilder sbStatement = new StringBuilder(1024);
 
-        if (lineBuffer != null) {
-            sbStatement.Append(lineBuffer);
-            lineBuffer = null;
-            stripComment(sbStatement);
+        if (_lineBuffer != null) {
+            sbStatement.Append(_lineBuffer);
+            _lineBuffer = null;
+            StripComment(sbStatement);
         }
 
         int pos = sbStatement.ToString().IndexOf(";", StringComparison.Ordinal);
@@ -192,15 +192,15 @@ namespace pgdiff.loader {
 
                 pos = sbStatement.Length;
                 sbStatement.Append(newLine);
-                stripComment(sbStatement);
+                StripComment(sbStatement);
 
                 pos = sbStatement.ToString().IndexOf(";", pos, StringComparison.Ordinal);
             } else {
-                if (!isQuoted(sbStatement, pos)) {
+                if (!IsQuoted(sbStatement, pos)) {
                     if (pos == sbStatement.Length - 1) {
-                        lineBuffer = null;
+                        _lineBuffer = null;
                     } else {
-                        lineBuffer = sbStatement.ToString().Substring(pos + 1);
+                        _lineBuffer = sbStatement.ToString().Substring(pos + 1);
                         sbStatement.Length = pos + 1;
                     }
 
@@ -213,7 +213,7 @@ namespace pgdiff.loader {
     }
 
     
-    private static void stripComment(StringBuilder sbStatement) {
+    private static void StripComment(StringBuilder sbStatement) {
         int pos = sbStatement.ToString().IndexOf("--", StringComparison.Ordinal);
 
         while (pos >= 0) {
@@ -222,7 +222,7 @@ namespace pgdiff.loader {
 
                 return;
             } else {
-                if (!isQuoted(sbStatement, pos)) {
+                if (!IsQuoted(sbStatement, pos)) {
                     sbStatement.Length = pos;
 
                     return;
@@ -235,7 +235,7 @@ namespace pgdiff.loader {
 
     
     
-    private static bool isQuoted(StringBuilder sbString,
+    private static bool IsQuoted(StringBuilder sbString,
             int pos) {
         bool isQuoted = false;
 

@@ -9,30 +9,30 @@ namespace pgdiff {
 public class PgDiffFunctions {
 
     
-    public static void createFunctions(TextWriter writer,
+    public static void CreateFunctions(TextWriter writer,
             PgDiffArguments arguments, PgSchema oldSchema,
             PgSchema newSchema, SearchPathHelper searchPathHelper) {
         // Add new functions and replace modified functions
-        foreach (PgFunction newFunction in newSchema.getFunctions()) {
+        foreach (PgFunction newFunction in newSchema.GetFunctions()) {
             PgFunction oldFunction;
 
             if (oldSchema == null) {
                 oldFunction = null;
             } else {
-                oldFunction = oldSchema.getFunction(newFunction.getSignature());
+                oldFunction = oldSchema.GetFunction(newFunction.GetSignature());
             }
 
             if ((oldFunction == null) || !newFunction.Equals(
-                    oldFunction, arguments.isIgnoreFunctionWhitespace())) {
-                searchPathHelper.outputSearchPath(writer);
+                    oldFunction, arguments.IsIgnoreFunctionWhitespace())) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
-                writer.WriteLine(newFunction.getCreationSQL());
+                writer.WriteLine(newFunction.GetCreationSql());
             }
         }
     }
 
     
-    public static void dropFunctions(TextWriter writer,
+    public static void DropFunctions(TextWriter writer,
             PgDiffArguments arguments, PgSchema oldSchema,
             PgSchema newSchema, SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
@@ -40,76 +40,76 @@ public class PgDiffFunctions {
         }
 
         // Drop functions that exist no more
-        foreach (PgFunction oldFunction in oldSchema.getFunctions()) {
-            if (!newSchema.containsFunction(oldFunction.getSignature())) {
-                searchPathHelper.outputSearchPath(writer);
+        foreach (PgFunction oldFunction in oldSchema.GetFunctions()) {
+            if (!newSchema.ContainsFunction(oldFunction.GetSignature())) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
-                writer.WriteLine(oldFunction.getDropSQL());
+                writer.WriteLine(oldFunction.GetDropSql());
             }
         }
     }
 
     
-    public static void alterComments(TextWriter writer,
+    public static void AlterComments(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        foreach (PgFunction oldfunction in oldSchema.getFunctions()) {
+        foreach (PgFunction oldfunction in oldSchema.GetFunctions()) {
             PgFunction newFunction =
-                    newSchema.getFunction(oldfunction.getSignature());
+                    newSchema.GetFunction(oldfunction.GetSignature());
 
             if (newFunction == null) {
                 continue;
             }
 
-            if (oldfunction.getComment() == null
-                    && newFunction.getComment() != null
-                    || oldfunction.getComment() != null
-                    && newFunction.getComment() != null
-                    && !oldfunction.getComment().Equals(
-                    newFunction.getComment())) {
-                searchPathHelper.outputSearchPath(writer);
+            if (oldfunction.GetComment() == null
+                    && newFunction.GetComment() != null
+                    || oldfunction.GetComment() != null
+                    && newFunction.GetComment() != null
+                    && !oldfunction.GetComment().Equals(
+                    newFunction.GetComment())) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
                 writer.Write("COMMENT ON FUNCTION ");
-                writer.Write(PgDiffUtils.getQuotedName(newFunction.getName()));
+                writer.Write(PgDiffUtils.GetQuotedName(newFunction.GetName()));
                 writer.Write('(');
 
                 bool addComma = false;
 
-                foreach (PgFunction.Argument argument in newFunction.getArguments()) {
+                foreach (PgFunction.Argument argument in newFunction.GetArguments()) {
                     if (addComma) {
                         writer.Write(", ");
                     } else {
                         addComma = true;
                     }
 
-                    writer.Write(argument.getDeclaration(false));
+                    writer.Write(argument.GetDeclaration(false));
                 }
 
                 writer.Write(") IS ");
-                writer.Write(newFunction.getComment());
+                writer.Write(newFunction.GetComment());
                 writer.WriteLine(';');
-            } else if (oldfunction.getComment() != null
-                    && newFunction.getComment() == null) {
-                searchPathHelper.outputSearchPath(writer);
+            } else if (oldfunction.GetComment() != null
+                    && newFunction.GetComment() == null) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
                 writer.Write("COMMENT ON FUNCTION ");
-                writer.Write(PgDiffUtils.getQuotedName(newFunction.getName()));
+                writer.Write(PgDiffUtils.GetQuotedName(newFunction.GetName()));
                 writer.Write('(');
 
                 bool addComma = false;
 
-                foreach (PgFunction.Argument argument in newFunction.getArguments()) {
+                foreach (PgFunction.Argument argument in newFunction.GetArguments()) {
                     if (addComma) {
                         writer.Write(", ");
                     } else {
                         addComma = true;
                     }
 
-                    writer.Write(argument.getDeclaration(false));
+                    writer.Write(argument.GetDeclaration(false));
                 }
 
                 writer.WriteLine(") IS NULL;");

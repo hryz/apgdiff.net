@@ -10,273 +10,273 @@ namespace pgdiff.parsers {
 public class CommentParser {
 
     
-    public static void parse(PgDatabase database,
+    public static void Parse(PgDatabase database,
             String statement, bool outputIgnoredStatements) {
         Parser parser = new Parser(statement);
-        parser.expect("COMMENT", "ON");
+        parser.Expect("COMMENT", "ON");
 
-        if (parser.expectOptional("TABLE")) {
-            parseTable(parser, database);
-        } else if (parser.expectOptional("COLUMN")) {
-            parseColumn(parser, database);
-        } else if (parser.expectOptional("CONSTRAINT")) {
-            parseConstraint(parser, database);
-        } else if (parser.expectOptional("DATABASE")) {
-            parseDatabase(parser, database);
-        } else if (parser.expectOptional("FUNCTION")) {
-            parseFunction(parser, database);
-        } else if (parser.expectOptional("INDEX")) {
-            parseIndex(parser, database);
-        } else if (parser.expectOptional("SCHEMA")) {
-            parseSchema(parser, database);
-        } else if (parser.expectOptional("SEQUENCE")) {
-            parseSequence(parser, database);
-        } else if (parser.expectOptional("TRIGGER")) {
-            parseTrigger(parser, database);
-        } else if (parser.expectOptional("VIEW")) {
-            parseView(parser, database);
+        if (parser.ExpectOptional("TABLE")) {
+            ParseTable(parser, database);
+        } else if (parser.ExpectOptional("COLUMN")) {
+            ParseColumn(parser, database);
+        } else if (parser.ExpectOptional("CONSTRAINT")) {
+            ParseConstraint(parser, database);
+        } else if (parser.ExpectOptional("DATABASE")) {
+            ParseDatabase(parser, database);
+        } else if (parser.ExpectOptional("FUNCTION")) {
+            ParseFunction(parser, database);
+        } else if (parser.ExpectOptional("INDEX")) {
+            ParseIndex(parser, database);
+        } else if (parser.ExpectOptional("SCHEMA")) {
+            ParseSchema(parser, database);
+        } else if (parser.ExpectOptional("SEQUENCE")) {
+            ParseSequence(parser, database);
+        } else if (parser.ExpectOptional("TRIGGER")) {
+            ParseTrigger(parser, database);
+        } else if (parser.ExpectOptional("VIEW")) {
+            ParseView(parser, database);
         } else if (outputIgnoredStatements) {
-            database.addIgnoredStatement(statement);
+            database.AddIgnoredStatement(statement);
         }
     }
 
     
-    private static void parseTable(Parser parser,
+    private static void ParseTable(Parser parser,
             PgDatabase database) {
-        String tableName = parser.parseIdentifier();
-        String objectName = ParserUtils.getObjectName(tableName);
+        String tableName = parser.ParseIdentifier();
+        String objectName = ParserUtils.GetObjectName(tableName);
         String schemaName =
-                ParserUtils.getSchemaName(tableName, database);
+                ParserUtils.GetSchemaName(tableName, database);
 
         PgTable table =
-                database.getSchema(schemaName).getTable(objectName);
+                database.GetSchema(schemaName).GetTable(objectName);
 
-        parser.expect("IS");
-        table.setComment(getComment(parser));
-        parser.expect(";");
+        parser.Expect("IS");
+        table.SetComment(GetComment(parser));
+        parser.Expect(";");
     }
 
     
-    private static void parseConstraint(Parser parser,
+    private static void ParseConstraint(Parser parser,
             PgDatabase database) {
         String constraintName =
-                ParserUtils.getObjectName(parser.parseIdentifier());
+                ParserUtils.GetObjectName(parser.ParseIdentifier());
 
-        parser.expect("ON");
+        parser.Expect("ON");
 
-        String tableName = parser.parseIdentifier();
-        String objectName = ParserUtils.getObjectName(tableName);
+        String tableName = parser.ParseIdentifier();
+        String objectName = ParserUtils.GetObjectName(tableName);
         String schemaName =
-                ParserUtils.getSchemaName(constraintName, database);
+                ParserUtils.GetSchemaName(constraintName, database);
 
-        PgConstraint constraint = database.getSchema(schemaName).
-                getTable(objectName).getConstraint(constraintName);
+        PgConstraint constraint = database.GetSchema(schemaName).
+                GetTable(objectName).GetConstraint(constraintName);
 
-        parser.expect("IS");
-        constraint.setComment(getComment(parser));
-        parser.expect(";");
+        parser.Expect("IS");
+        constraint.SetComment(GetComment(parser));
+        parser.Expect(";");
     }
 
     
-    private static void parseDatabase(Parser parser,
+    private static void ParseDatabase(Parser parser,
             PgDatabase database) {
-        parser.parseIdentifier();
-        parser.expect("IS");
-        database.setComment(getComment(parser));
-        parser.expect(";");
+        parser.ParseIdentifier();
+        parser.Expect("IS");
+        database.SetComment(GetComment(parser));
+        parser.Expect(";");
     }
 
     
-    private static void parseIndex(Parser parser,
+    private static void ParseIndex(Parser parser,
             PgDatabase database) {
-        String indexName = parser.parseIdentifier();
-        String objectName = ParserUtils.getObjectName(indexName);
+        String indexName = parser.ParseIdentifier();
+        String objectName = ParserUtils.GetObjectName(indexName);
         String schemaName =
-                ParserUtils.getSchemaName(indexName, database);
-        PgSchema schema = database.getSchema(schemaName);
+                ParserUtils.GetSchemaName(indexName, database);
+        PgSchema schema = database.GetSchema(schemaName);
 
-        PgIndex index = schema.getIndex(objectName);
+        PgIndex index = schema.GetIndex(objectName);
 
         if (index == null) {
-            PgConstraint primaryKey = schema.getPrimaryKey(objectName);
-            parser.expect("IS");
-            primaryKey.setComment(getComment(parser));
-            parser.expect(";");
+            PgConstraint primaryKey = schema.GetPrimaryKey(objectName);
+            parser.Expect("IS");
+            primaryKey.SetComment(GetComment(parser));
+            parser.Expect(";");
         } else {
-            parser.expect("IS");
-            index.setComment(getComment(parser));
-            parser.expect(";");
+            parser.Expect("IS");
+            index.SetComment(GetComment(parser));
+            parser.Expect(";");
         }
     }
 
     
-    private static void parseSchema(Parser parser,
+    private static void ParseSchema(Parser parser,
             PgDatabase database) {
         String schemaName =
-                ParserUtils.getObjectName(parser.parseIdentifier());
-        PgSchema schema = database.getSchema(schemaName);
+                ParserUtils.GetObjectName(parser.ParseIdentifier());
+        PgSchema schema = database.GetSchema(schemaName);
 
-        parser.expect("IS");
-        schema.setComment(getComment(parser));
-        parser.expect(";");
+        parser.Expect("IS");
+        schema.SetComment(GetComment(parser));
+        parser.Expect(";");
     }
 
     
-    private static void parseSequence(Parser parser,
+    private static void ParseSequence(Parser parser,
             PgDatabase database) {
-        String sequenceName = parser.parseIdentifier();
-        String objectName = ParserUtils.getObjectName(sequenceName);
+        String sequenceName = parser.ParseIdentifier();
+        String objectName = ParserUtils.GetObjectName(sequenceName);
         String schemaName =
-                ParserUtils.getSchemaName(sequenceName, database);
+                ParserUtils.GetSchemaName(sequenceName, database);
 
         PgSequence sequence =
-                database.getSchema(schemaName).getSequence(objectName);
+                database.GetSchema(schemaName).GetSequence(objectName);
 
-        parser.expect("IS");
-        sequence.setComment(getComment(parser));
-        parser.expect(";");
+        parser.Expect("IS");
+        sequence.SetComment(GetComment(parser));
+        parser.Expect(";");
     }
 
     
-    private static void parseTrigger(Parser parser,
+    private static void ParseTrigger(Parser parser,
             PgDatabase database) {
         String triggerName =
-                ParserUtils.getObjectName(parser.parseIdentifier());
+                ParserUtils.GetObjectName(parser.ParseIdentifier());
 
-        parser.expect("ON");
+        parser.Expect("ON");
 
-        String tableName = parser.parseIdentifier();
-        String objectName = ParserUtils.getObjectName(tableName);
+        String tableName = parser.ParseIdentifier();
+        String objectName = ParserUtils.GetObjectName(tableName);
         String schemaName =
-                ParserUtils.getSchemaName(triggerName, database);
+                ParserUtils.GetSchemaName(triggerName, database);
 
-        PgTrigger trigger = database.getSchema(schemaName).
-                getTable(objectName).getTrigger(triggerName);
+        PgTrigger trigger = database.GetSchema(schemaName).
+                GetTable(objectName).GetTrigger(triggerName);
 
-        parser.expect("IS");
-        trigger.comment = getComment(parser);
-        parser.expect(";");
+        parser.Expect("IS");
+        trigger.Comment = GetComment(parser);
+        parser.Expect(";");
     }
 
     
-    private static void parseView(Parser parser,
+    private static void ParseView(Parser parser,
             PgDatabase database) {
-        String viewName = parser.parseIdentifier();
-        String objectName = ParserUtils.getObjectName(viewName);
+        String viewName = parser.ParseIdentifier();
+        String objectName = ParserUtils.GetObjectName(viewName);
         String schemaName =
-                ParserUtils.getSchemaName(viewName, database);
+                ParserUtils.GetSchemaName(viewName, database);
 
-        PgView view = database.getSchema(schemaName).getView(objectName);
+        PgView view = database.GetSchema(schemaName).GetView(objectName);
 
-        parser.expect("IS");
-        view.setComment(getComment(parser));
-        parser.expect(";");
+        parser.Expect("IS");
+        view.SetComment(GetComment(parser));
+        parser.Expect(";");
     }
 
     
-    private static void parseColumn(Parser parser,
+    private static void ParseColumn(Parser parser,
             PgDatabase database) {
-        String columnName = parser.parseIdentifier();
-        String objectName = ParserUtils.getObjectName(columnName);
-        String tableName = ParserUtils.getSecondObjectName(columnName);
-        String schemaName = ParserUtils.getThirdObjectName(columnName);
-        PgSchema schema = database.getSchema(schemaName);
+        String columnName = parser.ParseIdentifier();
+        String objectName = ParserUtils.GetObjectName(columnName);
+        String tableName = ParserUtils.GetSecondObjectName(columnName);
+        String schemaName = ParserUtils.GetThirdObjectName(columnName);
+        PgSchema schema = database.GetSchema(schemaName);
 
-        PgTable table = schema.getTable(tableName);
+        PgTable table = schema.GetTable(tableName);
 
         if (table == null) {
-            PgView view = schema.getView(tableName);
-            parser.expect("IS");
+            PgView view = schema.GetView(tableName);
+            parser.Expect("IS");
 
-            String comment = getComment(parser);
+            String comment = GetComment(parser);
 
             if (comment == null) {
-                view.removeColumnComment(objectName);
+                view.RemoveColumnComment(objectName);
             } else {
-                view.addColumnComment(objectName, comment);
+                view.AddColumnComment(objectName, comment);
             }
-            parser.expect(";");
+            parser.Expect(";");
         } else {
-            PgColumn column = table.getColumn(objectName);
+            PgColumn column = table.GetColumn(objectName);
 
             if (column == null) {
-                throw new ParserException(String.Format( Resources.CannotFindColumnInTable, columnName, table.getName()));
+                throw new ParserException(String.Format( Resources.CannotFindColumnInTable, columnName, table.GetName()));
             }
 
-            parser.expect("IS");
-            column.setComment(getComment(parser));
-            parser.expect(";");
+            parser.Expect("IS");
+            column.SetComment(GetComment(parser));
+            parser.Expect(";");
         }
     }
 
     
-    private static void parseFunction(Parser parser,
+    private static void ParseFunction(Parser parser,
             PgDatabase database) {
-        String functionName = parser.parseIdentifier();
-        String objectName = ParserUtils.getObjectName(functionName);
+        String functionName = parser.ParseIdentifier();
+        String objectName = ParserUtils.GetObjectName(functionName);
         String schemaName =
-                ParserUtils.getSchemaName(functionName, database);
-        PgSchema schema = database.getSchema(schemaName);
+                ParserUtils.GetSchemaName(functionName, database);
+        PgSchema schema = database.GetSchema(schemaName);
 
-        parser.expect("(");
+        parser.Expect("(");
 
         PgFunction tmpFunction = new PgFunction();
-        tmpFunction.setName(objectName);
+        tmpFunction.SetName(objectName);
 
-        while (!parser.expectOptional(")")) {
+        while (!parser.ExpectOptional(")")) {
             String mode;
 
-            if (parser.expectOptional("IN")) {
+            if (parser.ExpectOptional("IN")) {
                 mode = "IN";
-            } else if (parser.expectOptional("OUT")) {
+            } else if (parser.ExpectOptional("OUT")) {
                 mode = "OUT";
-            } else if (parser.expectOptional("INOUT")) {
+            } else if (parser.ExpectOptional("INOUT")) {
                 mode = "INOUT";
-            } else if (parser.expectOptional("VARIADIC")) {
+            } else if (parser.ExpectOptional("VARIADIC")) {
                 mode = "VARIADIC";
             } else {
                 mode = null;
             }
 
-            int position = parser.getPosition();
+            int position = parser.GetPosition();
             String argumentName = null;
-            String dataType = parser.parseDataType();
+            String dataType = parser.ParseDataType();
 
-            int position2 = parser.getPosition();
+            int position2 = parser.GetPosition();
 
-            if (!parser.expectOptional(")") && !parser.expectOptional(",")) {
-                parser.setPosition(position);
+            if (!parser.ExpectOptional(")") && !parser.ExpectOptional(",")) {
+                parser.SetPosition(position);
                 argumentName =
-                        ParserUtils.getObjectName(parser.parseIdentifier());
-                dataType = parser.parseDataType();
+                        ParserUtils.GetObjectName(parser.ParseIdentifier());
+                dataType = parser.ParseDataType();
             } else {
-                parser.setPosition(position2);
+                parser.SetPosition(position2);
             }
 
             PgFunction.Argument argument = new PgFunction.Argument();
-            argument.setDataType(dataType);
-            argument.setMode(mode);
-            argument.setName(argumentName);
-            tmpFunction.addArgument(argument);
+            argument.SetDataType(dataType);
+            argument.SetMode(mode);
+            argument.SetName(argumentName);
+            tmpFunction.AddArgument(argument);
 
-            if (parser.expectOptional(")")) {
+            if (parser.ExpectOptional(")")) {
                 break;
             } else {
-                parser.expect(",");
+                parser.Expect(",");
             }
         }
 
         PgFunction function =
-                schema.getFunction(tmpFunction.getSignature());
+                schema.GetFunction(tmpFunction.GetSignature());
 
-        parser.expect("IS");
-        function.setComment(getComment(parser));
-        parser.expect(";");
+        parser.Expect("IS");
+        function.SetComment(GetComment(parser));
+        parser.Expect(";");
     }
 
     
-    private static String getComment(Parser parser) {
-        String comment = parser.parseString();
+    private static String GetComment(Parser parser) {
+        String comment = parser.ParseString();
 
         if ("null".Equals(comment,StringComparison.InvariantCultureIgnoreCase)) {
             return null;

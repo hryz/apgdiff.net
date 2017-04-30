@@ -8,87 +8,87 @@ namespace pgdiff.parsers {
 public class CreateTriggerParser {
 
     
-    public static void parse(PgDatabase database,
+    public static void Parse(PgDatabase database,
             String statement, bool ignoreSlonyTriggers) {
         Parser parser = new Parser(statement);
-        parser.expect("CREATE", "TRIGGER");
+        parser.Expect("CREATE", "TRIGGER");
 
-        String triggerName = parser.parseIdentifier();
-        String objectName = ParserUtils.getObjectName(triggerName);
+        String triggerName = parser.ParseIdentifier();
+        String objectName = ParserUtils.GetObjectName(triggerName);
 
         PgTrigger trigger = new PgTrigger();
-        trigger.name = objectName;
+        trigger.Name = objectName;
 
-        if (parser.expectOptional("BEFORE")) {
-            trigger.before =true;
-        } else if (parser.expectOptional("AFTER")) {
-            trigger.before =false;
+        if (parser.ExpectOptional("BEFORE")) {
+            trigger.Before =true;
+        } else if (parser.ExpectOptional("AFTER")) {
+            trigger.Before =false;
         }
 
         bool first = true;
 
         while (true) {
-            if (!first && !parser.expectOptional("OR")) {
+            if (!first && !parser.ExpectOptional("OR")) {
                 break;
-            } else if (parser.expectOptional("INSERT")) {
-                trigger.onInsert =true;
-            } else if (parser.expectOptional("UPDATE")) {
-                trigger.onUpdate = true;
+            } else if (parser.ExpectOptional("INSERT")) {
+                trigger.OnInsert =true;
+            } else if (parser.ExpectOptional("UPDATE")) {
+                trigger.OnUpdate = true;
 
-                if (parser.expectOptional("OF")) {
+                if (parser.ExpectOptional("OF")) {
                     do {
-                        trigger.addUpdateColumn(parser.parseIdentifier());
-                    } while (parser.expectOptional(","));
+                        trigger.AddUpdateColumn(parser.ParseIdentifier());
+                    } while (parser.ExpectOptional(","));
                 }
-            } else if (parser.expectOptional("DELETE")) {
-                trigger.onDelete =true;
-            } else if (parser.expectOptional("TRUNCATE")) {
-                trigger.onTruncate = true;
+            } else if (parser.ExpectOptional("DELETE")) {
+                trigger.OnDelete =true;
+            } else if (parser.ExpectOptional("TRUNCATE")) {
+                trigger.OnTruncate = true;
             } else if (first) {
                 break;
             } else {
-                parser.throwUnsupportedCommand();
+                parser.ThrowUnsupportedCommand();
             }
 
             first = false;
         }
 
-        parser.expect("ON");
+        parser.Expect("ON");
 
-        String tableName = parser.parseIdentifier();
+        String tableName = parser.ParseIdentifier();
 
-        trigger.tableName = ParserUtils.getObjectName(tableName);
+        trigger.TableName = ParserUtils.GetObjectName(tableName);
 
-        if (parser.expectOptional("FOR")) {
-            parser.expectOptional("EACH");
+        if (parser.ExpectOptional("FOR")) {
+            parser.ExpectOptional("EACH");
 
-            if (parser.expectOptional("ROW")) {
-                trigger.forEachRow = true;
-            } else if (parser.expectOptional("STATEMENT"))
+            if (parser.ExpectOptional("ROW")) {
+                trigger.ForEachRow = true;
+            } else if (parser.ExpectOptional("STATEMENT"))
             {
-                trigger.forEachRow = false;
+                trigger.ForEachRow = false;
             } else {
-                parser.throwUnsupportedCommand();
+                parser.ThrowUnsupportedCommand();
             }
         }
 
-        if (parser.expectOptional("WHEN")) {
-            parser.expect("(");
-            trigger.when =parser.getExpression();
-            parser.expect(")");
+        if (parser.ExpectOptional("WHEN")) {
+            parser.Expect("(");
+            trigger.When =parser.GetExpression();
+            parser.Expect(")");
         }
 
-        parser.expect("EXECUTE", "PROCEDURE");
-        trigger.function = parser.getRest();
+        parser.Expect("EXECUTE", "PROCEDURE");
+        trigger.Function = parser.GetRest();
 
         bool ignoreSlonyTrigger = ignoreSlonyTriggers
-                && ("_slony_logtrigger".Equals(trigger.name)
-                || "_slony_denyaccess".Equals(trigger.name));
+                && ("_slony_logtrigger".Equals(trigger.Name)
+                || "_slony_denyaccess".Equals(trigger.Name));
 
         if (!ignoreSlonyTrigger) {
-            PgSchema tableSchema = database.getSchema(
-                    ParserUtils.getSchemaName(tableName, database));
-            tableSchema.getTable(trigger.tableName).addTrigger(trigger);
+            PgSchema tableSchema = database.GetSchema(
+                    ParserUtils.GetSchemaName(tableName, database));
+            tableSchema.GetTable(trigger.TableName).AddTrigger(trigger);
         }
     }
 

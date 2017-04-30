@@ -10,38 +10,38 @@ namespace pgdiff.parsers {
 public class AlterSequenceParser {
 
     
-    public static void parse(PgDatabase database,
+    public static void Parse(PgDatabase database,
             String statement, bool outputIgnoredStatements) {
         Parser parser = new Parser(statement);
 
-        parser.expect("ALTER", "SEQUENCE");
+        parser.Expect("ALTER", "SEQUENCE");
 
-        String sequenceName = parser.parseIdentifier();
+        String sequenceName = parser.ParseIdentifier();
         String schemaName =
-                ParserUtils.getSchemaName(sequenceName, database);
-        PgSchema schema = database.getSchema(schemaName);
+                ParserUtils.GetSchemaName(sequenceName, database);
+        PgSchema schema = database.GetSchema(schemaName);
 
         if (schema == null) {
             throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
         }
 
-        String objectName = ParserUtils.getObjectName(sequenceName);
-        PgSequence sequence = schema.getSequence(objectName);
+        String objectName = ParserUtils.GetObjectName(sequenceName);
+        PgSequence sequence = schema.GetSequence(objectName);
 
         if (sequence == null) {
             throw new Exception(String.Format(Resources.CannotFindSequence, sequenceName,statement));
         }
 
-        while (!parser.expectOptional(";")) {
+        while (!parser.ExpectOptional(";")) {
 
-            if (parser.expectOptional("OWNED", "BY")) {
-                if (parser.expectOptional("NONE")) {
-                    sequence.setOwnedBy(null);
+            if (parser.ExpectOptional("OWNED", "BY")) {
+                if (parser.ExpectOptional("NONE")) {
+                    sequence.SetOwnedBy(null);
                 } else {
-                    sequence.setOwnedBy(parser.getExpression());
+                    sequence.SetOwnedBy(parser.GetExpression());
                 }
             } else {
-                parser.throwUnsupportedCommand();
+                parser.ThrowUnsupportedCommand();
             }
         }
     }

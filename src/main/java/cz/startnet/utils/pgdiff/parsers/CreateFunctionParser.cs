@@ -10,84 +10,84 @@ namespace pgdiff.parsers {
 public class CreateFunctionParser {
 
     
-    public static void parse(PgDatabase database,
+    public static void Parse(PgDatabase database,
             String statement) {
         Parser parser = new Parser(statement);
-        parser.expect("CREATE");
-        parser.expectOptional("OR", "REPLACE");
-        parser.expect("FUNCTION");
+        parser.Expect("CREATE");
+        parser.ExpectOptional("OR", "REPLACE");
+        parser.Expect("FUNCTION");
 
-        String functionName = parser.parseIdentifier();
+        String functionName = parser.ParseIdentifier();
         String schemaName =
-                ParserUtils.getSchemaName(functionName, database);
-        PgSchema schema = database.getSchema(schemaName);
+                ParserUtils.GetSchemaName(functionName, database);
+        PgSchema schema = database.GetSchema(schemaName);
 
         if (schema == null) {
             throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
         }
 
         PgFunction function = new PgFunction();
-        function.setName(ParserUtils.getObjectName(functionName));
-        schema.addFunction(function);
+        function.SetName(ParserUtils.GetObjectName(functionName));
+        schema.AddFunction(function);
 
-        parser.expect("(");
+        parser.Expect("(");
 
-        while (!parser.expectOptional(")")) {
+        while (!parser.ExpectOptional(")")) {
             String mode;
 
-            if (parser.expectOptional("IN")) {
+            if (parser.ExpectOptional("IN")) {
                 mode = "IN";
-            } else if (parser.expectOptional("OUT")) {
+            } else if (parser.ExpectOptional("OUT")) {
                 mode = "OUT";
-            } else if (parser.expectOptional("INOUT")) {
+            } else if (parser.ExpectOptional("INOUT")) {
                 mode = "INOUT";
-            } else if (parser.expectOptional("VARIADIC")) {
+            } else if (parser.ExpectOptional("VARIADIC")) {
                 mode = "VARIADIC";
             } else {
                 mode = null;
             }
 
-            int position = parser.getPosition();
+            int position = parser.GetPosition();
             String argumentName = null;
-            String dataType = parser.parseDataType();
+            String dataType = parser.ParseDataType();
 
-            int position2 = parser.getPosition();
+            int position2 = parser.GetPosition();
 
-            if (!parser.expectOptional(")") && !parser.expectOptional(",")
-                    && !parser.expectOptional("=")
-                    && !parser.expectOptional("DEFAULT")) {
-                parser.setPosition(position);
+            if (!parser.ExpectOptional(")") && !parser.ExpectOptional(",")
+                    && !parser.ExpectOptional("=")
+                    && !parser.ExpectOptional("DEFAULT")) {
+                parser.SetPosition(position);
                 argumentName =
-                        ParserUtils.getObjectName(parser.parseIdentifier());
-                dataType = parser.parseDataType();
+                        ParserUtils.GetObjectName(parser.ParseIdentifier());
+                dataType = parser.ParseDataType();
             } else {
-                parser.setPosition(position2);
+                parser.SetPosition(position2);
             }
 
             String defaultExpression;
 
-            if (parser.expectOptional("=")
-                    || parser.expectOptional("DEFAULT")) {
-                defaultExpression = parser.getExpression();
+            if (parser.ExpectOptional("=")
+                    || parser.ExpectOptional("DEFAULT")) {
+                defaultExpression = parser.GetExpression();
             } else {
                 defaultExpression = null;
             }
 
             PgFunction.Argument argument = new PgFunction.Argument();
-            argument.setDataType(dataType);
-            argument.setDefaultExpression(defaultExpression);
-            argument.setMode(mode);
-            argument.setName(argumentName);
-            function.addArgument(argument);
+            argument.SetDataType(dataType);
+            argument.SetDefaultExpression(defaultExpression);
+            argument.SetMode(mode);
+            argument.SetName(argumentName);
+            function.AddArgument(argument);
 
-            if (parser.expectOptional(")")) {
+            if (parser.ExpectOptional(")")) {
                 break;
             } else {
-                parser.expect(",");
+                parser.Expect(",");
             }
         }
 
-        function.setBody(parser.getRest());
+        function.SetBody(parser.GetRest());
     }
 
     

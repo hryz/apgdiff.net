@@ -9,21 +9,21 @@ namespace pgdiff {
 public class SearchPathHelper {
 
     
-    private String searchPath;
+    private String _searchPath;
     
-    private bool wasOutput;
+    private bool _wasOutput;
 
     
     public SearchPathHelper(String searchPath) {
-        this.searchPath = searchPath;
+        this._searchPath = searchPath;
     }
 
     
-    public void outputSearchPath(TextWriter writer) {
-        if (!wasOutput && searchPath != null && ! String.IsNullOrEmpty(searchPath)) {
+    public void OutputSearchPath(TextWriter writer) {
+        if (!_wasOutput && _searchPath != null && ! String.IsNullOrEmpty(_searchPath)) {
             writer.WriteLine();
-            writer.WriteLine(searchPath);
-            wasOutput = true;
+            writer.WriteLine(_searchPath);
+            _wasOutput = true;
         }
     }
 }

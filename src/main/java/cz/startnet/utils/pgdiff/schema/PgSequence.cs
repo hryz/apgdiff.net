@@ -8,195 +8,195 @@ namespace pgdiff.schema {
 public class PgSequence {
 
     
-    private String cache;
+    private String _cache;
     
-    private String increment;
+    private String _increment;
     
-    private String maxValue;
+    private String _maxValue;
     
-    private String minValue;
+    private String _minValue;
     
-    private String name;
+    private String _name;
     
-    private String startWith;
+    private String _startWith;
     
-    private bool cycle;
+    private bool _cycle;
     
-    private String ownedBy;
+    private String _ownedBy;
     
-    private String comment;
+    private String _comment;
 
     
     public PgSequence(String name) {
-        this.name = name;
+        this._name = name;
     }
 
     
-    public void setCache(String cache) {
-        this.cache = cache;
+    public void SetCache(String cache) {
+        this._cache = cache;
     }
 
     
-    public String getCache() {
-        return cache;
+    public String GetCache() {
+        return _cache;
     }
 
     
-    public String getComment() {
-        return comment;
+    public String GetComment() {
+        return _comment;
     }
 
     
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void SetComment(String comment) {
+        this._comment = comment;
     }
 
     
-    public String getCreationSQL() {
-        StringBuilder sbSQL = new StringBuilder(100);
-        sbSQL.Append("CREATE SEQUENCE ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(name));
+    public String GetCreationSql() {
+        StringBuilder sbSql = new StringBuilder(100);
+        sbSql.Append("CREATE SEQUENCE ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(_name));
 
-        if (startWith != null) {
-            sbSQL.Append("\n\tSTART WITH ");
-            sbSQL.Append(startWith);
+        if (_startWith != null) {
+            sbSql.Append("\n\tSTART WITH ");
+            sbSql.Append(_startWith);
         }
 
-        if (increment != null) {
-            sbSQL.Append("\n\tINCREMENT BY ");
-            sbSQL.Append(increment);
+        if (_increment != null) {
+            sbSql.Append("\n\tINCREMENT BY ");
+            sbSql.Append(_increment);
         }
 
-        sbSQL.Append("\n\t");
+        sbSql.Append("\n\t");
 
-        if (maxValue == null) {
-            sbSQL.Append("NO MAXVALUE");
+        if (_maxValue == null) {
+            sbSql.Append("NO MAXVALUE");
         } else {
-            sbSQL.Append("MAXVALUE ");
-            sbSQL.Append(maxValue);
+            sbSql.Append("MAXVALUE ");
+            sbSql.Append(_maxValue);
         }
 
-        sbSQL.Append("\n\t");
+        sbSql.Append("\n\t");
 
-        if (minValue == null) {
-            sbSQL.Append("NO MINVALUE");
+        if (_minValue == null) {
+            sbSql.Append("NO MINVALUE");
         } else {
-            sbSQL.Append("MINVALUE ");
-            sbSQL.Append(minValue);
+            sbSql.Append("MINVALUE ");
+            sbSql.Append(_minValue);
         }
 
-        if (cache != null) {
-            sbSQL.Append("\n\tCACHE ");
-            sbSQL.Append(cache);
+        if (_cache != null) {
+            sbSql.Append("\n\tCACHE ");
+            sbSql.Append(_cache);
         }
 
-        if (cycle) {
-            sbSQL.Append("\n\tCYCLE");
+        if (_cycle) {
+            sbSql.Append("\n\tCYCLE");
         }
 
-        sbSQL.Append(';');
+        sbSql.Append(';');
 
-        if ( !String.IsNullOrEmpty(comment)) {
-            sbSQL.Append("\n\nCOMMENT ON SEQUENCE ");
-            sbSQL.Append(PgDiffUtils.getQuotedName(name));
-            sbSQL.Append(" IS ");
-            sbSQL.Append(comment);
-            sbSQL.Append(';');
+        if ( !String.IsNullOrEmpty(_comment)) {
+            sbSql.Append("\n\nCOMMENT ON SEQUENCE ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(_name));
+            sbSql.Append(" IS ");
+            sbSql.Append(_comment);
+            sbSql.Append(';');
         }
 
-        return sbSQL.ToString();
+        return sbSql.ToString();
     }
 
     
-    public String getOwnedBySQL() {
-        StringBuilder sbSQL = new StringBuilder(100);
+    public String GetOwnedBySql() {
+        StringBuilder sbSql = new StringBuilder(100);
 
-        sbSQL.Append("ALTER SEQUENCE ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(name));
+        sbSql.Append("ALTER SEQUENCE ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(_name));
 
-        if ( !String.IsNullOrEmpty(ownedBy)) {
-            sbSQL.Append("\n\tOWNED BY ");
-            sbSQL.Append(ownedBy);
+        if ( !String.IsNullOrEmpty(_ownedBy)) {
+            sbSql.Append("\n\tOWNED BY ");
+            sbSql.Append(_ownedBy);
         }
 
-        sbSQL.Append(';');
+        sbSql.Append(';');
 
-        return sbSQL.ToString();
+        return sbSql.ToString();
     }
 
     
-    public void setCycle(bool cycle) {
-        this.cycle = cycle;
+    public void SetCycle(bool cycle) {
+        this._cycle = cycle;
     }
 
     
-    public bool isCycle() {
-        return cycle;
+    public bool IsCycle() {
+        return _cycle;
     }
 
     
-    public String getDropSQL() {
-        return "DROP SEQUENCE " + PgDiffUtils.getQuotedName(getName()) + ";";
+    public String GetDropSql() {
+        return "DROP SEQUENCE " + PgDiffUtils.GetQuotedName(GetName()) + ";";
     }
 
     
-    public void setIncrement(String increment) {
-        this.increment = increment;
+    public void SetIncrement(String increment) {
+        this._increment = increment;
     }
 
     
-    public String getIncrement() {
-        return increment;
+    public String GetIncrement() {
+        return _increment;
     }
 
     
-    public void setMaxValue(String maxValue) {
-        this.maxValue = maxValue;
+    public void SetMaxValue(String maxValue) {
+        this._maxValue = maxValue;
     }
 
     
-    public String getMaxValue() {
-        return maxValue;
+    public String GetMaxValue() {
+        return _maxValue;
     }
 
     
-    public void setMinValue(String minValue) {
-        this.minValue = minValue;
+    public void SetMinValue(String minValue) {
+        this._minValue = minValue;
     }
 
     
-    public String getMinValue() {
-        return minValue;
+    public String GetMinValue() {
+        return _minValue;
     }
 
     
-    public void setName(String name) {
-        this.name = name;
+    public void SetName(String name) {
+        this._name = name;
     }
 
     
-    public String getName() {
-        return name;
+    public String GetName() {
+        return _name;
     }
 
     
-    public void setStartWith(String startWith) {
-        this.startWith = startWith;
+    public void SetStartWith(String startWith) {
+        this._startWith = startWith;
     }
 
     
-    public String getStartWith() {
-        return startWith;
+    public String GetStartWith() {
+        return _startWith;
     }
 
     
-    public String getOwnedBy() {
-        return ownedBy;
+    public String GetOwnedBy() {
+        return _ownedBy;
     }
 
     
-    public void setOwnedBy(String ownedBy) {
-        this.ownedBy = ownedBy;
+    public void SetOwnedBy(String ownedBy) {
+        this._ownedBy = ownedBy;
     }
 }
 }

@@ -12,161 +12,161 @@ namespace pgdiff.schema {
 public class PgView {
 
     
-    private List<String> columnNames;
+    private List<String> _columnNames;
     
-    private String name;
+    private String _name;
     
-    private String query;
+    private String _query;
     
-    private List<DefaultValue> defaultValues = new List<DefaultValue>();
+    private List<DefaultValue> _defaultValues = new List<DefaultValue>();
     
-    private List<ColumnComment> columnComments = new List<ColumnComment>();
+    private List<ColumnComment> _columnComments = new List<ColumnComment>();
     
-    private String comment;
+    private String _comment;
 
     
     public PgView(String name) {
-        this.name = name;
+        this._name = name;
     }
 
     
     
-    public void setColumnNames(List<String> columnNames) {
-        this.columnNames = columnNames;
+    public void SetColumnNames(List<String> columnNames) {
+        this._columnNames = columnNames;
     }
 
     
-    public List<String> getColumnNames() {
-        return new List<string>(columnNames);
+    public List<String> GetColumnNames() {
+        return new List<string>(_columnNames);
     }
 
     
-    public String getComment() {
-        return comment;
+    public String GetComment() {
+        return _comment;
     }
 
     
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void SetComment(String comment) {
+        this._comment = comment;
     }
 
     
-    public String getCreationSQL() {
-        StringBuilder sbSQL = new StringBuilder(query.Length * 2);
-        sbSQL.Append("CREATE VIEW ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(name));
+    public String GetCreationSql() {
+        StringBuilder sbSql = new StringBuilder(_query.Length * 2);
+        sbSql.Append("CREATE VIEW ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(_name));
 
-        if (columnNames != null && columnNames.Count >0) {
-            sbSQL.Append(" (");
+        if (_columnNames != null && _columnNames.Count >0) {
+            sbSql.Append(" (");
 
-            for (int i = 0; i < columnNames.Count; i++) {
+            for (int i = 0; i < _columnNames.Count; i++) {
                 if (i > 0) {
-                    sbSQL.Append(", ");
+                    sbSql.Append(", ");
                 }
 
-                sbSQL.Append(PgDiffUtils.getQuotedName(columnNames[i]));
+                sbSql.Append(PgDiffUtils.GetQuotedName(_columnNames[i]));
             }
-            sbSQL.Append(')');
+            sbSql.Append(')');
         }
 
-        sbSQL.Append(" AS\n\t");
-        sbSQL.Append(query);
-        sbSQL.Append(';');
+        sbSql.Append(" AS\n\t");
+        sbSql.Append(_query);
+        sbSql.Append(';');
 
-        foreach(DefaultValue defaultValue in defaultValues) {
-            sbSQL.Append("\n\nALTER VIEW ");
-            sbSQL.Append(PgDiffUtils.getQuotedName(name));
-            sbSQL.Append(" ALTER COLUMN ");
-            sbSQL.Append(
-                    PgDiffUtils.getQuotedName(defaultValue.getColumnName()));
-            sbSQL.Append(" SET DEFAULT ");
-            sbSQL.Append(defaultValue.getDefaultValue());
-            sbSQL.Append(';');
+        foreach(DefaultValue defaultValue in _defaultValues) {
+            sbSql.Append("\n\nALTER VIEW ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(_name));
+            sbSql.Append(" ALTER COLUMN ");
+            sbSql.Append(
+                    PgDiffUtils.GetQuotedName(defaultValue.GetColumnName()));
+            sbSql.Append(" SET DEFAULT ");
+            sbSql.Append(defaultValue.GetDefaultValue());
+            sbSql.Append(';');
         }
 
-        if (!String.IsNullOrEmpty(comment)) {
-            sbSQL.Append("\n\nCOMMENT ON VIEW ");
-            sbSQL.Append(PgDiffUtils.getQuotedName(name));
-            sbSQL.Append(" IS ");
-            sbSQL.Append(comment);
-            sbSQL.Append(';');
+        if (!String.IsNullOrEmpty(_comment)) {
+            sbSql.Append("\n\nCOMMENT ON VIEW ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(_name));
+            sbSql.Append(" IS ");
+            sbSql.Append(_comment);
+            sbSql.Append(';');
         }
 
-        foreach(ColumnComment columnComment in columnComments) {
-            if (!String.IsNullOrEmpty(columnComment.getComment())) {
-                sbSQL.Append("\n\nCOMMENT ON COLUMN ");
-                sbSQL.Append(PgDiffUtils.getQuotedName(columnComment.getColumnName()));
-                sbSQL.Append(" IS ");
-                sbSQL.Append(columnComment.getComment());
-                sbSQL.Append(';');
+        foreach(ColumnComment columnComment in _columnComments) {
+            if (!String.IsNullOrEmpty(columnComment.GetComment())) {
+                sbSql.Append("\n\nCOMMENT ON COLUMN ");
+                sbSql.Append(PgDiffUtils.GetQuotedName(columnComment.GetColumnName()));
+                sbSql.Append(" IS ");
+                sbSql.Append(columnComment.GetComment());
+                sbSql.Append(';');
             }
         }
 
-        return sbSQL.ToString();
+        return sbSql.ToString();
     }
 
     
-    public String getDropSQL() {
-        return "DROP VIEW " + PgDiffUtils.getQuotedName(getName()) + ";";
+    public String GetDropSql() {
+        return "DROP VIEW " + PgDiffUtils.GetQuotedName(GetName()) + ";";
     }
 
     
-    public String getName() {
-        return name;
+    public String GetName() {
+        return _name;
     }
 
     
-    public void setQuery(String query) {
-        this.query = query;
+    public void SetQuery(String query) {
+        this._query = query;
     }
 
     
-    public String getQuery() {
-        return query;
+    public String GetQuery() {
+        return _query;
     }
 
    
-    public void addColumnDefaultValue(String columnName,
+    public void AddColumnDefaultValue(String columnName,
             String defaultValue) {
-        removeColumnDefaultValue(columnName);
-        defaultValues.Add(new DefaultValue(columnName, defaultValue));
+        RemoveColumnDefaultValue(columnName);
+        _defaultValues.Add(new DefaultValue(columnName, defaultValue));
     }
 
     
-    public void removeColumnDefaultValue(String columnName) {
-        foreach(DefaultValue item in defaultValues) {
-            if (item.getColumnName().Equals(columnName)) {
-                defaultValues.Remove(item);
+    public void RemoveColumnDefaultValue(String columnName) {
+        foreach(DefaultValue item in _defaultValues) {
+            if (item.GetColumnName().Equals(columnName)) {
+                _defaultValues.Remove(item);
                 return;
             }
         }
     }
 
     
-    public List<DefaultValue> getDefaultValues() {
-        return new List<DefaultValue>(defaultValues);
+    public List<DefaultValue> GetDefaultValues() {
+        return new List<DefaultValue>(_defaultValues);
     }
 
     
-    public void addColumnComment(String columnName,
+    public void AddColumnComment(String columnName,
             String comment) {
-        removeColumnDefaultValue(columnName);
-        columnComments.Add(new ColumnComment(columnName, comment));
+        RemoveColumnDefaultValue(columnName);
+        _columnComments.Add(new ColumnComment(columnName, comment));
     }
 
     
-    public void removeColumnComment(String columnName) {
-        foreach(ColumnComment item in columnComments) {
-            if (item.getColumnName().Equals(columnName)) {
-                columnComments.Remove(item);
+    public void RemoveColumnComment(String columnName) {
+        foreach(ColumnComment item in _columnComments) {
+            if (item.GetColumnName().Equals(columnName)) {
+                _columnComments.Remove(item);
                 return;
             }
         }
     }
 
     
-    public List<ColumnComment> getColumnComments() {
-        return new List<ColumnComment>(columnComments);
+    public List<ColumnComment> GetColumnComments() {
+        return new List<ColumnComment>(_columnComments);
     }
 
     
@@ -174,24 +174,24 @@ public class PgView {
     public class DefaultValue {
 
         
-        private String columnName;
+        private String _columnName;
         
-        private String defaultValue;
+        private String _defaultValue;
 
         
         public DefaultValue(String columnName, String defaultValue) {
-            this.columnName = columnName;
-            this.defaultValue = defaultValue;
+            this._columnName = columnName;
+            this._defaultValue = defaultValue;
         }
 
         
-        public String getColumnName() {
-            return columnName;
+        public String GetColumnName() {
+            return _columnName;
         }
 
         
-        public String getDefaultValue() {
-            return defaultValue;
+        public String GetDefaultValue() {
+            return _defaultValue;
         }
     }
 
@@ -200,24 +200,24 @@ public class PgView {
     public class ColumnComment {
 
         
-        private String columnName;
+        private String _columnName;
         
-        private String comment;
+        private String _comment;
 
         
         public ColumnComment(String columnName, String comment) {
-            this.columnName = columnName;
-            this.comment = comment;
+            this._columnName = columnName;
+            this._comment = comment;
         }
 
         
-        public String getColumnName() {
-            return columnName;
+        public String GetColumnName() {
+            return _columnName;
         }
 
         
-        public String getComment() {
-            return comment;
+        public String GetComment() {
+            return _comment;
         }
     }
 }

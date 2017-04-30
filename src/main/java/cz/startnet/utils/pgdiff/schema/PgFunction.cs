@@ -14,94 +14,94 @@ namespace pgdiff.schema {
 public class PgFunction {
 
     
-    private String name;
+    private String _name;
     
     
-    private List<Argument> arguments = new List<Argument>();
+    private List<Argument> _arguments = new List<Argument>();
     
-    private String body;
+    private String _body;
     
-    private String comment;
+    private String _comment;
 
     
-    public String getComment() {
-        return comment;
+    public String GetComment() {
+        return _comment;
     }
 
     
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void SetComment(String comment) {
+        this._comment = comment;
     }
 
     
-    public String getCreationSQL() {
-        StringBuilder sbSQL = new StringBuilder(500);
-        sbSQL.Append("CREATE OR REPLACE FUNCTION ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(name));
-        sbSQL.Append('(');
+    public String GetCreationSql() {
+        StringBuilder sbSql = new StringBuilder(500);
+        sbSql.Append("CREATE OR REPLACE FUNCTION ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(_name));
+        sbSql.Append('(');
 
         bool addComma = false;
 
-        foreach(Argument argument in arguments) {
+        foreach(Argument argument in _arguments) {
             if (addComma) {
-                sbSQL.Append(", ");
+                sbSql.Append(", ");
             }
 
-            sbSQL.Append(argument.getDeclaration(true));
+            sbSql.Append(argument.GetDeclaration(true));
 
             addComma = true;
         }
 
-        sbSQL.Append(") ");
-        sbSQL.Append(body);
-        sbSQL.Append(';');
+        sbSql.Append(") ");
+        sbSql.Append(_body);
+        sbSql.Append(';');
 
-        if (comment != null && ! String.IsNullOrEmpty(comment)) {
-            sbSQL.Append("\n\nCOMMENT ON FUNCTION ");
-            sbSQL.Append(PgDiffUtils.getQuotedName(name));
-            sbSQL.Append('(');
+        if (_comment != null && ! String.IsNullOrEmpty(_comment)) {
+            sbSql.Append("\n\nCOMMENT ON FUNCTION ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(_name));
+            sbSql.Append('(');
 
             addComma = false;
 
-            foreach(Argument argument in arguments) {
+            foreach(Argument argument in _arguments) {
                 if (addComma) {
-                    sbSQL.Append(", ");
+                    sbSql.Append(", ");
                 }
 
-                sbSQL.Append(argument.getDeclaration(false));
+                sbSql.Append(argument.GetDeclaration(false));
 
                 addComma = true;
             }
 
-            sbSQL.Append(") IS ");
-            sbSQL.Append(comment);
-            sbSQL.Append(';');
+            sbSql.Append(") IS ");
+            sbSql.Append(_comment);
+            sbSql.Append(';');
         }
 
-        return sbSQL.ToString();
+        return sbSql.ToString();
     }
 
     
-    public void setBody(String body) {
-        this.body = body;
+    public void SetBody(String body) {
+        this._body = body;
     }
 
     
-    public String getBody() {
-        return body;
+    public String GetBody() {
+        return _body;
     }
 
     
-    public String getDropSQL() {
+    public String GetDropSql() {
         StringBuilder sbString = new StringBuilder(100);
         sbString.Append("DROP FUNCTION ");
-        sbString.Append(name);
+        sbString.Append(_name);
         sbString.Append('(');
 
         bool addComma = false;
 
-        foreach(Argument argument in arguments) {
-            if ("OUT".Equals(argument.getMode(),StringComparison.InvariantCultureIgnoreCase)) {
+        foreach(Argument argument in _arguments) {
+            if ("OUT".Equals(argument.GetMode(),StringComparison.InvariantCultureIgnoreCase)) {
                 continue;
             }
 
@@ -109,7 +109,7 @@ public class PgFunction {
                 sbString.Append(", ");
             }
 
-            sbString.Append(argument.getDeclaration(false));
+            sbString.Append(argument.GetDeclaration(false));
 
             addComma = true;
         }
@@ -120,35 +120,35 @@ public class PgFunction {
     }
 
     
-    public void setName(String name) {
-        this.name = name;
+    public void SetName(String name) {
+        this._name = name;
     }
 
     
-    public String getName() {
-        return name;
+    public String GetName() {
+        return _name;
     }
 
     
-    public List<Argument> getArguments() {
-        return new List<Argument>(arguments);
+    public List<Argument> GetArguments() {
+        return new List<Argument>(_arguments);
     }
 
     
-    public void addArgument(Argument argument) {
-        arguments.Add(argument);
+    public void AddArgument(Argument argument) {
+        _arguments.Add(argument);
     }
 
     
-    public String getSignature() {
+    public String GetSignature() {
         StringBuilder sbString = new StringBuilder(100);
-        sbString.Append(name);
+        sbString.Append(_name);
         sbString.Append('(');
 
         bool addComma = false;
 
-        foreach(Argument argument in arguments) {
-            if ("OUT".Equals(argument.getMode(), StringComparison.InvariantCultureIgnoreCase)) {
+        foreach(Argument argument in _arguments) {
+            if ("OUT".Equals(argument.GetMode(), StringComparison.InvariantCultureIgnoreCase)) {
                 continue;
             }
 
@@ -156,7 +156,7 @@ public class PgFunction {
                 sbString.Append(',');
             }
 
-            sbString.Append(argument.getDataType().ToLower());
+            sbString.Append(argument.GetDataType().ToLower());
 
             addComma = true;
         }
@@ -186,8 +186,8 @@ public class PgFunction {
         } else if (@object is PgFunction) {
             PgFunction function = (PgFunction) @object;
 
-            if (name == null && function.getName() != null
-                    || name != null && !name.Equals(function.getName())) {
+            if (_name == null && function.GetName() != null
+                    || _name != null && !_name.Equals(function.GetName())) {
                 return false;
             }
 
@@ -195,11 +195,11 @@ public class PgFunction {
             String thatBody;
 
             if (ignoreFunctionWhitespace) {
-                thisBody = Regex.Replace(body, "\\s+", " ");
-                thatBody = Regex.Replace(function.getBody(), "\\s+", " ");
+                thisBody = Regex.Replace(_body, "\\s+", " ");
+                thatBody = Regex.Replace(function.GetBody(), "\\s+", " ");
             } else {
-                thisBody = body;
-                thatBody = function.getBody();
+                thisBody = _body;
+                thatBody = function.GetBody();
             }
 
             if (thisBody == null && thatBody != null
@@ -207,11 +207,11 @@ public class PgFunction {
                 return false;
             }
 
-            if (arguments.Count != function.getArguments().Count) {
+            if (_arguments.Count != function.GetArguments().Count) {
                 return false;
             } else {
-                for (int i = 0; i < arguments.Count; i++) {
-                    if (!arguments[i].Equals(function.getArguments()[i])) {
+                for (int i = 0; i < _arguments.Count; i++) {
+                    if (!_arguments[i].Equals(function.GetArguments()[i])) {
                         return false;
                     }
                 }
@@ -226,13 +226,13 @@ public class PgFunction {
     
     public override int GetHashCode() {
         StringBuilder sbString = new StringBuilder(500);
-        sbString.Append(body);
+        sbString.Append(_body);
         sbString.Append('|');
-        sbString.Append(name);
+        sbString.Append(_name);
 
-        foreach(Argument argument in arguments) {
+        foreach(Argument argument in _arguments) {
             sbString.Append('|');
-            sbString.Append(argument.getDeclaration(true));
+            sbString.Append(argument.GetDeclaration(true));
         }
 
         return sbString.ToString().GetHashCode();
@@ -243,73 +243,73 @@ public class PgFunction {
     public class Argument {
 
         
-        private String mode = "IN";
+        private String _mode = "IN";
         
-        private String name;
+        private String _name;
         
-        private String dataType;
+        private String _dataType;
         
-        private String defaultExpression;
+        private String _defaultExpression;
 
         
-        public String getDataType() {
-            return dataType;
+        public String GetDataType() {
+            return _dataType;
         }
 
         
-        public void setDataType(String dataType) {
-            this.dataType = dataType;
+        public void SetDataType(String dataType) {
+            this._dataType = dataType;
         }
 
         
-        public String getDefaultExpression() {
-            return defaultExpression;
+        public String GetDefaultExpression() {
+            return _defaultExpression;
         }
 
         
-        public void setDefaultExpression(String defaultExpression) {
-            this.defaultExpression = defaultExpression;
+        public void SetDefaultExpression(String defaultExpression) {
+            this._defaultExpression = defaultExpression;
         }
 
         
-        public String getMode() {
-            return mode;
+        public String GetMode() {
+            return _mode;
         }
 
         
-        public void setMode(String mode) {
-            this.mode = String.IsNullOrEmpty(mode) ? "IN" : mode;
+        public void SetMode(String mode) {
+            this._mode = String.IsNullOrEmpty(mode) ? "IN" : mode;
         }
 
         
-        public String getName() {
-            return name;
+        public String GetName() {
+            return _name;
         }
 
         
-        public void setName(String name) {
-            this.name = name;
+        public void SetName(String name) {
+            this._name = name;
         }
 
         
-        public String getDeclaration(bool includeDefaultValue) {
+        public String GetDeclaration(bool includeDefaultValue) {
             StringBuilder sbString = new StringBuilder(50);
 
-            if (mode != null && !"IN".Equals(mode, StringComparison.InvariantCultureIgnoreCase)) {
-                sbString.Append(mode);
+            if (_mode != null && !"IN".Equals(_mode, StringComparison.InvariantCultureIgnoreCase)) {
+                sbString.Append(_mode);
                 sbString.Append(' ');
             }
 
-            if (name != null && !String.IsNullOrEmpty(name)) {
-                sbString.Append(PgDiffUtils.getQuotedName(name));
+            if (_name != null && !String.IsNullOrEmpty(_name)) {
+                sbString.Append(PgDiffUtils.GetQuotedName(_name));
                 sbString.Append(' ');
             }
 
-            sbString.Append(dataType);
+            sbString.Append(_dataType);
 
-            if (includeDefaultValue && !String.IsNullOrEmpty(defaultExpression)) {
+            if (includeDefaultValue && !String.IsNullOrEmpty(_defaultExpression)) {
                 sbString.Append(" = ");
-                sbString.Append(defaultExpression);
+                sbString.Append(_defaultExpression);
             }
 
             return sbString.ToString();
@@ -324,27 +324,27 @@ public class PgFunction {
 
             Argument argument = (Argument) obj;
 
-            return (dataType == null ? argument.getDataType() == null
-                    : dataType.Equals(argument.getDataType(),StringComparison.InvariantCultureIgnoreCase))
-                    && (defaultExpression == null
-                    ? argument.getDefaultExpression() == null
-                    : defaultExpression.Equals(defaultExpression))
-                    && (mode == null ? argument.getMode() == null
-                    : mode.Equals(argument.getMode(),StringComparison.InvariantCultureIgnoreCase))
-                    && (name == null ? argument.getName() == null
-                    : name.Equals(argument.getName()));
+            return (_dataType == null ? argument.GetDataType() == null
+                    : _dataType.Equals(argument.GetDataType(),StringComparison.InvariantCultureIgnoreCase))
+                    && (_defaultExpression == null
+                    ? argument.GetDefaultExpression() == null
+                    : _defaultExpression.Equals(_defaultExpression))
+                    && (_mode == null ? argument.GetMode() == null
+                    : _mode.Equals(argument.GetMode(),StringComparison.InvariantCultureIgnoreCase))
+                    && (_name == null ? argument.GetName() == null
+                    : _name.Equals(argument.GetName()));
         }
 
         
         public override int GetHashCode() {
             StringBuilder sbString = new StringBuilder(50);
-            sbString.Append(mode == null ? null : mode.ToUpper());
+            sbString.Append(_mode == null ? null : _mode.ToUpper());
             sbString.Append('|');
-            sbString.Append(name);
+            sbString.Append(_name);
             sbString.Append('|');
-            sbString.Append(dataType == null ? null: dataType.ToUpper());
+            sbString.Append(_dataType == null ? null: _dataType.ToUpper());
             sbString.Append('|');
-            sbString.Append(defaultExpression);
+            sbString.Append(_defaultExpression);
 
             return sbString.ToString().GetHashCode();
         }

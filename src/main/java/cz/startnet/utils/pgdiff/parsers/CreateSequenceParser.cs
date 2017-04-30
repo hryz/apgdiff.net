@@ -10,58 +10,58 @@ namespace pgdiff.parsers {
 public class CreateSequenceParser {
 
     
-    public static void parse(PgDatabase database,
+    public static void Parse(PgDatabase database,
             String statement) {
         Parser parser = new Parser(statement);
-        parser.expect("CREATE", "SEQUENCE");
+        parser.Expect("CREATE", "SEQUENCE");
 
-        String sequenceName = parser.parseIdentifier();
+        String sequenceName = parser.ParseIdentifier();
         PgSequence sequence =
-                new PgSequence(ParserUtils.getObjectName(sequenceName));
+                new PgSequence(ParserUtils.GetObjectName(sequenceName));
         String schemaName =
-                ParserUtils.getSchemaName(sequenceName, database);
-        PgSchema schema = database.getSchema(schemaName);
+                ParserUtils.GetSchemaName(sequenceName, database);
+        PgSchema schema = database.GetSchema(schemaName);
 
         if (schema == null) {
             throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
         }
 
-        schema.addSequence(sequence);
+        schema.AddSequence(sequence);
 
-        while (!parser.expectOptional(";")) {
-            if (parser.expectOptional("INCREMENT")) {
-                parser.expectOptional("BY");
-                sequence.setIncrement(parser.parseString());
-            } else if (parser.expectOptional("MINVALUE")) {
-                sequence.setMinValue(parser.parseString());
-            } else if (parser.expectOptional("MAXVALUE")) {
-                sequence.setMaxValue(parser.parseString());
-            } else if (parser.expectOptional("START")) {
-                parser.expectOptional("WITH");
-                sequence.setStartWith(parser.parseString());
-            } else if (parser.expectOptional("CACHE")) {
-                sequence.setCache(parser.parseString());
-            } else if (parser.expectOptional("CYCLE")) {
-                sequence.setCycle(true);
-            } else if (parser.expectOptional("OWNED", "BY")) {
-                if (parser.expectOptional("NONE")) {
-                    sequence.setOwnedBy(null);
+        while (!parser.ExpectOptional(";")) {
+            if (parser.ExpectOptional("INCREMENT")) {
+                parser.ExpectOptional("BY");
+                sequence.SetIncrement(parser.ParseString());
+            } else if (parser.ExpectOptional("MINVALUE")) {
+                sequence.SetMinValue(parser.ParseString());
+            } else if (parser.ExpectOptional("MAXVALUE")) {
+                sequence.SetMaxValue(parser.ParseString());
+            } else if (parser.ExpectOptional("START")) {
+                parser.ExpectOptional("WITH");
+                sequence.SetStartWith(parser.ParseString());
+            } else if (parser.ExpectOptional("CACHE")) {
+                sequence.SetCache(parser.ParseString());
+            } else if (parser.ExpectOptional("CYCLE")) {
+                sequence.SetCycle(true);
+            } else if (parser.ExpectOptional("OWNED", "BY")) {
+                if (parser.ExpectOptional("NONE")) {
+                    sequence.SetOwnedBy(null);
                 } else {
-                    sequence.setOwnedBy(ParserUtils.getObjectName(
-                            parser.parseIdentifier()));
+                    sequence.SetOwnedBy(ParserUtils.GetObjectName(
+                            parser.ParseIdentifier()));
                 }
-            } else if (parser.expectOptional("NO")) {
-                if (parser.expectOptional("MINVALUE")) {
-                    sequence.setMinValue(null);
-                } else if (parser.expectOptional("MAXVALUE")) {
-                    sequence.setMaxValue(null);
-                } else if (parser.expectOptional("CYCLE")) {
-                    sequence.setCycle(false);
+            } else if (parser.ExpectOptional("NO")) {
+                if (parser.ExpectOptional("MINVALUE")) {
+                    sequence.SetMinValue(null);
+                } else if (parser.ExpectOptional("MAXVALUE")) {
+                    sequence.SetMaxValue(null);
+                } else if (parser.ExpectOptional("CYCLE")) {
+                    sequence.SetCycle(false);
                 } else {
-                    parser.throwUnsupportedCommand();
+                    parser.ThrowUnsupportedCommand();
                 }
             } else {
-                parser.throwUnsupportedCommand();
+                parser.ThrowUnsupportedCommand();
             }
         }
     }

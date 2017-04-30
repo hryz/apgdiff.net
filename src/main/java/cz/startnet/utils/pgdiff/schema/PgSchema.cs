@@ -13,94 +13,94 @@ public class PgSchema {
 
     
     
-    private List<PgFunction> functions = new List<PgFunction>();
+    private List<PgFunction> _functions = new List<PgFunction>();
     
     
-    private List<PgSequence> sequences = new List<PgSequence>();
+    private List<PgSequence> _sequences = new List<PgSequence>();
     
     
-    private List<PgTable> tables = new List<PgTable>();
+    private List<PgTable> _tables = new List<PgTable>();
     
     
-    private List<PgView> views = new List<PgView>();
+    private List<PgView> _views = new List<PgView>();
     
     
-    private List<PgIndex> indexes = new List<PgIndex>();
+    private List<PgIndex> _indexes = new List<PgIndex>();
     
     
-    private List<PgConstraint> primaryKeys = new List<PgConstraint>();
+    private List<PgConstraint> _primaryKeys = new List<PgConstraint>();
     
-    private String name;
+    private String _name;
     
-    private String authorization;
+    private String _authorization;
     
-    private String definition;
+    private String _definition;
     
-    private String comment;
+    private String _comment;
 
     
     public PgSchema(String name) {
-        this.name = name;
+        this._name = name;
     }
 
     
-    public void setAuthorization(String authorization) {
-        this.authorization = authorization;
+    public void SetAuthorization(String authorization) {
+        this._authorization = authorization;
     }
 
     
-    public String getAuthorization() {
-        return authorization;
+    public String GetAuthorization() {
+        return _authorization;
     }
 
     
-    public String getComment() {
-        return comment;
+    public String GetComment() {
+        return _comment;
     }
 
     
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void SetComment(String comment) {
+        this._comment = comment;
     }
 
     
-    public String getDefinition() {
-        return definition;
+    public String GetDefinition() {
+        return _definition;
     }
 
     
-    public void setDefinition(String definition) {
-        this.definition = definition;
+    public void SetDefinition(String definition) {
+        this._definition = definition;
     }
 
     
-    public String getCreationSQL() {
-        StringBuilder sbSQL = new StringBuilder(50);
-        sbSQL.Append("CREATE SCHEMA ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(getName()));
+    public String GetCreationSql() {
+        StringBuilder sbSql = new StringBuilder(50);
+        sbSql.Append("CREATE SCHEMA ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(GetName()));
 
-        if (getAuthorization() != null) {
-            sbSQL.Append(" AUTHORIZATION ");
-            sbSQL.Append(PgDiffUtils.getQuotedName(getAuthorization()));
+        if (GetAuthorization() != null) {
+            sbSql.Append(" AUTHORIZATION ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(GetAuthorization()));
         }
 
-        sbSQL.Append(';');
+        sbSql.Append(';');
 
-        if ( !String.IsNullOrEmpty(comment)) {
-            sbSQL.Append("\n\nCOMMENT ON SCHEMA ");
-            sbSQL.Append(PgDiffUtils.getQuotedName(name));
-            sbSQL.Append(" IS ");
-            sbSQL.Append(comment);
-            sbSQL.Append(';');
+        if ( !String.IsNullOrEmpty(_comment)) {
+            sbSql.Append("\n\nCOMMENT ON SCHEMA ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(_name));
+            sbSql.Append(" IS ");
+            sbSql.Append(_comment);
+            sbSql.Append(';');
         }
 
-        return sbSQL.ToString();
+        return sbSql.ToString();
     }
 
     
-    public PgFunction getFunction(String signature) {
-        foreach(PgFunction function in functions) {
-            if (function.getSignature().Equals(signature)) {
+    public PgFunction GetFunction(String signature) {
+        foreach(PgFunction function in _functions) {
+            if (function.GetSignature().Equals(signature)) {
                 return function;
             }
         }
@@ -109,19 +109,19 @@ public class PgSchema {
     }
 
     
-    public List<PgFunction> getFunctions() {
-        return new List<PgFunction>(functions);
+    public List<PgFunction> GetFunctions() {
+        return new List<PgFunction>(_functions);
     }
 
     
-    public String getName() {
-        return name;
+    public String GetName() {
+        return _name;
     }
 
     
-    public PgIndex getIndex(String name) {
-        foreach(PgIndex index in indexes) {
-            if (index.getName().Equals(name)) {
+    public PgIndex GetIndex(String name) {
+        foreach(PgIndex index in _indexes) {
+            if (index.GetName().Equals(name)) {
                 return index;
             }
         }
@@ -130,9 +130,9 @@ public class PgSchema {
     }
 
     
-    public PgConstraint getPrimaryKey(String name) {
-        foreach(PgConstraint constraint in primaryKeys) {
-            if (constraint.getName().Equals(name)) {
+    public PgConstraint GetPrimaryKey(String name) {
+        foreach(PgConstraint constraint in _primaryKeys) {
+            if (constraint.GetName().Equals(name)) {
                 return constraint;
             }
         }
@@ -141,9 +141,9 @@ public class PgSchema {
     }
 
     
-    public PgSequence getSequence(String name) {
-        foreach(PgSequence sequence in sequences) {
-            if (sequence.getName().Equals(name)) {
+    public PgSequence GetSequence(String name) {
+        foreach(PgSequence sequence in _sequences) {
+            if (sequence.GetName().Equals(name)) {
                 return sequence;
             }
         }
@@ -152,24 +152,24 @@ public class PgSchema {
     }
 
     
-    public List<PgIndex> getIndexes() {
-        return new List<PgIndex>(indexes);
+    public List<PgIndex> GetIndexes() {
+        return new List<PgIndex>(_indexes);
     }
 
     
-    public List<PgConstraint> getPrimaryKeys() {
-        return new List<PgConstraint>(primaryKeys);
+    public List<PgConstraint> GetPrimaryKeys() {
+        return new List<PgConstraint>(_primaryKeys);
     }
 
     
-    public List<PgSequence> getSequences() {
-        return new List<PgSequence>(sequences);
+    public List<PgSequence> GetSequences() {
+        return new List<PgSequence>(_sequences);
     }
 
     
-    public PgTable getTable(String name) {
-        foreach(PgTable table in tables) {
-            if (table.getName().Equals(name)) {
+    public PgTable GetTable(String name) {
+        foreach(PgTable table in _tables) {
+            if (table.GetName().Equals(name)) {
                 return table;
             }
         }
@@ -178,14 +178,14 @@ public class PgSchema {
     }
 
     
-    public List<PgTable> getTables() {
-        return new List<PgTable>(tables);
+    public List<PgTable> GetTables() {
+        return new List<PgTable>(_tables);
     }
 
     
-    public PgView getView(String name) {
-        foreach(PgView view in views) {
-            if (view.getName().Equals(name)) {
+    public PgView GetView(String name) {
+        foreach(PgView view in _views) {
+            if (view.GetName().Equals(name)) {
                 return view;
             }
         }
@@ -194,44 +194,44 @@ public class PgSchema {
     }
 
     
-    public List<PgView> getViews() {
-        return new List<PgView>(views);
+    public List<PgView> GetViews() {
+        return new List<PgView>(_views);
     }
 
     
-    public void addIndex(PgIndex index) {
-        indexes.Add(index);
+    public void AddIndex(PgIndex index) {
+        _indexes.Add(index);
     }
 
     
-    public void addPrimaryKey(PgConstraint primaryKey) {
-        primaryKeys.Add(primaryKey);
+    public void AddPrimaryKey(PgConstraint primaryKey) {
+        _primaryKeys.Add(primaryKey);
     }
 
     
-    public void addFunction(PgFunction function) {
-        functions.Add(function);
+    public void AddFunction(PgFunction function) {
+        _functions.Add(function);
     }
 
     
-    public void addSequence(PgSequence sequence) {
-        sequences.Add(sequence);
+    public void AddSequence(PgSequence sequence) {
+        _sequences.Add(sequence);
     }
 
     
-    public void addTable(PgTable table) {
-        tables.Add(table);
+    public void AddTable(PgTable table) {
+        _tables.Add(table);
     }
 
     
-    public void addView(PgView view) {
-        views.Add(view);
+    public void AddView(PgView view) {
+        _views.Add(view);
     }
 
     
-    public bool containsFunction(String signature) {
-        foreach(PgFunction function in functions) {
-            if (function.getSignature().Equals(signature)) {
+    public bool ContainsFunction(String signature) {
+        foreach(PgFunction function in _functions) {
+            if (function.GetSignature().Equals(signature)) {
                 return true;
             }
         }
@@ -240,9 +240,9 @@ public class PgSchema {
     }
 
     
-    public bool containsSequence(String name) {
-        foreach(PgSequence sequence in sequences) {
-            if (sequence.getName().Equals(name)) {
+    public bool ContainsSequence(String name) {
+        foreach(PgSequence sequence in _sequences) {
+            if (sequence.GetName().Equals(name)) {
                 return true;
             }
         }
@@ -251,9 +251,9 @@ public class PgSchema {
     }
 
     
-    public bool containsTable(String name) {
-        foreach(PgTable table in tables) {
-            if (table.getName().Equals(name)) {
+    public bool ContainsTable(String name) {
+        foreach(PgTable table in _tables) {
+            if (table.GetName().Equals(name)) {
                 return true;
             }
         }
@@ -262,9 +262,9 @@ public class PgSchema {
     }
 
     
-    public bool containsView(String name) {
-        foreach(PgView view in views) {
-            if (view.getName().Equals(name)) {
+    public bool ContainsView(String name) {
+        foreach(PgView view in _views) {
+            if (view.GetName().Equals(name)) {
                 return true;
             }
         }

@@ -8,7 +8,7 @@ namespace pgdiff.loader {
 public class FileException : Exception {
 
     
-    private static long serialVersionUID = 1L;
+    private static long _serialVersionUid = 1L;
 
     
     public FileException() {

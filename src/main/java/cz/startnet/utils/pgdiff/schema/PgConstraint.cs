@@ -10,100 +10,100 @@ namespace pgdiff.schema {
 public class PgConstraint {
 
     
-    private static Regex PATTERN_PRIMARY_KEY = new Regex(".*PRIMARY[\\s]+KEY.*", RegexOptions.Compiled|RegexOptions.IgnoreCase);
+    private static Regex _patternPrimaryKey = new Regex(".*PRIMARY[\\s]+KEY.*", RegexOptions.Compiled|RegexOptions.IgnoreCase);
     
-    private String definition;
+    private String _definition;
     
-    private String name;
+    private String _name;
     
-    private String tableName;
+    private String _tableName;
     
-    private String comment;
+    private String _comment;
 
     
     public PgConstraint(String name) {
-        this.name = name;
+        this._name = name;
     }
 
     
-    public String getCreationSQL() {
-        StringBuilder sbSQL = new StringBuilder(100);
-        sbSQL.Append("ALTER TABLE ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(getTableName()));
-        sbSQL.Append("\n\tADD CONSTRAINT ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(getName()));
-        sbSQL.Append(' ');
-        sbSQL.Append(getDefinition());
-        sbSQL.Append(';');
+    public String GetCreationSql() {
+        StringBuilder sbSql = new StringBuilder(100);
+        sbSql.Append("ALTER TABLE ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(GetTableName()));
+        sbSql.Append("\n\tADD CONSTRAINT ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(GetName()));
+        sbSql.Append(' ');
+        sbSql.Append(GetDefinition());
+        sbSql.Append(';');
 
-        if (comment != null && !String.IsNullOrEmpty(comment)) {
-            sbSQL.Append("\n\nCOMMENT ON CONSTRAINT ");
-            sbSQL.Append(PgDiffUtils.getQuotedName(name));
-            sbSQL.Append(" ON ");
-            sbSQL.Append(PgDiffUtils.getQuotedName(tableName));
-            sbSQL.Append(" IS ");
-            sbSQL.Append(comment);
-            sbSQL.Append(';');
+        if (_comment != null && !String.IsNullOrEmpty(_comment)) {
+            sbSql.Append("\n\nCOMMENT ON CONSTRAINT ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(_name));
+            sbSql.Append(" ON ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(_tableName));
+            sbSql.Append(" IS ");
+            sbSql.Append(_comment);
+            sbSql.Append(';');
         }
 
-        return sbSQL.ToString();
+        return sbSql.ToString();
     }
 
     
-    public String getComment() {
-        return comment;
+    public String GetComment() {
+        return _comment;
     }
 
     
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void SetComment(String comment) {
+        this._comment = comment;
     }
 
     
-    public void setDefinition(String definition) {
-        this.definition = definition;
+    public void SetDefinition(String definition) {
+        this._definition = definition;
     }
 
     
-    public String getDefinition() {
-        return definition;
+    public String GetDefinition() {
+        return _definition;
     }
 
     
-    public String getDropSQL() {
-        StringBuilder sbSQL = new StringBuilder(100);
-        sbSQL.Append("ALTER TABLE ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(getTableName()));
-        sbSQL.Append("\n\tDROP CONSTRAINT ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(getName()));
-        sbSQL.Append(';');
+    public String GetDropSql() {
+        StringBuilder sbSql = new StringBuilder(100);
+        sbSql.Append("ALTER TABLE ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(GetTableName()));
+        sbSql.Append("\n\tDROP CONSTRAINT ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(GetName()));
+        sbSql.Append(';');
 
-        return sbSQL.ToString();
+        return sbSql.ToString();
     }
 
     
-    public void setName(String name) {
-        this.name = name;
+    public void SetName(String name) {
+        this._name = name;
     }
 
     
-    public String getName() {
-        return name;
+    public String GetName() {
+        return _name;
     }
 
     
-    public bool isPrimaryKeyConstraint() {
-        return PATTERN_PRIMARY_KEY.IsMatch(definition);
+    public bool IsPrimaryKeyConstraint() {
+        return _patternPrimaryKey.IsMatch(_definition);
     }
 
     
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void SetTableName(String tableName) {
+        this._tableName = tableName;
     }
 
     
-    public String getTableName() {
-        return tableName;
+    public String GetTableName() {
+        return _tableName;
     }
 
     
@@ -114,9 +114,9 @@ public class PgConstraint {
             equals = true;
         } else if (@object is PgConstraint) {
             PgConstraint constraint = (PgConstraint) @object;
-            equals = definition.Equals(constraint.getDefinition())
-                    && name.Equals(constraint.getName())
-                    && tableName.Equals(constraint.getTableName());
+            equals = _definition.Equals(constraint.GetDefinition())
+                    && _name.Equals(constraint.GetName())
+                    && _tableName.Equals(constraint.GetTableName());
         }
 
         return equals;
@@ -125,7 +125,7 @@ public class PgConstraint {
     
     
     public override int GetHashCode() {
-        return (GetType().Name + "|" + definition + "|" + name + "|" + tableName).GetHashCode();
+        return (GetType().Name + "|" + _definition + "|" + _name + "|" + _tableName).GetHashCode();
     }
 }
 }

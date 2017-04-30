@@ -13,63 +13,63 @@ namespace pgdiff {
 public class PgDiffIndexes {
 
     
-    public static void createIndexes(TextWriter writer,
+    public static void CreateIndexes(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
-        foreach (PgTable newTable in newSchema.getTables()) {
-            String newTableName = newTable.getName();
+        foreach (PgTable newTable in newSchema.GetTables()) {
+            String newTableName = newTable.GetName();
 
             // Add new indexes
             if (oldSchema == null) {
-                foreach (PgIndex index in newTable.getIndexes()) {
-                    searchPathHelper.outputSearchPath(writer);
+                foreach (PgIndex index in newTable.GetIndexes()) {
+                    searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
-                    writer.WriteLine(index.getCreationSQL());
+                    writer.WriteLine(index.GetCreationSql());
                 }
             } else {
-                foreach (PgIndex index in getNewIndexes(
-                        oldSchema.getTable(newTableName), newTable)) {
-                    searchPathHelper.outputSearchPath(writer);
+                foreach (PgIndex index in GetNewIndexes(
+                        oldSchema.GetTable(newTableName), newTable)) {
+                    searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
-                    writer.WriteLine(index.getCreationSQL());
+                    writer.WriteLine(index.GetCreationSql());
                 }
             }
         }
     }
 
     
-    public static void dropIndexes(TextWriter writer,
+    public static void DropIndexes(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
-        foreach (PgTable newTable in newSchema.getTables()) {
-            String newTableName = newTable.getName();
+        foreach (PgTable newTable in newSchema.GetTables()) {
+            String newTableName = newTable.GetName();
             PgTable oldTable;
 
             if (oldSchema == null) {
                 oldTable = null;
             } else {
-                oldTable = oldSchema.getTable(newTableName);
+                oldTable = oldSchema.GetTable(newTableName);
             }
 
             // Drop indexes that do not exist in new schema or are modified
-            foreach (PgIndex index in getDropIndexes(oldTable, newTable)) {
-                searchPathHelper.outputSearchPath(writer);
+            foreach (PgIndex index in GetDropIndexes(oldTable, newTable)) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
-                writer.WriteLine(index.getDropSQL());
+                writer.WriteLine(index.GetDropSql());
             }
         }
     }
 
     
-    private static List<PgIndex> getDropIndexes(PgTable oldTable,
+    private static List<PgIndex> GetDropIndexes(PgTable oldTable,
             PgTable newTable) {
         
         List<PgIndex> list = new List<PgIndex>();
 
         if (newTable != null && oldTable != null) {
-            foreach (PgIndex index in oldTable.getIndexes()) {
-                if (!newTable.containsIndex(index.getName())
-                        || !newTable.getIndex(index.getName()).Equals(index)) {
+            foreach (PgIndex index in oldTable.GetIndexes()) {
+                if (!newTable.ContainsIndex(index.GetName())
+                        || !newTable.GetIndex(index.GetName()).Equals(index)) {
                     list.Add(index);
                 }
             }
@@ -79,20 +79,20 @@ public class PgDiffIndexes {
     }
 
     
-    private static List<PgIndex> getNewIndexes(PgTable oldTable,
+    private static List<PgIndex> GetNewIndexes(PgTable oldTable,
             PgTable newTable) {
         
         List<PgIndex> list = new List<PgIndex>();
 
         if (newTable != null) {
             if (oldTable == null) {
-                foreach (PgIndex index in newTable.getIndexes()) {
+                foreach (PgIndex index in newTable.GetIndexes()) {
                     list.Add(index);
                 }
             } else {
-                foreach (PgIndex index in newTable.getIndexes()) {
-                    if (!oldTable.containsIndex(index.getName())
-                            || !oldTable.getIndex(index.getName()).
+                foreach (PgIndex index in newTable.GetIndexes()) {
+                    if (!oldTable.ContainsIndex(index.GetName())
+                            || !oldTable.GetIndex(index.GetName()).
                             Equals(index)) {
                         list.Add(index);
                     }
@@ -104,41 +104,41 @@ public class PgDiffIndexes {
     }
 
     
-    public static void alterComments(TextWriter writer,
+    public static void AlterComments(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        foreach (PgIndex oldIndex in oldSchema.getIndexes()) {
-            PgIndex newIndex = newSchema.getIndex(oldIndex.getName());
+        foreach (PgIndex oldIndex in oldSchema.GetIndexes()) {
+            PgIndex newIndex = newSchema.GetIndex(oldIndex.GetName());
 
             if (newIndex == null) {
                 continue;
             }
 
-            if (oldIndex.getComment() == null
-                    && newIndex.getComment() != null
-                    || oldIndex.getComment() != null
-                    && newIndex.getComment() != null
-                    && !oldIndex.getComment().Equals(
-                    newIndex.getComment())) {
-                searchPathHelper.outputSearchPath(writer);
+            if (oldIndex.GetComment() == null
+                    && newIndex.GetComment() != null
+                    || oldIndex.GetComment() != null
+                    && newIndex.GetComment() != null
+                    && !oldIndex.GetComment().Equals(
+                    newIndex.GetComment())) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
                 writer.Write("COMMENT ON INDEX ");
                 writer.Write(
-                        PgDiffUtils.getQuotedName(newIndex.getName()));
+                        PgDiffUtils.GetQuotedName(newIndex.GetName()));
                 writer.Write(" IS ");
-                writer.Write(newIndex.getComment());
+                writer.Write(newIndex.GetComment());
                 writer.WriteLine(';');
-            } else if (oldIndex.getComment() != null
-                    && newIndex.getComment() == null) {
-                searchPathHelper.outputSearchPath(writer);
+            } else if (oldIndex.GetComment() != null
+                    && newIndex.GetComment() == null) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
                 writer.Write("COMMENT ON INDEX ");
                 writer.Write(
-                        PgDiffUtils.getQuotedName(newIndex.getName()));
+                        PgDiffUtils.GetQuotedName(newIndex.GetName()));
                 writer.WriteLine(" IS NULL;");
             }
         }

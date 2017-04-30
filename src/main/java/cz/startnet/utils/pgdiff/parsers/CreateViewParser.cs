@@ -13,41 +13,41 @@ namespace pgdiff.parsers {
 public class CreateViewParser {
 
     
-    public static void parse(PgDatabase database,
+    public static void Parse(PgDatabase database,
             String statement) {
         Parser parser = new Parser(statement);
-        parser.expect("CREATE");
-        parser.expectOptional("OR", "REPLACE");
-        parser.expect("VIEW");
+        parser.Expect("CREATE");
+        parser.ExpectOptional("OR", "REPLACE");
+        parser.Expect("VIEW");
 
-        String viewName = parser.parseIdentifier();
+        String viewName = parser.ParseIdentifier();
 
-        bool columnsExist = parser.expectOptional("(");
+        bool columnsExist = parser.ExpectOptional("(");
         List<String> columnNames = new List<string>();
 
         if (columnsExist) {
-            while (!parser.expectOptional(")")) {
-                columnNames.Add(ParserUtils.getObjectName(parser.parseIdentifier()));
-                parser.expectOptional(",");
+            while (!parser.ExpectOptional(")")) {
+                columnNames.Add(ParserUtils.GetObjectName(parser.ParseIdentifier()));
+                parser.ExpectOptional(",");
             }
         }
 
-        parser.expect("AS");
+        parser.Expect("AS");
 
-        String query = parser.getRest();
+        String query = parser.GetRest();
 
-        PgView view = new PgView(ParserUtils.getObjectName(viewName));
-        view.setColumnNames(columnNames);
-        view.setQuery(query);
+        PgView view = new PgView(ParserUtils.GetObjectName(viewName));
+        view.SetColumnNames(columnNames);
+        view.SetQuery(query);
 
-        String schemaName = ParserUtils.getSchemaName(viewName, database);
-        PgSchema schema = database.getSchema(schemaName);
+        String schemaName = ParserUtils.GetSchemaName(viewName, database);
+        PgSchema schema = database.GetSchema(schemaName);
 
         if (schema == null) {
             throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
         }
 
-        schema.addView(view);
+        schema.AddView(view);
     }
 
     

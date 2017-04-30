@@ -11,38 +11,38 @@ namespace pgdiff {
 public class PgDiffSequences {
 
     
-    public static void createSequences(TextWriter writer,
+    public static void CreateSequences(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         // Add new sequences
-        foreach (PgSequence sequence in newSchema.getSequences()) {
+        foreach (PgSequence sequence in newSchema.GetSequences()) {
             if (oldSchema == null
-                    || !oldSchema.containsSequence(sequence.getName())) {
-                searchPathHelper.outputSearchPath(writer);
+                    || !oldSchema.ContainsSequence(sequence.GetName())) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
-                writer.WriteLine(sequence.getCreationSQL());
+                writer.WriteLine(sequence.GetCreationSql());
             }
         }
     }
 
     
-    public static void alterCreatedSequences(TextWriter writer,
+    public static void AlterCreatedSequences(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         // Alter created sequences
-        foreach (PgSequence sequence in newSchema.getSequences()) {
+        foreach (PgSequence sequence in newSchema.GetSequences()) {
             if ((oldSchema == null
-                    || !oldSchema.containsSequence(sequence.getName()))
-                    && !String.IsNullOrEmpty(sequence.getOwnedBy())) {
-                searchPathHelper.outputSearchPath(writer);
+                    || !oldSchema.ContainsSequence(sequence.GetName()))
+                    && !String.IsNullOrEmpty(sequence.GetOwnedBy())) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
-                writer.WriteLine(sequence.getOwnedBySQL());
+                writer.WriteLine(sequence.GetOwnedBySql());
             }
         }
     }
 
     
-    public static void dropSequences(TextWriter writer,
+    public static void DropSequences(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
@@ -50,129 +50,129 @@ public class PgDiffSequences {
         }
 
         // Drop sequences that do not exist in new schema
-        foreach (PgSequence sequence in oldSchema.getSequences()) {
-            if (!newSchema.containsSequence(sequence.getName())) {
-                searchPathHelper.outputSearchPath(writer);
+        foreach (PgSequence sequence in oldSchema.GetSequences()) {
+            if (!newSchema.ContainsSequence(sequence.GetName())) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
-                writer.WriteLine(sequence.getDropSQL());
+                writer.WriteLine(sequence.GetDropSql());
             }
         }
     }
 
     
-    public static void alterSequences(TextWriter writer,
+    public static void AlterSequences(TextWriter writer,
             PgDiffArguments arguments, PgSchema oldSchema,
             PgSchema newSchema, SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        StringBuilder sbSQL = new StringBuilder(100);
+        StringBuilder sbSql = new StringBuilder(100);
 
-        foreach (PgSequence newSequence in newSchema.getSequences()) {
+        foreach (PgSequence newSequence in newSchema.GetSequences()) {
             PgSequence oldSequence =
-                    oldSchema.getSequence(newSequence.getName());
+                    oldSchema.GetSequence(newSequence.GetName());
 
             if (oldSequence == null) {
                 continue;
             }
 
-            sbSQL.Length = 0;
+            sbSql.Length = 0;
 
-            String oldIncrement = oldSequence.getIncrement();
-            String newIncrement = newSequence.getIncrement();
+            String oldIncrement = oldSequence.GetIncrement();
+            String newIncrement = newSequence.GetIncrement();
 
             if (newIncrement != null
                     && !newIncrement.Equals(oldIncrement)) {
-                sbSQL.Append("\n\tINCREMENT BY ");
-                sbSQL.Append(newIncrement);
+                sbSql.Append("\n\tINCREMENT BY ");
+                sbSql.Append(newIncrement);
             }
 
-            String oldMinValue = oldSequence.getMinValue();
-            String newMinValue = newSequence.getMinValue();
+            String oldMinValue = oldSequence.GetMinValue();
+            String newMinValue = newSequence.GetMinValue();
 
             if (newMinValue == null && oldMinValue != null) {
-                sbSQL.Append("\n\tNO MINVALUE");
+                sbSql.Append("\n\tNO MINVALUE");
             } else if (newMinValue != null
                     && !newMinValue.Equals(oldMinValue)) {
-                sbSQL.Append("\n\tMINVALUE ");
-                sbSQL.Append(newMinValue);
+                sbSql.Append("\n\tMINVALUE ");
+                sbSql.Append(newMinValue);
             }
 
-            String oldMaxValue = oldSequence.getMaxValue();
-            String newMaxValue = newSequence.getMaxValue();
+            String oldMaxValue = oldSequence.GetMaxValue();
+            String newMaxValue = newSequence.GetMaxValue();
 
             if (newMaxValue == null && oldMaxValue != null) {
-                sbSQL.Append("\n\tNO MAXVALUE");
+                sbSql.Append("\n\tNO MAXVALUE");
             } else if (newMaxValue != null
                     && !newMaxValue.Equals(oldMaxValue)) {
-                sbSQL.Append("\n\tMAXVALUE ");
-                sbSQL.Append(newMaxValue);
+                sbSql.Append("\n\tMAXVALUE ");
+                sbSql.Append(newMaxValue);
             }
 
-            if (!arguments.isIgnoreStartWith()) {
-                String oldStart = oldSequence.getStartWith();
-                String newStart = newSequence.getStartWith();
+            if (!arguments.IsIgnoreStartWith()) {
+                String oldStart = oldSequence.GetStartWith();
+                String newStart = newSequence.GetStartWith();
 
                 if (newStart != null && !newStart.Equals(oldStart)) {
-                    sbSQL.Append("\n\tRESTART WITH ");
-                    sbSQL.Append(newStart);
+                    sbSql.Append("\n\tRESTART WITH ");
+                    sbSql.Append(newStart);
                 }
             }
 
-            String oldCache = oldSequence.getCache();
-            String newCache = newSequence.getCache();
+            String oldCache = oldSequence.GetCache();
+            String newCache = newSequence.GetCache();
 
             if (newCache != null && !newCache.Equals(oldCache)) {
-                sbSQL.Append("\n\tCACHE ");
-                sbSQL.Append(newCache);
+                sbSql.Append("\n\tCACHE ");
+                sbSql.Append(newCache);
             }
 
-            bool oldCycle = oldSequence.isCycle();
-            bool newCycle = newSequence.isCycle();
+            bool oldCycle = oldSequence.IsCycle();
+            bool newCycle = newSequence.IsCycle();
 
             if (oldCycle && !newCycle) {
-                sbSQL.Append("\n\tNO CYCLE");
+                sbSql.Append("\n\tNO CYCLE");
             } else if (!oldCycle && newCycle) {
-                sbSQL.Append("\n\tCYCLE");
+                sbSql.Append("\n\tCYCLE");
             }
 
-            String oldOwnedBy = oldSequence.getOwnedBy();
-            String newOwnedBy = newSequence.getOwnedBy();
+            String oldOwnedBy = oldSequence.GetOwnedBy();
+            String newOwnedBy = newSequence.GetOwnedBy();
 
             if (newOwnedBy != null && !newOwnedBy.Equals(oldOwnedBy)) {
-                sbSQL.Append("\n\tOWNED BY ");
-                sbSQL.Append(newOwnedBy);
+                sbSql.Append("\n\tOWNED BY ");
+                sbSql.Append(newOwnedBy);
             }
 
-            if (sbSQL.Length > 0) {
-                searchPathHelper.outputSearchPath(writer);
+            if (sbSql.Length > 0) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
                 writer.Write("ALTER SEQUENCE "
-                        + PgDiffUtils.getQuotedName(newSequence.getName()));
-                writer.Write(sbSQL.ToString());
+                        + PgDiffUtils.GetQuotedName(newSequence.GetName()));
+                writer.Write(sbSql.ToString());
                 writer.WriteLine(';');
             }
 
-            if (oldSequence.getComment() == null
-                    && newSequence.getComment() != null
-                    || oldSequence.getComment() != null
-                    && newSequence.getComment() != null
-                    && !oldSequence.getComment().Equals(
-                    newSequence.getComment())) {
-                searchPathHelper.outputSearchPath(writer);
+            if (oldSequence.GetComment() == null
+                    && newSequence.GetComment() != null
+                    || oldSequence.GetComment() != null
+                    && newSequence.GetComment() != null
+                    && !oldSequence.GetComment().Equals(
+                    newSequence.GetComment())) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
                 writer.Write("COMMENT ON SEQUENCE ");
-                writer.Write(PgDiffUtils.getQuotedName(newSequence.getName()));
+                writer.Write(PgDiffUtils.GetQuotedName(newSequence.GetName()));
                 writer.Write(" IS ");
-                writer.Write(newSequence.getComment());
+                writer.Write(newSequence.GetComment());
                 writer.WriteLine(';');
-            } else if (oldSequence.getComment() != null
-                    && newSequence.getComment() == null) {
-                searchPathHelper.outputSearchPath(writer);
+            } else if (oldSequence.GetComment() != null
+                    && newSequence.GetComment() == null) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
                 writer.Write("COMMENT ON SEQUENCE ");
-                writer.Write(newSequence.getName());
+                writer.Write(newSequence.GetName());
                 writer.WriteLine(" IS NULL;");
             }
         }

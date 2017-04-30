@@ -14,26 +14,26 @@ public class Parser {
     
     private string _string;
     
-    private int position;
+    private int _position;
 
     
     public Parser(string _string) {
         this._string = _string;
-        skipWhitespace();
+        SkipWhitespace();
     }
 
     
-    public void expect(params string[] words) {
+    public void Expect(params string[] words) {
         foreach(string word in words) {
-            expect(word, false);
+            Expect(word, false);
         }
     }
 
-    public bool expect(string word, bool optional) {
-        int wordEnd = position + word.Length;
+    public bool Expect(string word, bool optional) {
+        int wordEnd = _position + word.Length;
 
         if (wordEnd <= _string.Length
-                && _string.Substring(position, wordEnd - position).Equals(word, StringComparison.InvariantCultureIgnoreCase)
+                && _string.Substring(_position, wordEnd - _position).Equals(word, StringComparison.InvariantCultureIgnoreCase)
                 && (wordEnd == _string.Length
                 || Char.IsWhiteSpace(_string[wordEnd])
                 || _string[wordEnd] == ';'
@@ -42,8 +42,8 @@ public class Parser {
                 || _string[wordEnd] == '['
                 || "(".Equals(word) || ",".Equals(word) || "[".Equals(word)
                 || "]".Equals(word))) {
-            position = wordEnd;
-            skipWhitespace();
+            _position = wordEnd;
+            SkipWhitespace();
 
             return true;
         }
@@ -54,60 +54,60 @@ public class Parser {
 
         throw new ParserException(String.Format(
                 Resources.CannotParseStringExpectedWord, _string,
-                word, position + 1, _string.Substring(position, 20)));
+                word, _position + 1, _string.Substring(_position, 20)));
     }
 
     
-    public bool expectOptional(params string[] words) {
-        bool found = expect(words[0], true);
+    public bool ExpectOptional(params string[] words) {
+        bool found = Expect(words[0], true);
 
         if (!found) {
             return false;
         }
 
         for (int i = 1; i < words.Length; i++) {
-            skipWhitespace();
-            expect(words[i]);
+            SkipWhitespace();
+            Expect(words[i]);
         }
 
         return true;
     }
 
     
-    public void skipWhitespace() {
-        for (; position < _string.Length; position++) {
-            if (!Char.IsWhiteSpace(_string[position])) {
+    public void SkipWhitespace() {
+        for (; _position < _string.Length; _position++) {
+            if (!Char.IsWhiteSpace(_string[_position])) {
                 break;
             }
         }
     }
 
     
-    public string parseIdentifier() {
-        string identifier = parseIdentifierInternal();
+    public string ParseIdentifier() {
+        string identifier = ParseIdentifierInternal();
 
-        if (_string[position] == '.') {
-            position++;
-            identifier += '.' + parseIdentifierInternal();
+        if (_string[_position] == '.') {
+            _position++;
+            identifier += '.' + ParseIdentifierInternal();
         }
 
-        skipWhitespace();
+        SkipWhitespace();
 
         return identifier;
     }
 
     
-    private string parseIdentifierInternal() {
-        bool quoted = _string[position] == '"';
+    private string ParseIdentifierInternal() {
+        bool quoted = _string[_position] == '"';
 
         if (quoted) {
-            int endPos = _string.IndexOf('"', position + 1);
-            string result = _string.Substring(position, endPos + 1 - position);
-            position = endPos + 1;
+            int endPos = _string.IndexOf('"', _position + 1);
+            string result = _string.Substring(_position, endPos + 1 - _position);
+            _position = endPos + 1;
 
             return result;
         } else {
-            int endPos = position;
+            int endPos = _position;
 
             for (; endPos < _string.Length; endPos++) {
                 char chr = _string[endPos];
@@ -119,36 +119,36 @@ public class Parser {
             }
 
             string result =
-                    _string.Substring(position, endPos - position).ToLower();
+                    _string.Substring(_position, endPos - _position).ToLower();
 
-            position = endPos;
+            _position = endPos;
 
             return result;
         }
     }
 
     
-    public string getRest() {
+    public string GetRest() {
         string result;
 
         if (_string[_string.Length - 1] == ';') {
-            if (position == _string.Length - 1) {
+            if (_position == _string.Length - 1) {
                 return null;
             } else {
-                result = _string.Substring(position, _string.Length - 1 - position);
+                result = _string.Substring(_position, _string.Length - 1 - _position);
             }
         } else {
-            result = _string.Substring(position);
+            result = _string.Substring(_position);
         }
 
-        position = _string.Length;
+        _position = _string.Length;
 
         return result;
     }
 
     
-    public int parseInteger() {
-        int endPos = position;
+    public int ParseInteger() {
+        int endPos = _position;
 
         for (; endPos < _string.Length; endPos++) {
             if (!Char.IsLetterOrDigit(_string[endPos])) {
@@ -158,27 +158,27 @@ public class Parser {
 
         try {
             int result =
-                    Int32.Parse(_string.Substring(position, endPos - position));
+                    Int32.Parse(_string.Substring(_position, endPos - _position));
 
-            position = endPos;
-            skipWhitespace();
+            _position = endPos;
+            SkipWhitespace();
 
             return result;
         } catch (FormatException ex) {
             throw new ParserException(String.Format(
                     Resources.CannotParseStringExpectedInteger,
-                    _string, position + 1,
-                    _string.Substring(position, 20)), ex);
+                    _string, _position + 1,
+                    _string.Substring(_position, 20)), ex);
         }
     }
 
     
-    public string parseString() {
-        bool quoted = _string[position] == '\'';
+    public string ParseString() {
+        bool quoted = _string[_position] == '\'';
 
         if (quoted) {
             bool escape = false;
-            int endPos = position + 1;
+            int endPos = _position + 1;
 
             for (; endPos < _string.Length; endPos++) {
                 char chr = _string[endPos];
@@ -198,19 +198,19 @@ public class Parser {
             string result;
 
             try {
-                result = _string.Substring(position, endPos + 1 - position);
+                result = _string.Substring(_position, endPos + 1 - _position);
             } catch (Exception ex) {
                 throw new Exception("Failed to get sub_string: " + _string
-                        + " start pos: " + position + " end pos: "
+                        + " start pos: " + _position + " end pos: "
                         + (endPos + 1), ex);
             }
 
-            position = endPos + 1;
-            skipWhitespace();
+            _position = endPos + 1;
+            SkipWhitespace();
 
             return result;
         } else {
-            int endPos = position;
+            int endPos = _position;
 
             for (; endPos < _string.Length; endPos++) {
                 char chr = _string[endPos];
@@ -221,44 +221,44 @@ public class Parser {
                 }
             }
 
-            if (position == endPos) {
+            if (_position == endPos) {
                 throw new ParserException(String.Format(
                         Resources.CannotParseStringExpectedString,
-                        _string, position + 1));
+                        _string, _position + 1));
             }
 
-            string result = _string.Substring(position, endPos - position);
+            string result = _string.Substring(_position, endPos - _position);
 
-            position = endPos;
-            skipWhitespace();
+            _position = endPos;
+            SkipWhitespace();
 
             return result;
         }
     }
 
     
-    public string getExpression() {
-        int endPos = getExpressionEnd();
+    public string GetExpression() {
+        int endPos = GetExpressionEnd();
 
-        if (position == endPos) {
+        if (_position == endPos) {
             throw new ParserException(String.Format(
                     Resources.CannotParseStringExpectedExpression,
-                    _string, position + 1,
-                    _string.Substring(position, 20)));
+                    _string, _position + 1,
+                    _string.Substring(_position, 20)));
         }
 
-        string result = _string.Substring(position, endPos - position).Trim();
+        string result = _string.Substring(_position, endPos - _position).Trim();
 
-        position = endPos;
+        _position = endPos;
 
         return result;
     }
 
     
-    private int getExpressionEnd() {
+    private int GetExpressionEnd() {
         int bracesCount = 0;
         bool singleQuoteOn = false;
-        int charPos = position;
+        int charPos = _position;
 
         for (; charPos < _string.Length; charPos++) {
             char chr = _string[charPos];
@@ -284,27 +284,27 @@ public class Parser {
     }
 
     
-    public int getPosition() {
-        return position;
+    public int GetPosition() {
+        return _position;
     }
 
     
-    public string getString() {
+    public string GetString() {
         return _string;
     }
 
     
-    public void throwUnsupportedCommand() {
+    public void ThrowUnsupportedCommand() {
         throw new ParserException(String.Format(
                 Resources.CannotParseStringUnsupportedCommand,
-                _string, position + 1,
-                _string.Substring(position, 20)));
+                _string, _position + 1,
+                _string.Substring(_position, 20)));
     }
 
   
-    public string expectOptionalOneOf(params string[] words) {
+    public string ExpectOptionalOneOf(params string[] words) {
         foreach(string word in words) {
-            if (expectOptional(word)) {
+            if (ExpectOptional(word)) {
                 return word;
             }
         }
@@ -318,13 +318,13 @@ public class Parser {
     }
 
     
-    public void setPosition(int position) {
-        this.position = position;
+    public void SetPosition(int position) {
+        this._position = position;
     }
 
     
-    public string parseDataType() {
-        int endPos = position;
+    public string ParseDataType() {
+        int endPos = _position;
 
         while (endPos < _string.Length
                 && !Char.IsWhiteSpace(_string[endPos])
@@ -334,43 +334,43 @@ public class Parser {
             endPos++;
         }
 
-        if (endPos == position) {
+        if (endPos == _position) {
             throw new ParserException(String.Format(
                     Resources.CannotParseStringExpectedDataType,
-                    _string, position + 1,
-                    _string.Substring(position, 20)));
+                    _string, _position + 1,
+                    _string.Substring(_position, 20)));
         }
 
-        string dataType = _string.Substring(position, endPos - position);
+        string dataType = _string.Substring(_position, endPos - _position);
 
-        position = endPos;
-        skipWhitespace();
+        _position = endPos;
+        SkipWhitespace();
 
         if ("character".Equals(dataType,StringComparison.InvariantCultureIgnoreCase)
-                && expectOptional("varying")) {
+                && ExpectOptional("varying")) {
             dataType = "character varying";
         } else if ("double".Equals(dataType,StringComparison.InvariantCultureIgnoreCase)
-                && expectOptional("precision")) {
+                && ExpectOptional("precision")) {
             dataType = "double precision";
         }
 
         bool timestamp = "timestamp".Equals(dataType,StringComparison.InvariantCultureIgnoreCase)
                 || "time".Equals(dataType,StringComparison.InvariantCultureIgnoreCase);
 
-        if (_string[position] == '(') {
-            dataType += getExpression();
+        if (_string[_position] == '(') {
+            dataType += GetExpression();
         }
 
         if (timestamp) {
-            if (expectOptional("with", "time", "zone")) {
+            if (ExpectOptional("with", "time", "zone")) {
                 dataType += " with time zone";
-            } else if (expectOptional("without", "time", "zone")) {
+            } else if (ExpectOptional("without", "time", "zone")) {
                 dataType += " without time zone";
             }
         }
 
-        if (expectOptional("[")) {
-            expect("]");
+        if (ExpectOptional("[")) {
+            Expect("]");
             dataType += "[]";
         }
 
@@ -378,10 +378,10 @@ public class Parser {
     }
 
     
-    public bool isConsumed() {
-        return position == _string.Length
-                || position + 1 == _string.Length
-                && _string[position] == ';';
+    public bool IsConsumed() {
+        return _position == _string.Length
+                || _position + 1 == _string.Length
+                && _string[_position] == ';';
     }
 }
 }

@@ -10,44 +10,44 @@ namespace pgdiff.parsers {
 public class CreateIndexParser {
 
     
-    public static void parse(PgDatabase database,
+    public static void Parse(PgDatabase database,
             String statement) {
         Parser parser = new Parser(statement);
-        parser.expect("CREATE");
+        parser.Expect("CREATE");
 
-        bool unique = parser.expectOptional("UNIQUE");
+        bool unique = parser.ExpectOptional("UNIQUE");
 
-        parser.expect("INDEX");
-        parser.expectOptional("CONCURRENTLY");
+        parser.Expect("INDEX");
+        parser.ExpectOptional("CONCURRENTLY");
 
         String indexName =
-                ParserUtils.getObjectName(parser.parseIdentifier());
+                ParserUtils.GetObjectName(parser.ParseIdentifier());
 
-        parser.expect("ON");
+        parser.Expect("ON");
 
-        String tableName = parser.parseIdentifier();
-        String definition = parser.getRest();
+        String tableName = parser.ParseIdentifier();
+        String definition = parser.GetRest();
         String schemaName =
-                ParserUtils.getSchemaName(tableName, database);
-        PgSchema schema = database.getSchema(schemaName);
+                ParserUtils.GetSchemaName(tableName, database);
+        PgSchema schema = database.GetSchema(schemaName);
 
         if (schema == null) {
             throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
         }
 
-        String objectName = ParserUtils.getObjectName(tableName);
-        PgTable table = schema.getTable(objectName);
+        String objectName = ParserUtils.GetObjectName(tableName);
+        PgTable table = schema.GetTable(objectName);
 
         if (table == null) {
             throw new Exception(String.Format(Resources.CannotFindTable, tableName,statement));
         }
 
         PgIndex index = new PgIndex(indexName);
-        table.addIndex(index);
-        schema.addIndex(index);
-        index.setDefinition(definition.Trim());
-        index.setTableName(table.getName());
-        index.setUnique(unique);
+        table.AddIndex(index);
+        schema.AddIndex(index);
+        index.SetDefinition(definition.Trim());
+        index.SetTableName(table.GetName());
+        index.SetUnique(unique);
     }
 
     

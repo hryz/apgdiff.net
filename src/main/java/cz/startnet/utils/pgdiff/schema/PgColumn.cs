@@ -11,64 +11,64 @@ namespace pgdiff.schema {
 public class PgColumn {
 
     
-    private static Regex PATTERN_NULL = new Regex("^(.+)[\\s]+NULL$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static Regex _patternNull = new Regex("^(.+)[\\s]+NULL$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             
     
-    private static Regex PATTERN_NOT_NULL = new Regex("^(.+)[\\s]+NOT[\\s]+NULL$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static Regex _patternNotNull = new Regex("^(.+)[\\s]+NOT[\\s]+NULL$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     
-    private static Regex PATTERN_DEFAULT = new Regex("^(.+)[\\s]+DEFAULT[\\s]+(.+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static Regex _patternDefault = new Regex("^(.+)[\\s]+DEFAULT[\\s]+(.+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     
-    private Int32? statistics;
+    private Int32? _statistics;
     
-    private String defaultValue;
+    private String _defaultValue;
     
-    private String name;
+    private String _name;
     
-    private String type;
+    private String _type;
     
-    private bool nullValue = true;
+    private bool _nullValue = true;
     
-    private String storage;
+    private String _storage;
     
-    private String comment;
+    private String _comment;
 
     
     public PgColumn(String name) {
-        this.name = name;
+        this._name = name;
     }
 
     
-    public String getComment() {
-        return comment;
+    public String GetComment() {
+        return _comment;
     }
 
     
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void SetComment(String comment) {
+        this._comment = comment;
     }
 
     
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
+    public void SetDefaultValue(String defaultValue) {
+        this._defaultValue = defaultValue;
     }
 
     
-    public String getDefaultValue() {
-        return defaultValue;
+    public String GetDefaultValue() {
+        return _defaultValue;
     }
 
     
-    public String getFullDefinition(bool addDefaults) {
+    public String GetFullDefinition(bool addDefaults) {
         StringBuilder sbDefinition = new StringBuilder(100);
-        sbDefinition.Append(PgDiffUtils.getQuotedName(name));
+        sbDefinition.Append(PgDiffUtils.GetQuotedName(_name));
         sbDefinition.Append(' ');
-        sbDefinition.Append(type);
+        sbDefinition.Append(_type);
 
-        if (defaultValue != null && !String.IsNullOrEmpty(defaultValue)) {
+        if (_defaultValue != null && !String.IsNullOrEmpty(_defaultValue)) {
             sbDefinition.Append(" DEFAULT ");
-            sbDefinition.Append(defaultValue);
-        } else if (!nullValue && addDefaults) {
-            String defaultColValue = PgColumnUtils.getDefaultValue(type);
+            sbDefinition.Append(_defaultValue);
+        } else if (!_nullValue && addDefaults) {
+            String defaultColValue = PgColumnUtils.GetDefaultValue(_type);
 
             if (defaultColValue != null) {
                 sbDefinition.Append(" DEFAULT ");
@@ -76,7 +76,7 @@ public class PgColumn {
             }
         }
 
-        if (!nullValue) {
+        if (!_nullValue) {
             sbDefinition.Append(" NOT NULL");
         }
 
@@ -84,83 +84,83 @@ public class PgColumn {
     }
 
     
-    public void setName(String name) {
-        this.name = name;
+    public void SetName(String name) {
+        this._name = name;
     }
 
     
-    public String getName() {
-        return name;
+    public String GetName() {
+        return _name;
     }
 
     
-    public void setNullValue(bool nullValue) {
-        this.nullValue = nullValue;
+    public void SetNullValue(bool nullValue) {
+        this._nullValue = nullValue;
     }
 
     
-    public bool getNullValue() {
-        return nullValue;
+    public bool GetNullValue() {
+        return _nullValue;
     }
 
     
-    public void setStatistics(Int32 statistics) {
-        this.statistics = statistics;
+    public void SetStatistics(Int32 statistics) {
+        this._statistics = statistics;
     }
 
     
-    public Int32? getStatistics() {
-        return statistics;
+    public Int32? GetStatistics() {
+        return _statistics;
     }
 
     
-    public String getStorage() {
-        return storage;
+    public String GetStorage() {
+        return _storage;
     }
 
     
-    public void setStorage(String storage) {
-        this.storage = storage;
+    public void SetStorage(String storage) {
+        this._storage = storage;
     }
 
     
-    public void setType(String type) {
-        this.type = type;
+    public void SetType(String type) {
+        this._type = type;
     }
 
     
     public String getType() {
-        return type;
+        return _type;
     }
 
     
-    public void parseDefinition(String definition) {
+    public void ParseDefinition(String definition) {
         String @string = definition;
 
-        Regex matcher = PATTERN_NOT_NULL;
+        Regex matcher = _patternNotNull;
 
         if (matcher.IsMatch(@string)) {
             @string = matcher.Matches(@string)[0].Groups[1].Value.Trim();
-            setNullValue(false);
+            SetNullValue(false);
         } else {
-            matcher = PATTERN_NULL;
+            matcher = _patternNull;
 
             if (matcher.IsMatch(@string)) {
                 @string = matcher.Matches(@string)[0].Groups[1].Value.Trim();
-                    setNullValue(true);
+                    SetNullValue(true);
             }
         }
 
-        matcher = PATTERN_DEFAULT;
+        matcher = _patternDefault;
 
         if (matcher.IsMatch(@string))
         {
             var matches = matcher.Matches(@string);
             @string = matches[0].Groups[1].Value.Trim(); 
-            setDefaultValue(matches[0].Groups[2].Value.Trim());
+            SetDefaultValue(matches[0].Groups[2].Value.Trim());
         }
 
-        setType(@string);
+        SetType(@string);
     }
 }
 }

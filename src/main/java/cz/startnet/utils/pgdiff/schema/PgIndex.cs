@@ -8,92 +8,92 @@ namespace pgdiff.schema {
 public class PgIndex {
 
     
-    private String definition;
+    private String _definition;
     
-    private String name;
+    private String _name;
     
-    private String tableName;
+    private String _tableName;
     
-    private bool unique;
+    private bool _unique;
     
-    private String comment;
+    private String _comment;
 
     
     public PgIndex(String name) {
-        this.name = name;
+        this._name = name;
     }
 
     
-    public String getComment() {
-        return comment;
+    public String GetComment() {
+        return _comment;
     }
 
     
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void SetComment(String comment) {
+        this._comment = comment;
     }
 
     
-    public String getCreationSQL() {
-        StringBuilder sbSQL = new StringBuilder(100);
-        sbSQL.Append("CREATE ");
+    public String GetCreationSql() {
+        StringBuilder sbSql = new StringBuilder(100);
+        sbSql.Append("CREATE ");
 
-        if (isUnique()) {
-            sbSQL.Append("UNIQUE ");
+        if (IsUnique()) {
+            sbSql.Append("UNIQUE ");
         }
 
-        sbSQL.Append("INDEX ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(getName()));
-        sbSQL.Append(" ON ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(getTableName()));
-        sbSQL.Append(' ');
-        sbSQL.Append(getDefinition());
-        sbSQL.Append(';');
+        sbSql.Append("INDEX ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(GetName()));
+        sbSql.Append(" ON ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(GetTableName()));
+        sbSql.Append(' ');
+        sbSql.Append(GetDefinition());
+        sbSql.Append(';');
 
-        if ( !String.IsNullOrEmpty(comment)) {
-            sbSQL.Append("\n\nCOMMENT ON INDEX ");
-            sbSQL.Append(PgDiffUtils.getQuotedName(name));
-            sbSQL.Append(" IS ");
-            sbSQL.Append(comment);
-            sbSQL.Append(';');
+        if ( !String.IsNullOrEmpty(_comment)) {
+            sbSql.Append("\n\nCOMMENT ON INDEX ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(_name));
+            sbSql.Append(" IS ");
+            sbSql.Append(_comment);
+            sbSql.Append(';');
         }
 
-        return sbSQL.ToString();
+        return sbSql.ToString();
     }
 
     
-    public void setDefinition(String definition) {
-        this.definition = definition;
+    public void SetDefinition(String definition) {
+        this._definition = definition;
     }
 
     
-    public String getDefinition() {
-        return definition;
+    public String GetDefinition() {
+        return _definition;
     }
 
     
-    public String getDropSQL() {
-        return "DROP INDEX " + PgDiffUtils.getQuotedName(getName()) + ";";
+    public String GetDropSql() {
+        return "DROP INDEX " + PgDiffUtils.GetQuotedName(GetName()) + ";";
     }
 
     
-    public void setName(String name) {
-        this.name = name;
+    public void SetName(String name) {
+        this._name = name;
     }
 
     
-    public String getName() {
-        return name;
+    public String GetName() {
+        return _name;
     }
 
     
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void SetTableName(String tableName) {
+        this._tableName = tableName;
     }
 
     
-    public String getTableName() {
-        return tableName;
+    public String GetTableName() {
+        return _tableName;
     }
 
     
@@ -105,10 +105,10 @@ public class PgIndex {
             equals = true;
         } else if (@object is PgIndex) {
             PgIndex index = (PgIndex) @object;
-            equals = definition.Equals(index.getDefinition())
-                    && name.Equals(index.getName())
-                    && tableName.Equals(index.getTableName())
-                    && unique == index.isUnique();
+            equals = _definition.Equals(index.GetDefinition())
+                    && _name.Equals(index.GetName())
+                    && _tableName.Equals(index.GetTableName())
+                    && _unique == index.IsUnique();
         }
 
         return equals;
@@ -117,17 +117,17 @@ public class PgIndex {
     
     
     public override int GetHashCode() {
-        return (GetType().Name + "|" + definition + "|" + name + "|" + tableName + "|" + unique).GetHashCode();
+        return (GetType().Name + "|" + _definition + "|" + _name + "|" + _tableName + "|" + _unique).GetHashCode();
     }
 
     
-    public bool isUnique() {
-        return unique;
+    public bool IsUnique() {
+        return _unique;
     }
 
     
-    public void setUnique(bool unique) {
-        this.unique = unique;
+    public void SetUnique(bool unique) {
+        this._unique = unique;
     }
 }
 }

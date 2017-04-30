@@ -15,61 +15,61 @@ namespace pgdiff {
 public class PgDiffViews {
 
     
-    public static void createViews(TextWriter writer,
+    public static void CreateViews(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
-        foreach (PgView newView in newSchema.getViews()) {
+        foreach (PgView newView in newSchema.GetViews()) {
             if (oldSchema == null
-                    || !oldSchema.containsView(newView.getName())
-                    || isViewModified(
-                    oldSchema.getView(newView.getName()), newView)) {
-                searchPathHelper.outputSearchPath(writer);
+                    || !oldSchema.ContainsView(newView.GetName())
+                    || IsViewModified(
+                    oldSchema.GetView(newView.GetName()), newView)) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
-                writer.WriteLine(newView.getCreationSQL());
+                writer.WriteLine(newView.GetCreationSql());
             }
         }
     }
 
     
-    public static void dropViews(TextWriter writer,
+    public static void DropViews(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        foreach (PgView oldView in oldSchema.getViews()) {
-            PgView newView = newSchema.getView(oldView.getName());
+        foreach (PgView oldView in oldSchema.GetViews()) {
+            PgView newView = newSchema.GetView(oldView.GetName());
 
-            if (newView == null || isViewModified(oldView, newView)) {
-                searchPathHelper.outputSearchPath(writer);
+            if (newView == null || IsViewModified(oldView, newView)) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
-                writer.WriteLine(oldView.getDropSQL());
+                writer.WriteLine(oldView.GetDropSql());
             }
         }
     }
 
     
-    private static bool isViewModified(PgView oldView,
+    private static bool IsViewModified(PgView oldView,
             PgView newView) {
         String[] oldViewColumnNames;
 
-        if (oldView.getColumnNames() == null|| oldView.getColumnNames().Count == 0) {
+        if (oldView.GetColumnNames() == null|| oldView.GetColumnNames().Count == 0) {
             oldViewColumnNames = null;
         } else {
-            oldViewColumnNames = oldView.getColumnNames().ToArray();
+            oldViewColumnNames = oldView.GetColumnNames().ToArray();
         }
 
         String[] newViewColumnNames;
 
-        if (newView.getColumnNames() == null || newView.getColumnNames().Count == 0) {
+        if (newView.GetColumnNames() == null || newView.GetColumnNames().Count == 0) {
             newViewColumnNames = null;
         } else {
-            newViewColumnNames = newView.getColumnNames().ToArray();
+            newViewColumnNames = newView.GetColumnNames().ToArray();
         }
 
         if (oldViewColumnNames == null && newViewColumnNames == null) {
-            return !oldView.getQuery().Trim().Equals(newView.getQuery().Trim());
+            return !oldView.GetQuery().Trim().Equals(newView.GetQuery().Trim());
         }
         else
         {
@@ -78,54 +78,54 @@ public class PgDiffViews {
     }
 
     
-    public static void alterViews(TextWriter writer,
+    public static void AlterViews(TextWriter writer,
             PgSchema oldSchema, PgSchema newSchema,
             SearchPathHelper searchPathHelper) {
         if (oldSchema == null) {
             return;
         }
 
-        foreach (PgView oldView in oldSchema.getViews()) {
-            PgView newView = newSchema.getView(oldView.getName());
+        foreach (PgView oldView in oldSchema.GetViews()) {
+            PgView newView = newSchema.GetView(oldView.GetName());
 
             if (newView == null) {
                 continue;
             }
 
-            diffDefaultValues(writer, oldView, newView, searchPathHelper);
+            DiffDefaultValues(writer, oldView, newView, searchPathHelper);
 
-            if (oldView.getComment() == null
-                    && newView.getComment() != null
-                    || oldView.getComment() != null
-                    && newView.getComment() != null
-                    && !oldView.getComment().Equals(
-                    newView.getComment())) {
-                searchPathHelper.outputSearchPath(writer);
+            if (oldView.GetComment() == null
+                    && newView.GetComment() != null
+                    || oldView.GetComment() != null
+                    && newView.GetComment() != null
+                    && !oldView.GetComment().Equals(
+                    newView.GetComment())) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
                 writer.Write("COMMENT ON VIEW ");
                 writer.Write(
-                        PgDiffUtils.getQuotedName(newView.getName()));
+                        PgDiffUtils.GetQuotedName(newView.GetName()));
                 writer.Write(" IS ");
-                writer.Write(newView.getComment());
+                writer.Write(newView.GetComment());
                 writer.WriteLine(';');
-            } else if (oldView.getComment() != null
-                    && newView.getComment() == null) {
-                searchPathHelper.outputSearchPath(writer);
+            } else if (oldView.GetComment() != null
+                    && newView.GetComment() == null) {
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
                 writer.Write("COMMENT ON VIEW ");
-                writer.Write(PgDiffUtils.getQuotedName(newView.getName()));
+                writer.Write(PgDiffUtils.GetQuotedName(newView.GetName()));
                 writer.WriteLine(" IS NULL;");
             }
 
             List<String> columnNames = new List<string>();
 
-            foreach (PgView.ColumnComment columnComment in newView.getColumnComments()) {
-                columnNames.Add(columnComment.getColumnName());
+            foreach (PgView.ColumnComment columnComment in newView.GetColumnComments()) {
+                columnNames.Add(columnComment.GetColumnName());
             }
 
-            foreach (PgView.ColumnComment columnComment in oldView.getColumnComments()) {
-                if (!columnNames.Contains(columnComment.getColumnName())) {
-                    columnNames.Add(columnComment.getColumnName());
+            foreach (PgView.ColumnComment columnComment in oldView.GetColumnComments()) {
+                if (!columnNames.Contains(columnComment.GetColumnName())) {
+                    columnNames.Add(columnComment.GetColumnName());
                 }
             }
 
@@ -133,15 +133,15 @@ public class PgDiffViews {
                 PgView.ColumnComment oldColumnComment = null;
                 PgView.ColumnComment newColumnComment = null;
 
-                foreach (PgView.ColumnComment columnComment in oldView.getColumnComments()) {
-                    if (columnName.Equals(columnComment.getColumnName())) {
+                foreach (PgView.ColumnComment columnComment in oldView.GetColumnComments()) {
+                    if (columnName.Equals(columnComment.GetColumnName())) {
                         oldColumnComment = columnComment;
                         break;
                     }
                 }
 
-                foreach (PgView.ColumnComment columnComment in newView.getColumnComments()) {
-                    if (columnName.Equals(columnComment.getColumnName())) {
+                foreach (PgView.ColumnComment columnComment in newView.GetColumnComments()) {
+                    if (columnName.Equals(columnComment.GetColumnName())) {
                         newColumnComment = columnComment;
                         break;
                     }
@@ -149,27 +149,27 @@ public class PgDiffViews {
 
                 if (oldColumnComment == null && newColumnComment != null
                         || oldColumnComment != null && newColumnComment != null
-                        && !oldColumnComment.getComment().Equals(
-                        newColumnComment.getComment())) {
-                    searchPathHelper.outputSearchPath(writer);
+                        && !oldColumnComment.GetComment().Equals(
+                        newColumnComment.GetComment())) {
+                    searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
                     writer.Write("COMMENT ON COLUMN ");
-                    writer.Write(PgDiffUtils.getQuotedName(newView.getName()));
+                    writer.Write(PgDiffUtils.GetQuotedName(newView.GetName()));
                     writer.Write('.');
-                    writer.Write(PgDiffUtils.getQuotedName(
-                            newColumnComment.getColumnName()));
+                    writer.Write(PgDiffUtils.GetQuotedName(
+                            newColumnComment.GetColumnName()));
                     writer.Write(" IS ");
-                    writer.Write(newColumnComment.getComment());
+                    writer.Write(newColumnComment.GetComment());
                     writer.WriteLine(';');
                 } else if (oldColumnComment != null
                         && newColumnComment == null) {
-                    searchPathHelper.outputSearchPath(writer);
+                    searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
                     writer.Write("COMMENT ON COLUMN ");
-                    writer.Write(PgDiffUtils.getQuotedName(newView.getName()));
+                    writer.Write(PgDiffUtils.GetQuotedName(newView.GetName()));
                     writer.Write('.');
-                    writer.Write(PgDiffUtils.getQuotedName(
-                            oldColumnComment.getColumnName()));
+                    writer.Write(PgDiffUtils.GetQuotedName(
+                            oldColumnComment.GetColumnName()));
                     writer.WriteLine(" IS NULL;");
                 }
             }
@@ -177,34 +177,34 @@ public class PgDiffViews {
     }
 
     
-    private static void diffDefaultValues(TextWriter writer,
+    private static void DiffDefaultValues(TextWriter writer,
             PgView oldView, PgView newView,
             SearchPathHelper searchPathHelper) {
         List<PgView.DefaultValue> oldValues =
-                oldView.getDefaultValues();
+                oldView.GetDefaultValues();
         List<PgView.DefaultValue> newValues =
-                newView.getDefaultValues();
+                newView.GetDefaultValues();
 
         // modify defaults that are in old view
         foreach(PgView.DefaultValue oldValue in oldValues) {
             bool found = false;
 
             foreach(PgView.DefaultValue newValue in newValues) {
-                if (oldValue.getColumnName().Equals(newValue.getColumnName())) {
+                if (oldValue.GetColumnName().Equals(newValue.GetColumnName())) {
                     found = true;
 
-                    if (!oldValue.getDefaultValue().Equals(
-                            newValue.getDefaultValue())) {
-                        searchPathHelper.outputSearchPath(writer);
+                    if (!oldValue.GetDefaultValue().Equals(
+                            newValue.GetDefaultValue())) {
+                        searchPathHelper.OutputSearchPath(writer);
                         writer.WriteLine();
                         writer.Write("ALTER TABLE ");
                         writer.Write(
-                                PgDiffUtils.getQuotedName(newView.getName()));
+                                PgDiffUtils.GetQuotedName(newView.GetName()));
                         writer.Write(" ALTER COLUMN ");
-                        writer.Write(PgDiffUtils.getQuotedName(
-                                newValue.getColumnName()));
+                        writer.Write(PgDiffUtils.GetQuotedName(
+                                newValue.GetColumnName()));
                         writer.Write(" SET DEFAULT ");
-                        writer.Write(newValue.getDefaultValue());
+                        writer.Write(newValue.GetDefaultValue());
                         writer.WriteLine(';');
                     }
 
@@ -213,13 +213,13 @@ public class PgDiffViews {
             }
 
             if (!found) {
-                searchPathHelper.outputSearchPath(writer);
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
                 writer.Write("ALTER TABLE ");
-                writer.Write(PgDiffUtils.getQuotedName(newView.getName()));
+                writer.Write(PgDiffUtils.GetQuotedName(newView.GetName()));
                 writer.Write(" ALTER COLUMN ");
-                writer.Write(PgDiffUtils.getQuotedName(
-                        oldValue.getColumnName()));
+                writer.Write(PgDiffUtils.GetQuotedName(
+                        oldValue.GetColumnName()));
                 writer.WriteLine(" DROP DEFAULT;");
             }
         }
@@ -229,7 +229,7 @@ public class PgDiffViews {
             bool found = false;
 
             foreach(PgView.DefaultValue oldValue in oldValues) {
-                if (newValue.getColumnName().Equals(oldValue.getColumnName())) {
+                if (newValue.GetColumnName().Equals(oldValue.GetColumnName())) {
                     found = true;
                     break;
                 }
@@ -239,14 +239,14 @@ public class PgDiffViews {
                 continue;
             }
 
-            searchPathHelper.outputSearchPath(writer);
+            searchPathHelper.OutputSearchPath(writer);
             writer.WriteLine();
             writer.Write("ALTER TABLE ");
-            writer.Write(PgDiffUtils.getQuotedName(newView.getName()));
+            writer.Write(PgDiffUtils.GetQuotedName(newView.GetName()));
             writer.Write(" ALTER COLUMN ");
-            writer.Write(PgDiffUtils.getQuotedName(newValue.getColumnName()));
+            writer.Write(PgDiffUtils.GetQuotedName(newValue.GetColumnName()));
             writer.Write(" SET DEFAULT ");
-            writer.Write(newValue.getDefaultValue());
+            writer.Write(newValue.GetDefaultValue());
             writer.WriteLine(';');
         }
     }

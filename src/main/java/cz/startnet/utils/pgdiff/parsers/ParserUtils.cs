@@ -12,40 +12,40 @@ namespace pgdiff.parsers {
 public class ParserUtils {
 
     
-    public static String getObjectName(String name) {
-        String[] names = splitNames(name);
+    public static String GetObjectName(String name) {
+        String[] names = SplitNames(name);
 
         return names[names.Length - 1];
     }
 
     
-    public static String getSecondObjectName(String name) {
-        String[] names = splitNames(name);
+    public static String GetSecondObjectName(String name) {
+        String[] names = SplitNames(name);
 
         return names[names.Length - 2];
     }
 
     
-    public static String getThirdObjectName(String name) {
-        String[] names = splitNames(name);
+    public static String GetThirdObjectName(String name) {
+        String[] names = SplitNames(name);
 
         return names.Length >= 3 ? names[names.Length - 3] : null;
     }
 
     
-    public static String getSchemaName(String name,
+    public static String GetSchemaName(String name,
             PgDatabase database) {
-        String[] names = splitNames(name);
+        String[] names = SplitNames(name);
 
         if (names.Length < 2) {
-            return database.getDefaultSchema().getName();
+            return database.GetDefaultSchema().GetName();
         } else {
             return names[0];
         }
     }
 
     
-    public static String generateName(String prefix,
+    public static String GenerateName(String prefix,
             List<String> names, String postfix) {
         String adjName;
 
@@ -81,7 +81,7 @@ public class ParserUtils {
     }
 
     
-    private static String[] splitNames(String @string) {
+    private static String[] SplitNames(String @string) {
         if (@string.IndexOf('"') == -1) {
             return @string.Split('.');
         } else {

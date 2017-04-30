@@ -7,7 +7,7 @@ namespace pgdiff {
 
 public class PgDiffUtils {
 
-    private static String[] KEYWORDS = new String[]{
+    private static String[] _keywords = new String[]{
         "ABS",
         "ABSOLUTE",
         "ACTION",
@@ -466,7 +466,7 @@ public class PgDiffUtils {
         "ZONE"};
 
     
-    public static String getQuotedName(String name,
+    public static String GetQuotedName(String name,
             bool excludeKeywords) {
         if (name.IndexOf('-') != -1 || name.IndexOf('.') != -1) {
             return '"' + name + '"';
@@ -486,7 +486,7 @@ public class PgDiffUtils {
 
         String upperName = name.ToUpper();
 
-        foreach (String keyword in KEYWORDS) {
+        foreach (String keyword in _keywords) {
             if (keyword.Equals(upperName)) {
                 return '"' + name + '"';
             }
@@ -496,8 +496,8 @@ public class PgDiffUtils {
     }
 
     
-    public static String getQuotedName(String name) {
-        return getQuotedName(name, false);
+    public static String GetQuotedName(String name) {
+        return GetQuotedName(name, false);
     }
 
     

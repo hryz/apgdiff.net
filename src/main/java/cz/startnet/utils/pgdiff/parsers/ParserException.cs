@@ -7,7 +7,7 @@ namespace pgdiff.parsers {
 public class ParserException : Exception {
 
     
-    private static long serialVersionUID = 1L;
+    private static long _serialVersionUid = 1L;
 
     
     public ParserException() {

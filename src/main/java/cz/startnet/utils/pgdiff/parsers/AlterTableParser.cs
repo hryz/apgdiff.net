@@ -13,37 +13,37 @@ namespace pgdiff.parsers {
 public class AlterTableParser {
 
     
-    public static void parse(PgDatabase database,
+    public static void Parse(PgDatabase database,
             String statement, bool outputIgnoredStatements) {
         Parser parser = new Parser(statement);
-        parser.expect("ALTER", "TABLE");
-        parser.expectOptional("ONLY");
+        parser.Expect("ALTER", "TABLE");
+        parser.ExpectOptional("ONLY");
 
-        String tableName = parser.parseIdentifier();
+        String tableName = parser.ParseIdentifier();
         String schemaName =
-                ParserUtils.getSchemaName(tableName, database);
-        PgSchema schema = database.getSchema(schemaName);
+                ParserUtils.GetSchemaName(tableName, database);
+        PgSchema schema = database.GetSchema(schemaName);
 
         if (schema == null) {
             throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
         }
 
-        String objectName = ParserUtils.getObjectName(tableName);
-        PgTable table = schema.getTable(objectName);
+        String objectName = ParserUtils.GetObjectName(tableName);
+        PgTable table = schema.GetTable(objectName);
 
         if (table == null) {
-            PgView view = schema.getView(objectName);
+            PgView view = schema.GetView(objectName);
 
             if (view != null) {
-                parseView(parser, view, outputIgnoredStatements, tableName,
+                ParseView(parser, view, outputIgnoredStatements, tableName,
                         database);
                 return;
             }
 
-            PgSequence sequence = schema.getSequence(objectName);
+            PgSequence sequence = schema.GetSequence(objectName);
 
             if (sequence != null) {
-                parseSequence(parser, sequence, outputIgnoredStatements,
+                ParseSequence(parser, sequence, outputIgnoredStatements,
                         tableName, database);
                 return;
             }
@@ -51,262 +51,262 @@ public class AlterTableParser {
             throw new Exception(String.Format(Resources.CannotFindObject, tableName,statement));
         }
 
-        while (!parser.expectOptional(";")) {
-            if (parser.expectOptional("ALTER")) {
-                parseAlterColumn(parser, table);
-            } else if (parser.expectOptional("CLUSTER", "ON")) {
-                table.setClusterIndexName(
-                        ParserUtils.getObjectName(parser.parseIdentifier()));
-            } else if (parser.expectOptional("OWNER", "TO")) {
+        while (!parser.ExpectOptional(";")) {
+            if (parser.ExpectOptional("ALTER")) {
+                ParseAlterColumn(parser, table);
+            } else if (parser.ExpectOptional("CLUSTER", "ON")) {
+                table.SetClusterIndexName(
+                        ParserUtils.GetObjectName(parser.ParseIdentifier()));
+            } else if (parser.ExpectOptional("OWNER", "TO")) {
                 // we do not parse this one so we just consume the identifier
                 if (outputIgnoredStatements) {
-                    database.addIgnoredStatement("ALTER TABLE " + tableName
-                            + " OWNER TO " + parser.parseIdentifier() + ';');
+                    database.AddIgnoredStatement("ALTER TABLE " + tableName
+                            + " OWNER TO " + parser.ParseIdentifier() + ';');
                 } else {
-                    parser.parseIdentifier();
+                    parser.ParseIdentifier();
                 }
-            } else if (parser.expectOptional("ADD")) {
-                if (parser.expectOptional("FOREIGN", "KEY")) {
-                    parseAddForeignKey(parser, table);
-                } else if (parser.expectOptional("CONSTRAINT")) {
-                    parseAddConstraint(parser, table, schema);
+            } else if (parser.ExpectOptional("ADD")) {
+                if (parser.ExpectOptional("FOREIGN", "KEY")) {
+                    ParseAddForeignKey(parser, table);
+                } else if (parser.ExpectOptional("CONSTRAINT")) {
+                    ParseAddConstraint(parser, table, schema);
                 } else {
-                    parser.throwUnsupportedCommand();
+                    parser.ThrowUnsupportedCommand();
                 }
-            } else if (parser.expectOptional("ENABLE")) {
-                parseEnable(
+            } else if (parser.ExpectOptional("ENABLE")) {
+                ParseEnable(
                         parser, outputIgnoredStatements, tableName, database);
-            } else if (parser.expectOptional("DISABLE")) {
-                parseDisable(
+            } else if (parser.ExpectOptional("DISABLE")) {
+                ParseDisable(
                         parser, outputIgnoredStatements, tableName, database);
             } else {
-                parser.throwUnsupportedCommand();
+                parser.ThrowUnsupportedCommand();
             }
 
-            if (parser.expectOptional(";")) {
+            if (parser.ExpectOptional(";")) {
                 break;
             } else {
-                parser.expect(",");
+                parser.Expect(",");
             }
         }
     }
 
     
-    private static void parseEnable(Parser parser,
+    private static void ParseEnable(Parser parser,
             bool outputIgnoredStatements, String tableName,
             PgDatabase database) {
-        if (parser.expectOptional("REPLICA")) {
-            if (parser.expectOptional("TRIGGER")) {
+        if (parser.ExpectOptional("REPLICA")) {
+            if (parser.ExpectOptional("TRIGGER")) {
                 if (outputIgnoredStatements) {
-                    database.addIgnoredStatement("ALTER TABLE " + tableName
+                    database.AddIgnoredStatement("ALTER TABLE " + tableName
                             + " ENABLE REPLICA TRIGGER "
-                            + parser.parseIdentifier() + ';');
+                            + parser.ParseIdentifier() + ';');
                 } else {
-                    parser.parseIdentifier();
+                    parser.ParseIdentifier();
                 }
-            } else if (parser.expectOptional("RULE")) {
+            } else if (parser.ExpectOptional("RULE")) {
                 if (outputIgnoredStatements) {
-                    database.addIgnoredStatement("ALTER TABLE " + tableName
+                    database.AddIgnoredStatement("ALTER TABLE " + tableName
                             + " ENABLE REPLICA RULE "
-                            + parser.parseIdentifier() + ';');
+                            + parser.ParseIdentifier() + ';');
                 } else {
-                    parser.parseIdentifier();
+                    parser.ParseIdentifier();
                 }
             } else {
-                parser.throwUnsupportedCommand();
+                parser.ThrowUnsupportedCommand();
             }
-        } else if (parser.expectOptional("ALWAYS")) {
-            if (parser.expectOptional("TRIGGER")) {
+        } else if (parser.ExpectOptional("ALWAYS")) {
+            if (parser.ExpectOptional("TRIGGER")) {
                 if (outputIgnoredStatements) {
-                    database.addIgnoredStatement("ALTER TABLE " + tableName
+                    database.AddIgnoredStatement("ALTER TABLE " + tableName
                             + " ENABLE ALWAYS TRIGGER "
-                            + parser.parseIdentifier() + ';');
+                            + parser.ParseIdentifier() + ';');
                 } else {
-                    parser.parseIdentifier();
+                    parser.ParseIdentifier();
                 }
-            } else if (parser.expectOptional("RULE")) {
+            } else if (parser.ExpectOptional("RULE")) {
                 if (outputIgnoredStatements) {
-                    database.addIgnoredStatement("ALTER TABLE " + tableName
-                            + " ENABLE RULE " + parser.parseIdentifier() + ';');
+                    database.AddIgnoredStatement("ALTER TABLE " + tableName
+                            + " ENABLE RULE " + parser.ParseIdentifier() + ';');
                 } else {
-                    parser.parseIdentifier();
+                    parser.ParseIdentifier();
                 }
             } else {
-                parser.throwUnsupportedCommand();
+                parser.ThrowUnsupportedCommand();
             }
         }
     }
 
     
-    private static void parseDisable(Parser parser,
+    private static void ParseDisable(Parser parser,
             bool outputIgnoredStatements, String tableName,
             PgDatabase database) {
-        if (parser.expectOptional("TRIGGER")) {
+        if (parser.ExpectOptional("TRIGGER")) {
             if (outputIgnoredStatements) {
-                database.addIgnoredStatement("ALTER TABLE " + tableName
-                        + " DISABLE TRIGGER " + parser.parseIdentifier() + ';');
+                database.AddIgnoredStatement("ALTER TABLE " + tableName
+                        + " DISABLE TRIGGER " + parser.ParseIdentifier() + ';');
             } else {
-                parser.parseIdentifier();
+                parser.ParseIdentifier();
             }
-        } else if (parser.expectOptional("RULE")) {
+        } else if (parser.ExpectOptional("RULE")) {
             if (outputIgnoredStatements) {
-                database.addIgnoredStatement("ALTER TABLE " + tableName
-                        + " DISABLE RULE " + parser.parseIdentifier() + ';');
+                database.AddIgnoredStatement("ALTER TABLE " + tableName
+                        + " DISABLE RULE " + parser.ParseIdentifier() + ';');
             } else {
-                parser.parseIdentifier();
+                parser.ParseIdentifier();
             }
         } else {
-            parser.throwUnsupportedCommand();
+            parser.ThrowUnsupportedCommand();
         }
     }
 
     
-    private static void parseAddConstraint(Parser parser,
+    private static void ParseAddConstraint(Parser parser,
             PgTable table, PgSchema schema) {
         String constraintName =
-                ParserUtils.getObjectName(parser.parseIdentifier());
+                ParserUtils.GetObjectName(parser.ParseIdentifier());
         PgConstraint constraint = new PgConstraint(constraintName);
-        constraint.setTableName(table.getName());
-        table.addConstraint(constraint);
+        constraint.SetTableName(table.GetName());
+        table.AddConstraint(constraint);
 
-        if (parser.expectOptional("PRIMARY", "KEY")) {
-            schema.addPrimaryKey(constraint);
-            constraint.setDefinition("PRIMARY KEY " + parser.getExpression());
+        if (parser.ExpectOptional("PRIMARY", "KEY")) {
+            schema.AddPrimaryKey(constraint);
+            constraint.SetDefinition("PRIMARY KEY " + parser.GetExpression());
         } else {
-            constraint.setDefinition(parser.getExpression());
+            constraint.SetDefinition(parser.GetExpression());
         }
     }
 
     
-    private static void parseAlterColumn(Parser parser,
+    private static void ParseAlterColumn(Parser parser,
             PgTable table) {
-        parser.expectOptional("COLUMN");
+        parser.ExpectOptional("COLUMN");
 
         String columnName =
-                ParserUtils.getObjectName(parser.parseIdentifier());
+                ParserUtils.GetObjectName(parser.ParseIdentifier());
 
-        if (parser.expectOptional("SET")) {
-            if (parser.expectOptional("STATISTICS")) {
-                PgColumn column = table.getColumn(columnName);
+        if (parser.ExpectOptional("SET")) {
+            if (parser.ExpectOptional("STATISTICS")) {
+                PgColumn column = table.GetColumn(columnName);
 
                 if (column == null) {
-                    throw new Exception(String.Format(Resources.CannotFindTableColumn, columnName, table.getName(), parser.getString()));
+                    throw new Exception(String.Format(Resources.CannotFindTableColumn, columnName, table.GetName(), parser.GetString()));
                 }
 
-                column.setStatistics(parser.parseInteger());
-            } else if (parser.expectOptional("DEFAULT")) {
-                String defaultValue = parser.getExpression();
+                column.SetStatistics(parser.ParseInteger());
+            } else if (parser.ExpectOptional("DEFAULT")) {
+                String defaultValue = parser.GetExpression();
 
-                if (table.containsColumn(columnName)) {
-                    PgColumn column = table.getColumn(columnName);
+                if (table.ContainsColumn(columnName)) {
+                    PgColumn column = table.GetColumn(columnName);
 
                     if (column == null) {
-                        throw new Exception(String.Format(Resources.CannotFindTableColumn, columnName, table.getName(), parser.getString()));
+                        throw new Exception(String.Format(Resources.CannotFindTableColumn, columnName, table.GetName(), parser.GetString()));
                     }
 
-                    column.setDefaultValue(defaultValue);
+                    column.SetDefaultValue(defaultValue);
                 } else {
-                    throw new ParserException(String.Format( Resources.CannotFindColumnInTable, columnName, table.getName()));
+                    throw new ParserException(String.Format( Resources.CannotFindColumnInTable, columnName, table.GetName()));
                 }
-            } else if (parser.expectOptional("STORAGE")) {
-                PgColumn column = table.getColumn(columnName);
+            } else if (parser.ExpectOptional("STORAGE")) {
+                PgColumn column = table.GetColumn(columnName);
 
                 if (column == null) {
-                    throw new Exception(String.Format( Resources.CannotFindTableColumn,columnName, table.getName(), parser.getString()));
+                    throw new Exception(String.Format( Resources.CannotFindTableColumn,columnName, table.GetName(), parser.GetString()));
                 }
 
-                if (parser.expectOptional("PLAIN")) {
-                    column.setStorage("PLAIN");
-                } else if (parser.expectOptional("EXTERNAL")) {
-                    column.setStorage("EXTERNAL");
-                } else if (parser.expectOptional("EXTENDED")) {
-                    column.setStorage("EXTENDED");
-                } else if (parser.expectOptional("MAIN")) {
-                    column.setStorage("MAIN");
+                if (parser.ExpectOptional("PLAIN")) {
+                    column.SetStorage("PLAIN");
+                } else if (parser.ExpectOptional("EXTERNAL")) {
+                    column.SetStorage("EXTERNAL");
+                } else if (parser.ExpectOptional("EXTENDED")) {
+                    column.SetStorage("EXTENDED");
+                } else if (parser.ExpectOptional("MAIN")) {
+                    column.SetStorage("MAIN");
                 } else {
-                    parser.throwUnsupportedCommand();
+                    parser.ThrowUnsupportedCommand();
                 }
             } else {
-                parser.throwUnsupportedCommand();
+                parser.ThrowUnsupportedCommand();
             }
         } else {
-            parser.throwUnsupportedCommand();
+            parser.ThrowUnsupportedCommand();
         }
     }
 
     
-    private static void parseAddForeignKey(Parser parser,
+    private static void ParseAddForeignKey(Parser parser,
             PgTable table) {
         List<String> columnNames = new List<string>();
-        parser.expect("(");
+        parser.Expect("(");
 
-        while (!parser.expectOptional(")")) {
-            columnNames.Add(ParserUtils.getObjectName(parser.parseIdentifier()));
+        while (!parser.ExpectOptional(")")) {
+            columnNames.Add(ParserUtils.GetObjectName(parser.ParseIdentifier()));
 
-            if (parser.expectOptional(")")) {
+            if (parser.ExpectOptional(")")) {
                 break;
             } else {
-                parser.expect(",");
+                parser.Expect(",");
             }
         }
 
-        String constraintName = ParserUtils.generateName(
-                table.getName() + "_", columnNames, "_fkey");
+        String constraintName = ParserUtils.GenerateName(
+                table.GetName() + "_", columnNames, "_fkey");
         PgConstraint constraint =
                 new PgConstraint(constraintName);
-        table.addConstraint(constraint);
-        constraint.setDefinition(parser.getExpression());
-        constraint.setTableName(table.getName());
+        table.AddConstraint(constraint);
+        constraint.SetDefinition(parser.GetExpression());
+        constraint.SetTableName(table.GetName());
     }
 
     
-    private static void parseView(Parser parser, PgView view,
+    private static void ParseView(Parser parser, PgView view,
             bool outputIgnoredStatements, String viewName,
             PgDatabase database) {
-        while (!parser.expectOptional(";")) {
-            if (parser.expectOptional("ALTER")) {
-                parser.expectOptional("COLUMN");
+        while (!parser.ExpectOptional(";")) {
+            if (parser.ExpectOptional("ALTER")) {
+                parser.ExpectOptional("COLUMN");
 
                 String columnName =
-                        ParserUtils.getObjectName(parser.parseIdentifier());
+                        ParserUtils.GetObjectName(parser.ParseIdentifier());
 
-                if (parser.expectOptional("SET", "DEFAULT")) {
-                    String expression = parser.getExpression();
-                    view.addColumnDefaultValue(columnName, expression);
-                } else if (parser.expectOptional("DROP", "DEFAULT")) {
-                    view.removeColumnDefaultValue(columnName);
+                if (parser.ExpectOptional("SET", "DEFAULT")) {
+                    String expression = parser.GetExpression();
+                    view.AddColumnDefaultValue(columnName, expression);
+                } else if (parser.ExpectOptional("DROP", "DEFAULT")) {
+                    view.RemoveColumnDefaultValue(columnName);
                 } else {
-                    parser.throwUnsupportedCommand();
+                    parser.ThrowUnsupportedCommand();
                 }
-            } else if (parser.expectOptional("OWNER", "TO")) {
+            } else if (parser.ExpectOptional("OWNER", "TO")) {
                 // we do not parse this one so we just consume the identifier
                 if (outputIgnoredStatements) {
-                    database.addIgnoredStatement("ALTER TABLE " + viewName
-                            + " OWNER TO " + parser.parseIdentifier() + ';');
+                    database.AddIgnoredStatement("ALTER TABLE " + viewName
+                            + " OWNER TO " + parser.ParseIdentifier() + ';');
                 } else {
-                    parser.parseIdentifier();
+                    parser.ParseIdentifier();
                 }
             } else {
-                parser.throwUnsupportedCommand();
+                parser.ThrowUnsupportedCommand();
             }
         }
     }
 
     
-    private static void parseSequence(Parser parser,
+    private static void ParseSequence(Parser parser,
             PgSequence sequence, bool outputIgnoredStatements,
             String sequenceName, PgDatabase database) {
-        while (!parser.expectOptional(";")) {
-            if (parser.expectOptional("OWNER", "TO")) {
+        while (!parser.ExpectOptional(";")) {
+            if (parser.ExpectOptional("OWNER", "TO")) {
                 // we do not parse this one so we just consume the identifier
                 if (outputIgnoredStatements) {
-                    database.addIgnoredStatement("ALTER TABLE " + sequenceName
-                            + " OWNER TO " + parser.parseIdentifier() + ';');
+                    database.AddIgnoredStatement("ALTER TABLE " + sequenceName
+                            + " OWNER TO " + parser.ParseIdentifier() + ';');
                 } else {
-                    parser.parseIdentifier();
+                    parser.ParseIdentifier();
                 }
             } else {
-                parser.throwUnsupportedCommand();
+                parser.ThrowUnsupportedCommand();
             }
         }
     }

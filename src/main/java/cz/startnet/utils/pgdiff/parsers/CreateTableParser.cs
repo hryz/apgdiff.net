@@ -10,97 +10,97 @@ namespace pgdiff.parsers {
 public class CreateTableParser {
 
     
-    public static void parse(PgDatabase database,
+    public static void Parse(PgDatabase database,
             String statement) {
         Parser parser = new Parser(statement);
-        parser.expect("CREATE", "TABLE");
+        parser.Expect("CREATE", "TABLE");
 
         // Optional IF NOT EXISTS, irrelevant for our purposes
-        parser.expectOptional("IF", "NOT", "EXISTS");
+        parser.ExpectOptional("IF", "NOT", "EXISTS");
 
-        String tableName = parser.parseIdentifier();
-        PgTable table = new PgTable(ParserUtils.getObjectName(tableName));
+        String tableName = parser.ParseIdentifier();
+        PgTable table = new PgTable(ParserUtils.GetObjectName(tableName));
         String schemaName =
-                ParserUtils.getSchemaName(tableName, database);
-        PgSchema schema = database.getSchema(schemaName);
+                ParserUtils.GetSchemaName(tableName, database);
+        PgSchema schema = database.GetSchema(schemaName);
 
         if (schema == null) {
             throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
         }
 
-        schema.addTable(table);
+        schema.AddTable(table);
 
-        parser.expect("(");
+        parser.Expect("(");
 
-        while (!parser.expectOptional(")")) {
-            if (parser.expectOptional("CONSTRAINT")) {
-                parseConstraint(parser, table);
+        while (!parser.ExpectOptional(")")) {
+            if (parser.ExpectOptional("CONSTRAINT")) {
+                ParseConstraint(parser, table);
             } else {
-                parseColumn(parser, table);
+                ParseColumn(parser, table);
             }
 
-            if (parser.expectOptional(")")) {
+            if (parser.ExpectOptional(")")) {
                 break;
             } else {
-                parser.expect(",");
+                parser.Expect(",");
             }
         }
 
-        while (!parser.expectOptional(";")) {
-            if (parser.expectOptional("INHERITS")) {
-                parseInherits(parser, table);
-            } else if (parser.expectOptional("WITHOUT")) {
-                table.setWith("OIDS=false");
-            } else if (parser.expectOptional("WITH")) {
-                if (parser.expectOptional("OIDS")
-                        || parser.expectOptional("OIDS=true")) {
-                    table.setWith("OIDS=true");
-                } else if (parser.expectOptional("OIDS=false")) {
-                    table.setWith("OIDS=false");
+        while (!parser.ExpectOptional(";")) {
+            if (parser.ExpectOptional("INHERITS")) {
+                ParseInherits(parser, table);
+            } else if (parser.ExpectOptional("WITHOUT")) {
+                table.SetWith("OIDS=false");
+            } else if (parser.ExpectOptional("WITH")) {
+                if (parser.ExpectOptional("OIDS")
+                        || parser.ExpectOptional("OIDS=true")) {
+                    table.SetWith("OIDS=true");
+                } else if (parser.ExpectOptional("OIDS=false")) {
+                    table.SetWith("OIDS=false");
                 } else {
-                    table.setWith(parser.getExpression());
+                    table.SetWith(parser.GetExpression());
                 }
-            } else if (parser.expectOptional("TABLESPACE")) {
-                table.setTablespace(parser.parseString());
+            } else if (parser.ExpectOptional("TABLESPACE")) {
+                table.SetTablespace(parser.ParseString());
             } else {
-                parser.throwUnsupportedCommand();
+                parser.ThrowUnsupportedCommand();
             }
         }
     }
 
     
-    private static void parseInherits(Parser parser,
+    private static void ParseInherits(Parser parser,
             PgTable table) {
-        parser.expect("(");
+        parser.Expect("(");
 
-        while (!parser.expectOptional(")")) {
-            table.addInherits(
-                    ParserUtils.getObjectName(parser.parseIdentifier()));
+        while (!parser.ExpectOptional(")")) {
+            table.AddInherits(
+                    ParserUtils.GetObjectName(parser.ParseIdentifier()));
 
-            if (parser.expectOptional(")")) {
+            if (parser.ExpectOptional(")")) {
                 break;
             } else {
-                parser.expect(",");
+                parser.Expect(",");
             }
         }
     }
 
     
-    private static void parseConstraint(Parser parser,
+    private static void ParseConstraint(Parser parser,
             PgTable table) {
         PgConstraint constraint = new PgConstraint(
-                ParserUtils.getObjectName(parser.parseIdentifier()));
-        table.addConstraint(constraint);
-        constraint.setDefinition(parser.getExpression());
-        constraint.setTableName(table.getName());
+                ParserUtils.GetObjectName(parser.ParseIdentifier()));
+        table.AddConstraint(constraint);
+        constraint.SetDefinition(parser.GetExpression());
+        constraint.SetTableName(table.GetName());
     }
 
     
-    private static void parseColumn(Parser parser, PgTable table) {
+    private static void ParseColumn(Parser parser, PgTable table) {
         PgColumn column = new PgColumn(
-                ParserUtils.getObjectName(parser.parseIdentifier()));
-        table.addColumn(column);
-        column.parseDefinition(parser.getExpression());
+                ParserUtils.GetObjectName(parser.ParseIdentifier()));
+        table.AddColumn(column);
+        column.ParseDefinition(parser.GetExpression());
     }
 
     

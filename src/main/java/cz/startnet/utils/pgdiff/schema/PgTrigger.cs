@@ -13,126 +13,126 @@ namespace pgdiff.schema {
 public class PgTrigger {
 
     
-    public String function { get; set; }
+    public String Function { get; set; }
 
-    public String name { get; set; }
+    public String Name { get; set; }
 
-    public String tableName { get; set; }
+    public String TableName { get; set; }
 
-    public bool before { get; set; } = true;
+    public bool Before { get; set; } = true;
 
-    public bool forEachRow { get; set; }
+    public bool ForEachRow { get; set; }
 
-    public bool onDelete { get; set; }
+    public bool OnDelete { get; set; }
 
-    public bool onInsert { get; set; }
+    public bool OnInsert { get; set; }
 
-    public bool onUpdate { get; set; }
+    public bool OnUpdate { get; set; }
 
-    public bool onTruncate { get; set; }
-
-
-    public List<String> updateColumns { get; set; } = new List<string>();
-
-    public void addUpdateColumn(string item) => updateColumns.Add(item);
-
-    public String when { get; set; }
-
-    public String comment { get; set; }
+    public bool OnTruncate { get; set; }
 
 
+    public List<String> UpdateColumns { get; set; } = new List<string>();
+
+    public void AddUpdateColumn(string item) => UpdateColumns.Add(item);
+
+    public String When { get; set; }
+
+    public String Comment { get; set; }
 
 
 
-        public String getCreationSQL() {
-        StringBuilder sbSQL = new StringBuilder(100);
-        sbSQL.Append("CREATE TRIGGER ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(name));
-        sbSQL.Append("\n\t");
-        sbSQL.Append(before ? "BEFORE" : "AFTER");
+
+
+        public String GetCreationSql() {
+        StringBuilder sbSql = new StringBuilder(100);
+        sbSql.Append("CREATE TRIGGER ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(Name));
+        sbSql.Append("\n\t");
+        sbSql.Append(Before ? "BEFORE" : "AFTER");
 
         bool firstEvent = true;
 
-        if (onInsert) {
-            sbSQL.Append(" INSERT");
+        if (OnInsert) {
+            sbSql.Append(" INSERT");
             firstEvent = false;
         }
 
-        if (onUpdate) {
+        if (OnUpdate) {
             if (firstEvent) {
                 firstEvent = false;
             } else {
-                sbSQL.Append(" OR");
+                sbSql.Append(" OR");
             }
 
-            sbSQL.Append(" UPDATE");
+            sbSql.Append(" UPDATE");
 
-            if (updateColumns.Count > 0) {
-                sbSQL.Append(" OF");
+            if (UpdateColumns.Count > 0) {
+                sbSql.Append(" OF");
 
                 bool first = true;
 
-                foreach(String columnName in updateColumns) {
+                foreach(String columnName in UpdateColumns) {
                     if (first) {
                         first = false;
                     } else {
-                        sbSQL.Append(',');
+                        sbSql.Append(',');
                     }
 
-                    sbSQL.Append(' ');
-                    sbSQL.Append(columnName);
+                    sbSql.Append(' ');
+                    sbSql.Append(columnName);
                 }
             }
         }
 
-        if (onDelete) {
+        if (OnDelete) {
             if (!firstEvent) {
-                sbSQL.Append(" OR");
+                sbSql.Append(" OR");
             }
 
-            sbSQL.Append(" DELETE");
+            sbSql.Append(" DELETE");
         }
 
-        if (onTruncate) {
+        if (OnTruncate) {
             if (!firstEvent) {
-                sbSQL.Append(" OR");
+                sbSql.Append(" OR");
             }
 
-            sbSQL.Append(" TRUNCATE");
+            sbSql.Append(" TRUNCATE");
         }
 
-        sbSQL.Append(" ON ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(tableName));
-        sbSQL.Append("\n\tFOR EACH ");
-        sbSQL.Append(forEachRow ? "ROW" : "STATEMENT");
+        sbSql.Append(" ON ");
+        sbSql.Append(PgDiffUtils.GetQuotedName(TableName));
+        sbSql.Append("\n\tFOR EACH ");
+        sbSql.Append(ForEachRow ? "ROW" : "STATEMENT");
 
-        if (!String.IsNullOrEmpty(when)) {
-            sbSQL.Append("\n\tWHEN (");
-            sbSQL.Append(when);
-            sbSQL.Append(')');
+        if (!String.IsNullOrEmpty(When)) {
+            sbSql.Append("\n\tWHEN (");
+            sbSql.Append(When);
+            sbSql.Append(')');
         }
 
-        sbSQL.Append("\n\tEXECUTE PROCEDURE ");
-        sbSQL.Append(function);
-        sbSQL.Append(';');
+        sbSql.Append("\n\tEXECUTE PROCEDURE ");
+        sbSql.Append(Function);
+        sbSql.Append(';');
 
-        if (!String.IsNullOrEmpty(comment)) {
-            sbSQL.Append("\n\nCOMMENT ON TRIGGER ");
-            sbSQL.Append(PgDiffUtils.getQuotedName(name));
-            sbSQL.Append(" ON ");
-            sbSQL.Append(PgDiffUtils.getQuotedName(tableName));
-            sbSQL.Append(" IS ");
-            sbSQL.Append(comment);
-            sbSQL.Append(';');
+        if (!String.IsNullOrEmpty(Comment)) {
+            sbSql.Append("\n\nCOMMENT ON TRIGGER ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(Name));
+            sbSql.Append(" ON ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(TableName));
+            sbSql.Append(" IS ");
+            sbSql.Append(Comment);
+            sbSql.Append(';');
         }
 
-        return sbSQL.ToString();
+        return sbSql.ToString();
     }
 
     
-    public String getDropSQL() {
-        return "DROP TRIGGER " + PgDiffUtils.getQuotedName(name) + " ON "
-                + PgDiffUtils.getQuotedName(tableName) + ";";
+    public String GetDropSql() {
+        return "DROP TRIGGER " + PgDiffUtils.GetQuotedName(Name) + " ON "
+                + PgDiffUtils.GetQuotedName(TableName) + ";";
     }
 
     
@@ -148,15 +148,15 @@ public class PgTrigger {
             equals = true;
         } else if (@object is PgTrigger) {
             PgTrigger trigger = (PgTrigger) @object;
-            equals = (before == trigger.before)
-                    && (forEachRow == trigger.forEachRow)
-                    && function.Equals(trigger.function)
-                    && name.Equals(trigger.name)
-                    && (onDelete == trigger.onDelete)
-                    && (onInsert == trigger.onInsert)
-                    && (onUpdate == trigger.onUpdate)
-                    && (onTruncate == trigger.onTruncate)
-                    && tableName.Equals(trigger.tableName);
+            equals = (Before == trigger.Before)
+                    && (ForEachRow == trigger.ForEachRow)
+                    && Function.Equals(trigger.Function)
+                    && Name.Equals(trigger.Name)
+                    && (OnDelete == trigger.OnDelete)
+                    && (OnInsert == trigger.OnInsert)
+                    && (OnUpdate == trigger.OnUpdate)
+                    && (OnTruncate == trigger.OnTruncate)
+                    && TableName.Equals(trigger.TableName);
 
             if (equals) {
 
@@ -166,11 +166,11 @@ public class PgTrigger {
                 sorted2.Sort();
 
                 equals = sorted1.Equals(sorted2);*/
-                if (updateColumns.Count == 0 && trigger.updateColumns.Count == 0)
+                if (UpdateColumns.Count == 0 && trigger.UpdateColumns.Count == 0)
                     equals = true;
                 else
-                    equals = updateColumns.All(
-                        t1 => trigger.updateColumns.Any(
+                    equals = UpdateColumns.All(
+                        t1 => trigger.UpdateColumns.Any(
                             t2 => t1.Equals(t2, StringComparison.InvariantCultureIgnoreCase)));
             }
         }
@@ -179,9 +179,9 @@ public class PgTrigger {
     }
 
     public override int GetHashCode() {
-        return (GetType().Name + "|" + before + "|" + forEachRow + "|"
-                + function + "|" + name + "|" + onDelete + "|" + onInsert + "|"
-                + onUpdate + "|" + onTruncate + "|" + tableName).GetHashCode();
+        return (GetType().Name + "|" + Before + "|" + ForEachRow + "|"
+                + Function + "|" + Name + "|" + OnDelete + "|" + OnInsert + "|"
+                + OnUpdate + "|" + OnTruncate + "|" + TableName).GetHashCode();
     }
 }
 }

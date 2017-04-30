@@ -14,8 +14,8 @@ public class Programm {
     {
         PgDiffArguments arguments = new PgDiffArguments();
 
-        if (arguments.parse(Console.In, Console.Out, args)) {
-            PgDiff.createDiff(Console.Out, arguments);
+        if (arguments.Parse(Console.In, Console.Out, args)) {
+            PgDiff.CreateDiff(Console.Out, arguments);
         }
     }
         
