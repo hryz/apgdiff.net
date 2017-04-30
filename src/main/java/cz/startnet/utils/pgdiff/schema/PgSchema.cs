@@ -5,14 +5,6 @@ namespace pgdiff.schema
 {
     public class PgSchema
     {
-        public string Authorization { get; set; }
-
-        public string Comment { get; set; }
-
-        public string Definition { get; set; }
-
-        public string Name { get; set; }
-
         private readonly List<PgFunction> _functions = new List<PgFunction>();
 
         private readonly List<PgIndex> _indexes = new List<PgIndex>();
@@ -30,6 +22,14 @@ namespace pgdiff.schema
         {
             Name = name;
         }
+
+        public string Authorization { get; set; }
+
+        public string Comment { get; set; }
+
+        public string Definition { get; set; }
+
+        public string Name { get; set; }
 
         public string GetCreationSql()
         {

@@ -55,7 +55,7 @@ namespace pgdiff.parsers
                 }
                 else if (parser.ExpectOptional("OWNED", "BY"))
                 {
-                    sequence.OwnedBy =parser.ExpectOptional("NONE")
+                    sequence.OwnedBy = parser.ExpectOptional("NONE")
                         ? null
                         : ParserUtils.GetObjectName(parser.ParseIdentifier());
                 }

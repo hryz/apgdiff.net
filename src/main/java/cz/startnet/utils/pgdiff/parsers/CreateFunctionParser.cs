@@ -35,11 +35,16 @@ namespace pgdiff.parsers
             {
                 string mode;
 
-                if (parser.ExpectOptional("IN")) mode = "IN";
-                else if (parser.ExpectOptional("OUT")) mode = "OUT";
-                else if (parser.ExpectOptional("INOUT")) mode = "INOUT";
-                else if (parser.ExpectOptional("VARIADIC")) mode = "VARIADIC";
-                else mode = null;
+                if (parser.ExpectOptional("IN"))
+                    mode = "IN";
+                else if (parser.ExpectOptional("OUT"))
+                    mode = "OUT";
+                else if (parser.ExpectOptional("INOUT"))
+                    mode = "INOUT";
+                else if (parser.ExpectOptional("VARIADIC"))
+                    mode = "VARIADIC";
+                else
+                    mode = null;
 
                 var position = parser.GetPosition();
                 string argumentName = null;

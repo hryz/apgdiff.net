@@ -28,8 +28,8 @@ namespace pgdiff.parsers
         public static string GetThirdObjectName(string name)
         {
             var names = SplitNames(name);
-            return names.Length >= 3 
-                ? names[names.Length - 3] 
+            return names.Length >= 3
+                ? names[names.Length - 3]
                 : null;
         }
 
@@ -38,8 +38,8 @@ namespace pgdiff.parsers
         {
             var names = SplitNames(name);
 
-            return names.Length < 2 
-                ? database.DefaultSchema.Name 
+            return names.Length < 2
+                ? database.DefaultSchema.Name
                 : names[0];
         }
 
@@ -58,7 +58,8 @@ namespace pgdiff.parsers
 
                 foreach (var name in names)
                 {
-                    if (sbString.Length > 0) sbString.Append(',');
+                    if (sbString.Length > 0)
+                        sbString.Append(',');
                     sbString.Append(name);
                 }
 
@@ -81,7 +82,8 @@ namespace pgdiff.parsers
 
         private static string[] SplitNames(string str)
         {
-            if (str.IndexOf('"') == -1) return str.Split('.');
+            if (str.IndexOf('"') == -1)
+                return str.Split('.');
             var strings = new List<string>();
             var startPos = 0;
 

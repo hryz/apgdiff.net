@@ -12,7 +12,8 @@ namespace pgdiff
         }
 
 
-        public static void CreateTriggers(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void CreateTriggers(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper)
         {
             foreach (var newTable in newSchema.GetTables())
             {
@@ -29,7 +30,8 @@ namespace pgdiff
         }
 
 
-        public static void DropTriggers(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void DropTriggers(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper)
         {
             foreach (var newTable in newSchema.GetTables())
             {
@@ -55,7 +57,8 @@ namespace pgdiff
                 var newTriggers = newTable.GetTriggers();
 
                 foreach (var oldTrigger in oldTable.GetTriggers())
-                    if (newTriggers.All(t => !t.Equals(oldTrigger))) list.Add(oldTrigger);
+                    if (newTriggers.All(t => !t.Equals(oldTrigger)))
+                        list.Add(oldTrigger);
             }
 
             return list;
@@ -67,31 +70,37 @@ namespace pgdiff
             var list = new List<PgTrigger>();
 
             if (newTable != null)
-                if (oldTable == null) list.AddRange(newTable.GetTriggers());
+                if (oldTable == null)
+                    list.AddRange(newTable.GetTriggers());
                 else
                     foreach (var newTrigger in newTable.GetTriggers())
-                        if (oldTable.GetTriggers().All(t => !t.Equals(newTrigger))) list.Add(newTrigger);
+                        if (oldTable.GetTriggers().All(t => !t.Equals(newTrigger)))
+                            list.Add(newTrigger);
 
             return list;
         }
 
 
-        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper)
         {
-            if (oldSchema == null) return;
+            if (oldSchema == null)
+                return;
 
             foreach (var oldTable in oldSchema.GetTables())
             {
                 var newTable = newSchema.GetTable(oldTable.Name);
 
-                if (newTable == null) continue;
+                if (newTable == null)
+                    continue;
 
                 foreach (var oldTrigger in oldTable.GetTriggers())
                 {
                     var newTrigger =
                         newTable.GetTrigger(oldTrigger.Name);
 
-                    if (newTrigger == null) continue;
+                    if (newTrigger == null)
+                        continue;
 
                     if (oldTrigger.Comment == null
                         && newTrigger.Comment != null

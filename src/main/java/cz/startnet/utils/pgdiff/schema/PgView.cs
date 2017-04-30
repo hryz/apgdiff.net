@@ -5,15 +5,15 @@ namespace pgdiff.schema
 {
     public class PgView
     {
+        public readonly List<DefaultValue> DefaultValues = new List<DefaultValue>();
+
+        public string Name { get; set; }
+
         public List<ColumnComment> ColumnComments = new List<ColumnComment>();
 
         public List<string> ColumnNames;
 
         public string Comment;
-
-        public readonly List<DefaultValue> DefaultValues = new List<DefaultValue>();
-
-        public readonly string Name;
 
         public string Query;
 
@@ -35,7 +35,8 @@ namespace pgdiff.schema
 
                 for (var i = 0; i < ColumnNames.Count; i++)
                 {
-                    if (i > 0) sbSql.Append(", ");
+                    if (i > 0)
+                        sbSql.Append(", ");
 
                     sbSql.Append(PgDiffUtils.GetQuotedName(ColumnNames[i]));
                 }
@@ -124,31 +125,29 @@ namespace pgdiff.schema
 
         public class DefaultValue
         {
-            public string ColumnName { get; }
-
-            public string _DefaultValue { get; }
-
-
             public DefaultValue(string columnName, string defaultValue)
             {
                 ColumnName = columnName;
                 _DefaultValue = defaultValue;
             }
+
+            public string ColumnName { get; }
+
+            public string _DefaultValue { get; }
         }
 
 
         public class ColumnComment
         {
-            public string ColumnName { get; }
-
-            public string Comment { get; }
-
-
             public ColumnComment(string columnName, string comment)
             {
                 ColumnName = columnName;
                 Comment = comment;
             }
+
+            public string ColumnName { get; }
+
+            public string Comment { get; }
         }
     }
 }

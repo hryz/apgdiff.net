@@ -6,6 +6,11 @@ namespace pgdiff.schema
 {
     public class PgTable
     {
+        public PgTable(string name)
+        {
+            Name = name;
+        }
+
         public string ClusterIndexName { get; set; }
 
         public string Comment { get; set; }
@@ -25,12 +30,6 @@ namespace pgdiff.schema
         public List<string> Inherits { get; set; } = new List<string>();
 
         public List<PgTrigger> Triggers { get; set; } = new List<PgTrigger>();
-
-
-        public PgTable(string name)
-        {
-            Name = name;
-        }
 
         public PgColumn GetColumn(string name)
         {
@@ -68,8 +67,10 @@ namespace pgdiff.schema
             {
                 foreach (var column in Columns)
                 {
-                    if (first) first = false;
-                    else sbSql.Append(",\n");
+                    if (first)
+                        first = false;
+                    else
+                        sbSql.Append(",\n");
 
                     sbSql.Append("\t");
                     sbSql.Append(column.GetFullDefinition(false));
@@ -86,8 +87,10 @@ namespace pgdiff.schema
 
                 foreach (var tableName in Inherits)
                 {
-                    if (first) first = false;
-                    else sbSql.Append(", ");
+                    if (first)
+                        first = false;
+                    else
+                        sbSql.Append(", ");
 
                     sbSql.Append(tableName);
                 }
@@ -108,8 +111,10 @@ namespace pgdiff.schema
                     sbSql.Append("WITH ");
 
                     if ("OIDS".Equals(With, StringComparison.InvariantCultureIgnoreCase)
-                        || "OIDS=true".Equals(With, StringComparison.InvariantCultureIgnoreCase)) sbSql.Append("OIDS");
-                    else sbSql.Append(With);
+                        || "OIDS=true".Equals(With, StringComparison.InvariantCultureIgnoreCase))
+                        sbSql.Append("OIDS");
+                    else
+                        sbSql.Append(With);
                 }
             }
 

@@ -5,18 +5,19 @@ namespace pgdiff.parsers
 {
     public class Parser
     {
-        private int _position;
         private readonly string _string;
+        private int _position;
 
         public Parser(string _string)
         {
             this._string = _string;
             SkipWhitespace();
         }
-        
+
         public void Expect(params string[] words)
         {
-            foreach (var word in words) Expect(word, false);
+            foreach (var word in words)
+                Expect(word, false);
         }
 
         public bool Expect(string word, bool optional)
@@ -44,7 +45,7 @@ namespace pgdiff.parsers
             if (optional)
                 return false;
 
-            throw new ParserException(string.Format(Resources.CannotParseStringExpectedWord, 
+            throw new ParserException(string.Format(Resources.CannotParseStringExpectedWord,
                 _string, word, _position + 1, _string.Substring(_position, 20)));
         }
 
@@ -109,11 +110,11 @@ namespace pgdiff.parsers
                 for (; endPos < _string.Length; endPos++)
                 {
                     var chr = _string[endPos];
-                    if (char.IsWhiteSpace(chr) 
-                        || chr == ',' 
+                    if (char.IsWhiteSpace(chr)
+                        || chr == ','
                         || chr == ')'
-                        || chr == '(' 
-                        || chr == ';' 
+                        || chr == '('
+                        || chr == ';'
                         || chr == '.')
                         break;
                 }
@@ -186,7 +187,8 @@ namespace pgdiff.parsers
                     else if (!escape && chr == '\'')
                         if (endPos + 1 < _string.Length && _string[endPos + 1] == '\'')
                             endPos++;
-                        else break;
+                        else
+                            break;
                 }
 
                 string result;
@@ -197,7 +199,8 @@ namespace pgdiff.parsers
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"Failed to get sub_string: {_string} start pos: {_position} end pos: {endPos + 1}", ex);
+                    throw new Exception(
+                        $"Failed to get sub_string: {_string} start pos: {_position} end pos: {endPos + 1}", ex);
                 }
 
                 _position = endPos + 1;
@@ -212,12 +215,13 @@ namespace pgdiff.parsers
                 for (; endPos < _string.Length; endPos++)
                 {
                     var chr = _string[endPos];
-                    if (char.IsWhiteSpace(chr) || chr == ',' || chr == ')'|| chr == ';')
+                    if (char.IsWhiteSpace(chr) || chr == ',' || chr == ')' || chr == ';')
                         break;
                 }
 
                 if (_position == endPos)
-                    throw new ParserException(string.Format(Resources.CannotParseStringExpectedString, _string, _position + 1));
+                    throw new ParserException(string.Format(Resources.CannotParseStringExpectedString, _string,
+                        _position + 1));
 
                 var result = _string.Substring(_position, endPos - _position);
 
@@ -259,7 +263,8 @@ namespace pgdiff.parsers
                 else if (chr == ')')
                     if (bracesCount == 0)
                         break;
-                    else bracesCount--;
+                    else
+                        bracesCount--;
                 else if (chr == '\'')
                     singleQuoteOn = !singleQuoteOn;
                 else if (chr == ',' && !singleQuoteOn && bracesCount == 0)
@@ -287,7 +292,7 @@ namespace pgdiff.parsers
         public void ThrowUnsupportedCommand()
         {
             throw new ParserException(string.Format(Resources.CannotParseStringUnsupportedCommand,
-                _string, _position + 1,_string.Substring(_position, 20)));
+                _string, _position + 1, _string.Substring(_position, 20)));
         }
 
 
@@ -341,7 +346,8 @@ namespace pgdiff.parsers
             var timestamp = "timestamp".Equals(dataType, StringComparison.InvariantCultureIgnoreCase)
                             || "time".Equals(dataType, StringComparison.InvariantCultureIgnoreCase);
 
-            if (_string[_position] == '(') dataType += GetExpression();
+            if (_string[_position] == '(')
+                dataType += GetExpression();
 
             if (timestamp)
                 if (ExpectOptional("with", "time", "zone"))

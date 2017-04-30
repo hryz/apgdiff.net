@@ -15,7 +15,10 @@ namespace pgdiff.schema
         private static readonly Regex PatternDefault =
             new Regex("^(.+)[\\s]+DEFAULT[\\s]+(.+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public PgColumn(string name) => Name = name;
+        public PgColumn(string name)
+        {
+            Name = name;
+        }
 
         public string Comment { get; set; }
 
@@ -55,12 +58,11 @@ namespace pgdiff.schema
                 }
             }
 
-            if (!NullValue) sbDefinition.Append(" NOT NULL");
+            if (!NullValue)
+                sbDefinition.Append(" NOT NULL");
 
             return sbDefinition.ToString();
         }
-
-        
 
 
         public void ParseDefinition(string definition)

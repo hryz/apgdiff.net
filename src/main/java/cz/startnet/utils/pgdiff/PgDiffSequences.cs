@@ -42,7 +42,8 @@ namespace pgdiff
 
         public static void DropSequences(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
-            if (oldSchema == null) return;
+            if (oldSchema == null)
+                return;
 
             // Drop sequences that do not exist in new schema
             foreach (var sequence in oldSchema.GetSequences())
@@ -55,9 +56,11 @@ namespace pgdiff
         }
 
 
-        public static void AlterSequences(TextWriter writer, PgDiffArguments arguments, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void AlterSequences(TextWriter writer, PgDiffArguments arguments, 
+            PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
-            if (oldSchema == null) return;
+            if (oldSchema == null)
+                return;
 
             var sbSql = new StringBuilder(100);
 
@@ -66,7 +69,8 @@ namespace pgdiff
                 var oldSequence =
                     oldSchema.GetSequence(newSequence.Name);
 
-                if (oldSequence == null) continue;
+                if (oldSequence == null)
+                    continue;
 
                 sbSql.Length = 0;
 
@@ -132,8 +136,10 @@ namespace pgdiff
                 var oldCycle = oldSequence.Cycle;
                 var newCycle = newSequence.Cycle;
 
-                if (oldCycle && !newCycle) sbSql.Append("\n\tNO CYCLE");
-                else if (!oldCycle && newCycle) sbSql.Append("\n\tCYCLE");
+                if (oldCycle && !newCycle)
+                    sbSql.Append("\n\tNO CYCLE");
+                else if (!oldCycle && newCycle)
+                    sbSql.Append("\n\tCYCLE");
 
                 var oldOwnedBy = oldSequence.OwnedBy;
                 var newOwnedBy = newSequence.OwnedBy;

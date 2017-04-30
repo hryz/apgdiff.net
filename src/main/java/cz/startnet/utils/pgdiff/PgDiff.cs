@@ -27,7 +27,8 @@ namespace pgdiff
         }
 
 
-        public static void CreateDiff(TextWriter writer, PgDiffArguments arguments, string oldInputStream, string newInputStream)
+        public static void CreateDiff(TextWriter writer, PgDiffArguments arguments, string oldInputStream,
+            string newInputStream)
         {
             var oldDatabase = PgDumpLoader.LoadDatabaseSchema(
                 oldInputStream, arguments.InCharsetName,
@@ -53,9 +54,11 @@ namespace pgdiff
         }
 
 
-        private static void DiffDatabaseSchemas(TextWriter writer, PgDiffArguments arguments, PgDatabase oldDatabase, PgDatabase newDatabase)
+        private static void DiffDatabaseSchemas(TextWriter writer, PgDiffArguments arguments, PgDatabase oldDatabase,
+            PgDatabase newDatabase)
         {
-            if (arguments.AddTransaction) writer.WriteLine("START TRANSACTION;");
+            if (arguments.AddTransaction)
+                writer.WriteLine("START TRANSACTION;");
 
             if (oldDatabase.Comment == null
                 && newDatabase.Comment != null
@@ -126,27 +129,22 @@ namespace pgdiff
                 if (newDatabase.GetSchema(oldSchema.Name) == null)
                 {
                     writer.WriteLine();
-                    writer.WriteLine("DROP SCHEMA "
-                                     + PgDiffUtils.GetQuotedName(oldSchema.Name)
-                                     + " CASCADE;");
+                    writer.WriteLine($"DROP SCHEMA {PgDiffUtils.GetQuotedName(oldSchema.Name)} CASCADE;");
                 }
         }
 
 
-        private static void UpdateSchemas(TextWriter writer, PgDiffArguments arguments, PgDatabase oldDatabase, PgDatabase newDatabase)
+        private static void UpdateSchemas(TextWriter writer, PgDiffArguments arguments, PgDatabase oldDatabase,
+            PgDatabase newDatabase)
         {
             var setSearchPath = newDatabase.Schemas.Count > 1
                                 || !newDatabase.Schemas[0].Name.Equals("public");
 
             foreach (var newSchema in newDatabase.Schemas)
             {
-                SearchPathHelper searchPathHelper;
-
-                if (setSearchPath)
-                    searchPathHelper = new SearchPathHelper("SET search_path = "
-                                                            + PgDiffUtils.GetQuotedName(newSchema.Name, true)
-                                                            + ", pg_catalog;");
-                else searchPathHelper = new SearchPathHelper(null);
+                var searchPathHelper = setSearchPath 
+                    ? new SearchPathHelper($"SET search_path = {PgDiffUtils.GetQuotedName(newSchema.Name, true)}, pg_catalog;") 
+                    : new SearchPathHelper(null);
 
                 var oldSchema = oldDatabase.GetSchema(newSchema.Name);
 
@@ -165,8 +163,7 @@ namespace pgdiff
                         writer.Write(newSchema.Comment);
                         writer.WriteLine(';');
                     }
-                    else if (oldSchema.Comment != null
-                             && newSchema.Comment == null)
+                    else if (oldSchema.Comment != null && newSchema.Comment == null)
                     {
                         writer.WriteLine();
                         writer.Write("COMMENT ON SCHEMA ");

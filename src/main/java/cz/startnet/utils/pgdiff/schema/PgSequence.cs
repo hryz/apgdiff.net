@@ -4,6 +4,11 @@ namespace pgdiff.schema
 {
     public class PgSequence
     {
+        public PgSequence(string name)
+        {
+            Name = name;
+        }
+
         public string Cache { get; set; }
 
         public string Comment { get; set; }
@@ -21,12 +26,6 @@ namespace pgdiff.schema
         public string OwnedBy { get; set; }
 
         public string StartWith { get; set; }
-
-
-        public PgSequence(string name)
-        {
-            Name = name;
-        }
 
 
         public string GetCreationSql()
@@ -77,7 +76,8 @@ namespace pgdiff.schema
                 sbSql.Append(Cache);
             }
 
-            if (Cycle) sbSql.Append("\n\tCYCLE");
+            if (Cycle)
+                sbSql.Append("\n\tCYCLE");
 
             sbSql.Append(';');
 

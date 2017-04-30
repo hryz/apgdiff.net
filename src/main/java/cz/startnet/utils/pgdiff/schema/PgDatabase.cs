@@ -24,7 +24,7 @@ namespace pgdiff.schema
         {
             DefaultSchema = GetSchema(name);
         }
-        
+
         public PgSchema GetSchema(string name)
         {
             if (name == null)
@@ -36,7 +36,5 @@ namespace pgdiff.schema
 
             return null;
         }
-
-        
     }
 }

@@ -56,8 +56,10 @@ namespace pgdiff.schema
 
             if (OnUpdate)
             {
-                if (firstEvent) firstEvent = false;
-                else sbSql.Append(" OR");
+                if (firstEvent)
+                    firstEvent = false;
+                else
+                    sbSql.Append(" OR");
 
                 sbSql.Append(" UPDATE");
 
@@ -69,8 +71,10 @@ namespace pgdiff.schema
 
                     foreach (var columnName in UpdateColumns)
                     {
-                        if (first) first = false;
-                        else sbSql.Append(',');
+                        if (first)
+                            first = false;
+                        else
+                            sbSql.Append(',');
 
                         sbSql.Append(' ');
                         sbSql.Append(columnName);
@@ -80,14 +84,16 @@ namespace pgdiff.schema
 
             if (OnDelete)
             {
-                if (!firstEvent) sbSql.Append(" OR");
+                if (!firstEvent)
+                    sbSql.Append(" OR");
 
                 sbSql.Append(" DELETE");
             }
 
             if (OnTruncate)
             {
-                if (!firstEvent) sbSql.Append(" OR");
+                if (!firstEvent)
+                    sbSql.Append(" OR");
 
                 sbSql.Append(" TRUNCATE");
             }

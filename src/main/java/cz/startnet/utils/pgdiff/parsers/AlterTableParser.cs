@@ -85,12 +85,14 @@ namespace pgdiff.parsers
             if (parser.ExpectOptional("REPLICA"))
                 if (parser.ExpectOptional("TRIGGER"))
                     if (outputIgnoredStatements)
-                        database.IgnoredStatements.Add($"ALTER TABLE {tableName} ENABLE REPLICA TRIGGER {parser.ParseIdentifier()};");
+                        database.IgnoredStatements.Add(
+                            $"ALTER TABLE {tableName} ENABLE REPLICA TRIGGER {parser.ParseIdentifier()};");
                     else
                         parser.ParseIdentifier();
                 else if (parser.ExpectOptional("RULE"))
                     if (outputIgnoredStatements)
-                        database.IgnoredStatements.Add($"ALTER TABLE {tableName} ENABLE REPLICA RULE {parser.ParseIdentifier()};");
+                        database.IgnoredStatements.Add(
+                            $"ALTER TABLE {tableName} ENABLE REPLICA RULE {parser.ParseIdentifier()};");
                     else
                         parser.ParseIdentifier();
                 else
@@ -98,12 +100,14 @@ namespace pgdiff.parsers
             else if (parser.ExpectOptional("ALWAYS"))
                 if (parser.ExpectOptional("TRIGGER"))
                     if (outputIgnoredStatements)
-                        database.IgnoredStatements.Add($"ALTER TABLE {tableName} ENABLE ALWAYS TRIGGER {parser.ParseIdentifier()};");
+                        database.IgnoredStatements.Add(
+                            $"ALTER TABLE {tableName} ENABLE ALWAYS TRIGGER {parser.ParseIdentifier()};");
                     else
                         parser.ParseIdentifier();
                 else if (parser.ExpectOptional("RULE"))
                     if (outputIgnoredStatements)
-                        database.IgnoredStatements.Add($"ALTER TABLE {tableName} ENABLE RULE {parser.ParseIdentifier()};");
+                        database.IgnoredStatements.Add(
+                            $"ALTER TABLE {tableName} ENABLE RULE {parser.ParseIdentifier()};");
                     else
                         parser.ParseIdentifier();
                 else
@@ -115,7 +119,8 @@ namespace pgdiff.parsers
         {
             if (parser.ExpectOptional("TRIGGER"))
                 if (outputIgnoredStatements)
-                    database.IgnoredStatements.Add($"ALTER TABLE {tableName} DISABLE TRIGGER {parser.ParseIdentifier()};");
+                    database.IgnoredStatements.Add(
+                        $"ALTER TABLE {tableName} DISABLE TRIGGER {parser.ParseIdentifier()};");
                 else
                     parser.ParseIdentifier();
             else if (parser.ExpectOptional("RULE"))
@@ -128,8 +133,7 @@ namespace pgdiff.parsers
         }
 
 
-        private static void ParseAddConstraint(Parser parser,
-            PgTable table, PgSchema schema)
+        private static void ParseAddConstraint(Parser parser, PgTable table, PgSchema schema)
         {
             var constraintName = ParserUtils.GetObjectName(parser.ParseIdentifier());
             var constraint = new PgConstraint(constraintName);
@@ -139,7 +143,7 @@ namespace pgdiff.parsers
             if (parser.ExpectOptional("PRIMARY", "KEY"))
             {
                 schema.AddPrimaryKey(constraint);
-                constraint.Definition ="PRIMARY KEY " + parser.GetExpression();
+                constraint.Definition = "PRIMARY KEY " + parser.GetExpression();
             }
             else
             {
@@ -148,13 +152,11 @@ namespace pgdiff.parsers
         }
 
 
-        private static void ParseAlterColumn(Parser parser,
-            PgTable table)
+        private static void ParseAlterColumn(Parser parser, PgTable table)
         {
             parser.ExpectOptional("COLUMN");
 
-            var columnName =
-                ParserUtils.GetObjectName(parser.ParseIdentifier());
+            var columnName = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
             if (parser.ExpectOptional("SET"))
                 if (parser.ExpectOptional("STATISTICS"))
@@ -174,7 +176,7 @@ namespace pgdiff.parsers
                         if (column == null)
                             throw new Exception(string.Format(Resources.CannotFindTableColumn, columnName, table.Name, parser.GetString()));
 
-                        column.DefaultValue =defaultValue;
+                        column.DefaultValue = defaultValue;
                     }
                     else
                     {
@@ -186,7 +188,8 @@ namespace pgdiff.parsers
                     var column = table.GetColumn(columnName);
 
                     if (column == null)
-                        throw new Exception(string.Format(Resources.CannotFindTableColumn, columnName, table.Name, parser.GetString()));
+                        throw new Exception(string.Format(Resources.CannotFindTableColumn, columnName, table.Name,
+                            parser.GetString()));
 
                     if (parser.ExpectOptional("PLAIN"))
                         column.Storage = "PLAIN";
@@ -226,7 +229,7 @@ namespace pgdiff.parsers
             var constraint = new PgConstraint(constraintName);
             table.AddConstraint(constraint);
             constraint.Definition = parser.GetExpression();
-            constraint.TableName =table.Name;
+            constraint.TableName = table.Name;
         }
 
 

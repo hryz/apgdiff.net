@@ -170,8 +170,10 @@ namespace pgdiff.parsers
 
                 var comment = GetComment(parser);
 
-                if (comment == null) view.RemoveColumnComment(objectName);
-                else view.AddColumnComment(objectName, comment);
+                if (comment == null)
+                    view.RemoveColumnComment(objectName);
+                else
+                    view.AddColumnComment(objectName, comment);
                 parser.Expect(";");
             }
             else
@@ -204,11 +206,16 @@ namespace pgdiff.parsers
             {
                 string mode;
 
-                if (parser.ExpectOptional("IN")) mode = "IN";
-                else if (parser.ExpectOptional("OUT")) mode = "OUT";
-                else if (parser.ExpectOptional("INOUT")) mode = "INOUT";
-                else if (parser.ExpectOptional("VARIADIC")) mode = "VARIADIC";
-                else mode = null;
+                if (parser.ExpectOptional("IN"))
+                    mode = "IN";
+                else if (parser.ExpectOptional("OUT"))
+                    mode = "OUT";
+                else if (parser.ExpectOptional("INOUT"))
+                    mode = "INOUT";
+                else if (parser.ExpectOptional("VARIADIC"))
+                    mode = "VARIADIC";
+                else
+                    mode = null;
 
                 var position = parser.GetPosition();
                 string argumentName = null;
@@ -254,8 +261,8 @@ namespace pgdiff.parsers
         {
             var comment = parser.ParseString();
 
-            return "null".Equals(comment, StringComparison.InvariantCultureIgnoreCase) 
-                ? null 
+            return "null".Equals(comment, StringComparison.InvariantCultureIgnoreCase)
+                ? null
                 : comment;
         }
     }

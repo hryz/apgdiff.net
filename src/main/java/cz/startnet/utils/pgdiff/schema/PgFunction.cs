@@ -27,7 +27,8 @@ namespace pgdiff.schema
 
             foreach (var argument in _arguments)
             {
-                if (addComma) sbSql.Append(", ");
+                if (addComma)
+                    sbSql.Append(", ");
 
                 sbSql.Append(argument.GetDeclaration(true));
 
@@ -48,7 +49,8 @@ namespace pgdiff.schema
 
                 foreach (var argument in _arguments)
                 {
-                    if (addComma) sbSql.Append(", ");
+                    if (addComma)
+                        sbSql.Append(", ");
 
                     sbSql.Append(argument.GetDeclaration(false));
 
@@ -77,7 +79,8 @@ namespace pgdiff.schema
                 if ("OUT".Equals(argument.Mode, StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
-                if (addComma) sbString.Append(", ");
+                if (addComma)
+                    sbString.Append(", ");
 
                 sbString.Append(argument.GetDeclaration(false));
 
@@ -111,9 +114,11 @@ namespace pgdiff.schema
 
             foreach (var argument in _arguments)
             {
-                if ("OUT".Equals(argument.Mode, StringComparison.InvariantCultureIgnoreCase)) continue;
+                if ("OUT".Equals(argument.Mode, StringComparison.InvariantCultureIgnoreCase))
+                    continue;
 
-                if (addComma) sbString.Append(',');
+                if (addComma)
+                    sbString.Append(',');
 
                 sbString.Append(argument.DataType.ToLower());
 
@@ -128,8 +133,10 @@ namespace pgdiff.schema
 
         public override bool Equals(object @object)
         {
-            if (!(@object is PgFunction)) return false;
-            if (@object == this) return true;
+            if (!(@object is PgFunction))
+                return false;
+            if (@object == this)
+                return true;
 
             return Equals(@object, false);
         }
@@ -148,7 +155,8 @@ namespace pgdiff.schema
                 var function = (PgFunction) @object;
 
                 if (Name == null && function.Name != null
-                    || Name != null && !Name.Equals(function.Name)) return false;
+                    || Name != null && !Name.Equals(function.Name))
+                    return false;
 
                 string thisBody;
                 string thatBody;
@@ -165,11 +173,14 @@ namespace pgdiff.schema
                 }
 
                 if (thisBody == null && thatBody != null
-                    || thisBody != null && !thisBody.Equals(thatBody)) return false;
+                    || thisBody != null && !thisBody.Equals(thatBody))
+                    return false;
 
-                if (_arguments.Count != function.GetArguments().Count) return false;
+                if (_arguments.Count != function.GetArguments().Count)
+                    return false;
                 for (var i = 0; i < _arguments.Count; i++)
-                    if (!_arguments[i].Equals(function.GetArguments()[i])) return false;
+                    if (!_arguments[i].Equals(function.GetArguments()[i]))
+                        return false;
 
                 return true;
             }
@@ -197,11 +208,11 @@ namespace pgdiff.schema
 
         public class Argument
         {
+            private string _mode = "IN";
             public string DataType { get; set; }
 
             public string DefaultExpression { get; set; }
 
-            private string _mode = "IN";
             public string Mode
             {
                 get => _mode;
@@ -239,14 +250,18 @@ namespace pgdiff.schema
 
             public override bool Equals(object obj)
             {
-                if (!(obj is Argument)) return false;
-                if (this == obj) return true;
+                if (!(obj is Argument))
+                    return false;
+                if (this == obj)
+                    return true;
 
                 var argument = (Argument) obj;
 
-                return (DataType?.Equals(argument.DataType, StringComparison.InvariantCultureIgnoreCase) ?? argument.DataType == null)
+                return (DataType?.Equals(argument.DataType, StringComparison.InvariantCultureIgnoreCase) ??
+                        argument.DataType == null)
                        && (DefaultExpression?.Equals(DefaultExpression) ?? argument.DefaultExpression == null)
-                       && (Mode?.Equals(argument.Mode, StringComparison.InvariantCultureIgnoreCase) ?? argument.Mode == null)
+                       && (Mode?.Equals(argument.Mode, StringComparison.InvariantCultureIgnoreCase) ??
+                           argument.Mode == null)
                        && (Name?.Equals(argument.Name) ?? argument.Name == null);
             }
 

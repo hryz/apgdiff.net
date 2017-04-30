@@ -4,6 +4,11 @@ namespace pgdiff.schema
 {
     public class PgIndex
     {
+        public PgIndex(string name)
+        {
+            Name = name;
+        }
+
         public string Comment { get; set; }
 
         public string Definition { get; set; }
@@ -14,18 +19,13 @@ namespace pgdiff.schema
 
         public bool Unique { get; set; }
 
-
-        public PgIndex(string name)
-        {
-            Name = name;
-        }
-
         public string GetCreationSql()
         {
             var sbSql = new StringBuilder(100);
             sbSql.Append("CREATE ");
 
-            if (Unique) sbSql.Append("UNIQUE ");
+            if (Unique)
+                sbSql.Append("UNIQUE ");
 
             sbSql.Append("INDEX ");
             sbSql.Append(PgDiffUtils.GetQuotedName(Name));

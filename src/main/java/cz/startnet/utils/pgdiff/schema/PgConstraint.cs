@@ -5,8 +5,14 @@ namespace pgdiff.schema
 {
     public class PgConstraint
     {
-        private static readonly Regex PatternPrimaryKey = new Regex(".*PRIMARY[\\s]+KEY.*", 
+        private static readonly Regex PatternPrimaryKey = new Regex(".*PRIMARY[\\s]+KEY.*",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+
+        public PgConstraint(string name)
+        {
+            Name = name;
+        }
 
         public string Comment { get; set; }
 
@@ -15,12 +21,6 @@ namespace pgdiff.schema
         public string Name { get; set; }
 
         public string TableName { get; set; }
-
-
-        public PgConstraint(string name)
-        {
-            Name = name;
-        }
 
 
         public string GetCreationSql()
@@ -49,9 +49,6 @@ namespace pgdiff.schema
         }
 
 
-        
-
-
         public string GetDropSql()
         {
             var sbSql = new StringBuilder(100);
@@ -65,16 +62,10 @@ namespace pgdiff.schema
         }
 
 
-        
-
-
         public bool IsPrimaryKeyConstraint()
         {
             return PatternPrimaryKey.IsMatch(Definition);
         }
-
-
-       
 
 
         public override bool Equals(object @object)

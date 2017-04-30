@@ -35,8 +35,10 @@ namespace pgdiff
             var success = true;
             int argsLength;
 
-            if (args.Length >= 2) argsLength = args.Length - 2;
-            else argsLength = args.Length;
+            if (args.Length >= 2)
+                argsLength = args.Length - 2;
+            else
+                argsLength = args.Length;
 
             for (var i = 0; i < argsLength; i++)
                 if ("--add-defaults".Equals(args[i]))

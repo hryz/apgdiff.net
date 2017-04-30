@@ -4,7 +4,7 @@ namespace pgdiff
 {
     public class PgDiffUtils
     {
-        private static readonly string[] _keywords =
+        private static readonly string[] Keywords =
         {
             "ABS",
             "ABSOLUTE",
@@ -472,18 +472,18 @@ namespace pgdiff
 
         public static string GetQuotedName(string name, bool excludeKeywords)
         {
-            if (name.IndexOf('-') != -1 || name.IndexOf('.') != -1) return '"' + name + '"';
+            if (name.IndexOf('-') != -1 || name.IndexOf('.') != -1)
+                return '"' + name + '"';
 
             if (name.Any(char.IsUpper))
-            {
                 return '"' + name + '"';
-            }
 
-            if (excludeKeywords) return name;
+            if (excludeKeywords)
+                return name;
 
             var upperName = name.ToUpper();
 
-            foreach (var keyword in _keywords)
+            foreach (var keyword in Keywords)
                 if (keyword.Equals(upperName))
                     return '"' + name + '"';
 

@@ -17,7 +17,7 @@ namespace pgdiff
 
         public void OutputSearchPath(TextWriter writer)
         {
-            if (!_wasOutput && _searchPath != null && !string.IsNullOrEmpty(_searchPath))
+            if (!_wasOutput && !string.IsNullOrEmpty(_searchPath))
             {
                 writer.WriteLine();
                 writer.WriteLine(_searchPath);

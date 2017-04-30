@@ -6,7 +6,12 @@ namespace pgdiff
 {
     public class PgDiffConstraints
     {
-        public static void CreateConstraints(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey, SearchPathHelper searchPathHelper)
+        private PgDiffConstraints()
+        {
+        }
+
+        public static void CreateConstraints(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey,
+            SearchPathHelper searchPathHelper)
         {
             foreach (var newTable in newSchema.GetTables())
             {
@@ -22,7 +27,8 @@ namespace pgdiff
             }
         }
 
-        public static void DropConstraints(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey, SearchPathHelper searchPathHelper)
+        public static void DropConstraints(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey,
+            SearchPathHelper searchPathHelper)
         {
             foreach (var newTable in newSchema.GetTables())
             {
@@ -44,17 +50,11 @@ namespace pgdiff
             var list = new List<PgConstraint>();
 
             if (newTable != null && oldTable != null)
-            {
                 foreach (var constraint in oldTable.Constraints)
-                {
                     if (constraint.IsPrimaryKeyConstraint() == primaryKey
                         && (!newTable.ContainsConstraint(constraint.Name)
                             || !newTable.GetConstraint(constraint.Name).Equals(constraint)))
-                    {
                         list.Add(constraint);
-                    }
-                }
-            }
 
             return list;
         }
@@ -65,51 +65,37 @@ namespace pgdiff
             var list = new List<PgConstraint>();
 
             if (newTable != null)
-            {
                 if (oldTable == null)
                 {
                     foreach (var constraint in newTable.Constraints)
-                    {
                         if (constraint.IsPrimaryKeyConstraint() == primaryKey)
-                        {
                             list.Add(constraint);
-                        }
-                    }
                 }
                 else
                 {
                     foreach (var constraint in newTable.Constraints)
-                    {
-                        if ((constraint.IsPrimaryKeyConstraint() == primaryKey)
-                            && (!oldTable.ContainsConstraint(
-                                    constraint.Name)
+                        if (constraint.IsPrimaryKeyConstraint() == primaryKey
+                            && (!oldTable.ContainsConstraint(constraint.Name)
                                 || !oldTable.GetConstraint(constraint.Name).Equals(constraint)))
-                        {
                             list.Add(constraint);
-                        }
-                    }
                 }
-            }
 
             return list;
         }
 
 
-        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
-            {
                 return;
-            }
 
             foreach (var oldTable in oldSchema.GetTables())
             {
                 var newTable = newSchema.GetTable(oldTable.Name);
 
                 if (newTable == null)
-                {
                     continue;
-                }
 
                 foreach (var oldConstraint in oldTable.Constraints)
                 {
@@ -117,9 +103,7 @@ namespace pgdiff
                         newTable.GetConstraint(oldConstraint.Name);
 
                     if (newConstraint == null)
-                    {
                         continue;
-                    }
 
                     if (oldConstraint.Comment == null
                         && newConstraint.Comment != null
@@ -172,11 +156,6 @@ namespace pgdiff
                     }
                 }
             }
-        }
-
-
-        private PgDiffConstraints()
-        {
         }
     }
 }

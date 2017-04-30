@@ -30,9 +30,7 @@ namespace pgdiff.parsers
             while (true)
             {
                 if (!first && !parser.ExpectOptional("OR"))
-                {
                     break;
-                }
                 if (parser.ExpectOptional("INSERT"))
                 {
                     trigger.OnInsert = true;

@@ -11,9 +11,7 @@ namespace pgdiff
         }
 
 
-        public static void CreateIndexes(TextWriter writer,
-            PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper)
+        public static void CreateIndexes(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             foreach (var newTable in newSchema.GetTables())
             {
@@ -39,17 +37,17 @@ namespace pgdiff
         }
 
 
-        public static void DropIndexes(TextWriter writer,
-            PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper)
+        public static void DropIndexes(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             foreach (var newTable in newSchema.GetTables())
             {
                 var newTableName = newTable.Name;
                 PgTable oldTable;
 
-                if (oldSchema == null) oldTable = null;
-                else oldTable = oldSchema.GetTable(newTableName);
+                if (oldSchema == null)
+                    oldTable = null;
+                else
+                    oldTable = oldSchema.GetTable(newTableName);
 
                 // Drop indexes that do not exist in new schema or are modified
                 foreach (var index in GetDropIndexes(oldTable, newTable))
@@ -62,47 +60,49 @@ namespace pgdiff
         }
 
 
-        private static List<PgIndex> GetDropIndexes(PgTable oldTable,
-            PgTable newTable)
+        private static List<PgIndex> GetDropIndexes(PgTable oldTable, PgTable newTable)
         {
             var list = new List<PgIndex>();
 
             if (newTable != null && oldTable != null)
                 foreach (var index in oldTable.GetIndexes())
                     if (!newTable.ContainsIndex(index.Name)
-                        || !newTable.GetIndex(index.Name).Equals(index)) list.Add(index);
+                        || !newTable.GetIndex(index.Name).Equals(index))
+                        list.Add(index);
 
             return list;
         }
 
 
-        private static List<PgIndex> GetNewIndexes(PgTable oldTable,
-            PgTable newTable)
+        private static List<PgIndex> GetNewIndexes(PgTable oldTable, PgTable newTable)
         {
             var list = new List<PgIndex>();
 
             if (newTable != null)
-                if (oldTable == null) foreach (var index in newTable.GetIndexes()) list.Add(index);
+                if (oldTable == null)
+                    foreach (var index in newTable.GetIndexes())
+                        list.Add(index);
                 else
                     foreach (var index in newTable.GetIndexes())
                         if (!oldTable.ContainsIndex(index.Name)
-                            || !oldTable.GetIndex(index.Name).Equals(index)) list.Add(index);
+                            || !oldTable.GetIndex(index.Name).Equals(index))
+                            list.Add(index);
 
             return list;
         }
 
 
-        public static void AlterComments(TextWriter writer,
-            PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper)
+        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
-            if (oldSchema == null) return;
+            if (oldSchema == null)
+                return;
 
             foreach (var oldIndex in oldSchema.GetIndexes())
             {
                 var newIndex = newSchema.GetIndex(oldIndex.Name);
 
-                if (newIndex == null) continue;
+                if (newIndex == null)
+                    continue;
 
                 if (oldIndex.Comment == null
                     && newIndex.Comment != null

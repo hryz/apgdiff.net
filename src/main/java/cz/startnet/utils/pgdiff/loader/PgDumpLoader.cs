@@ -18,7 +18,7 @@ namespace pgdiff.loader
 
 
         private static readonly Regex PatternDefaultSchema = new Regex(
-            "^SET[\\s]+search_path[\\s]*=[\\s]*\"?([^,\\s\"]+)\"?(?:,[\\s]+.*)?;$", 
+            "^SET[\\s]+search_path[\\s]*=[\\s]*\"?([^,\\s\"]+)\"?(?:,[\\s]+.*)?;$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
         private static readonly Regex PatternCreateTable = new Regex(
@@ -83,8 +83,7 @@ namespace pgdiff.loader
         }
 
 
-        public static PgDatabase LoadDatabaseSchema(TextReader reader, string charsetName, bool outputIgnoredStatements,
-            bool ignoreSlonyTriggers)
+        public static PgDatabase LoadDatabaseSchema(TextReader reader, string charsetName, bool outputIgnoredStatements, bool ignoreSlonyTriggers)
         {
             var database = new PgDatabase();
 
@@ -160,11 +159,12 @@ namespace pgdiff.loader
         }
 
 
-        public static PgDatabase LoadDatabaseSchema(string file, string charsetName, bool outputIgnoredStatements,bool ignoreSlonyTriggers)
+        public static PgDatabase LoadDatabaseSchema(string file, string charsetName, bool outputIgnoredStatements, bool ignoreSlonyTriggers)
         {
             try
             {
-                return LoadDatabaseSchema(File.OpenText(file), charsetName, outputIgnoredStatements,ignoreSlonyTriggers);
+                return LoadDatabaseSchema(File.OpenText(file), charsetName, outputIgnoredStatements,
+                    ignoreSlonyTriggers);
             }
             catch (FileNotFoundException ex)
             {
@@ -206,7 +206,8 @@ namespace pgdiff.loader
                         else
                             throw new Exception(string.Format(Resources.EndOfStatementNotFound, sbStatement));
 
-                    if (sbStatement.Length > 0) sbStatement.Append('\n');
+                    if (sbStatement.Length > 0)
+                        sbStatement.Append('\n');
 
                     pos = sbStatement.Length;
                     sbStatement.Append(newLine);
@@ -268,7 +269,8 @@ namespace pgdiff.loader
                     isQuoted = !isQuoted;
 
                     // if quote was escaped by backslash, it's like double quote
-                    if (pos > 0 && sbString[pos - 1] == '\\') isQuoted = !isQuoted;
+                    if (pos > 0 && sbString[pos - 1] == '\\')
+                        isQuoted = !isQuoted;
                 }
                 else if (sbString[curPos] == '$' && !isQuoted)
                 {

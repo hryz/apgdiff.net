@@ -32,7 +32,9 @@ namespace pgdiff.parsers
 
             while (!parser.ExpectOptional(";"))
                 if (parser.ExpectOptional("OWNED", "BY"))
-                    sequence.OwnedBy = parser.ExpectOptional("NONE") ? null : parser.GetExpression();
+                    sequence.OwnedBy = parser.ExpectOptional("NONE") 
+                        ? null 
+                        : parser.GetExpression();
                 else
                     parser.ThrowUnsupportedCommand();
         }

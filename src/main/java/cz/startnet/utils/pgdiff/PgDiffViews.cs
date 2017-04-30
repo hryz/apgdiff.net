@@ -12,7 +12,8 @@ namespace pgdiff
         }
 
 
-        public static void CreateViews(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void CreateViews(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper)
         {
             foreach (var newView in newSchema.GetViews())
                 if (oldSchema == null
@@ -27,9 +28,11 @@ namespace pgdiff
         }
 
 
-        public static void DropViews(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void DropViews(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper)
         {
-            if (oldSchema == null) return;
+            if (oldSchema == null)
+                return;
 
             foreach (var oldView in oldSchema.GetViews())
             {
@@ -49,13 +52,17 @@ namespace pgdiff
         {
             string[] oldViewColumnNames;
 
-            if (oldView.ColumnNames == null || oldView.ColumnNames.Count == 0) oldViewColumnNames = null;
-            else oldViewColumnNames = oldView.ColumnNames.ToArray();
+            if (oldView.ColumnNames == null || oldView.ColumnNames.Count == 0)
+                oldViewColumnNames = null;
+            else
+                oldViewColumnNames = oldView.ColumnNames.ToArray();
 
             string[] newViewColumnNames;
 
-            if (newView.ColumnNames == null || newView.ColumnNames.Count == 0) newViewColumnNames = null;
-            else newViewColumnNames = newView.ColumnNames.ToArray();
+            if (newView.ColumnNames == null || newView.ColumnNames.Count == 0)
+                newViewColumnNames = null;
+            else
+                newViewColumnNames = newView.ColumnNames.ToArray();
 
             if (oldViewColumnNames == null && newViewColumnNames == null)
                 return !oldView.Query.Trim().Equals(newView.Query.Trim());
@@ -63,15 +70,18 @@ namespace pgdiff
         }
 
 
-        public static void AlterViews(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void AlterViews(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper)
         {
-            if (oldSchema == null) return;
+            if (oldSchema == null)
+                return;
 
             foreach (var oldView in oldSchema.GetViews())
             {
                 var newView = newSchema.GetView(oldView.Name);
 
-                if (newView == null) continue;
+                if (newView == null)
+                    continue;
 
                 DiffDefaultValues(writer, oldView, newView, searchPathHelper);
 
@@ -103,10 +113,12 @@ namespace pgdiff
 
                 var columnNames = new List<string>();
 
-                foreach (var columnComment in newView.ColumnComments) columnNames.Add(columnComment.ColumnName);
+                foreach (var columnComment in newView.ColumnComments)
+                    columnNames.Add(columnComment.ColumnName);
 
                 foreach (var columnComment in oldView.ColumnComments)
-                    if (!columnNames.Contains(columnComment.ColumnName)) columnNames.Add(columnComment.ColumnName);
+                    if (!columnNames.Contains(columnComment.ColumnName))
+                        columnNames.Add(columnComment.ColumnName);
 
                 foreach (var columnName in columnNames)
                 {
@@ -158,7 +170,8 @@ namespace pgdiff
         }
 
 
-        private static void DiffDefaultValues(TextWriter writer, PgView oldView, PgView newView, SearchPathHelper searchPathHelper)
+        private static void DiffDefaultValues(TextWriter writer, PgView oldView, PgView newView,
+            SearchPathHelper searchPathHelper)
         {
             var oldValues = oldView.DefaultValues;
             var newValues = newView.DefaultValues;
@@ -213,7 +226,8 @@ namespace pgdiff
                         break;
                     }
 
-                if (found) continue;
+                if (found)
+                    continue;
 
                 searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
