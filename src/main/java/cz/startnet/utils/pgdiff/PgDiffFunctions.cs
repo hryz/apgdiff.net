@@ -1,124 +1,115 @@
 using System.IO;
 using pgdiff.schema;
 
-namespace pgdiff {
+namespace pgdiff
+{
+    public class PgDiffFunctions
+    {
+        private PgDiffFunctions()
+        {
+        }
 
+        public static void CreateFunctions(TextWriter writer, PgDiffArguments arguments, PgSchema oldSchema,
+            PgSchema newSchema, SearchPathHelper searchPathHelper)
+        {
+            // Add new functions and replace modified functions
+            foreach (var newFunction in newSchema.GetFunctions())
+            {
+                var oldFunction = oldSchema?.GetFunction(newFunction.GetSignature());
 
-
-
-public class PgDiffFunctions {
-
-    
-    public static void CreateFunctions(TextWriter writer,
-            PgDiffArguments arguments, PgSchema oldSchema,
-            PgSchema newSchema, SearchPathHelper searchPathHelper) {
-        // Add new functions and replace modified functions
-        foreach (PgFunction newFunction in newSchema.GetFunctions()) {
-            PgFunction oldFunction;
-
-            if (oldSchema == null) {
-                oldFunction = null;
-            } else {
-                oldFunction = oldSchema.GetFunction(newFunction.GetSignature());
-            }
-
-            if ((oldFunction == null) || !newFunction.Equals(
-                    oldFunction, arguments.IsIgnoreFunctionWhitespace())) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.WriteLine(newFunction.GetCreationSql());
+                if (oldFunction == null || !newFunction.Equals(oldFunction, arguments.IgnoreFunctionWhitespace))
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.WriteLine(newFunction.GetCreationSql());
+                }
             }
         }
-    }
 
-    
-    public static void DropFunctions(TextWriter writer,
-            PgDiffArguments arguments, PgSchema oldSchema,
-            PgSchema newSchema, SearchPathHelper searchPathHelper) {
-        if (oldSchema == null) {
-            return;
+
+        public static void DropFunctions(TextWriter writer, PgDiffArguments arguments, PgSchema oldSchema,
+            PgSchema newSchema, SearchPathHelper searchPathHelper)
+        {
+            if (oldSchema == null)
+                return;
+
+            // Drop functions that exist no more
+            foreach (var oldFunction in oldSchema.GetFunctions())
+                if (!newSchema.ContainsFunction(oldFunction.GetSignature()))
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.WriteLine(oldFunction.GetDropSql());
+                }
         }
 
-        // Drop functions that exist no more
-        foreach (PgFunction oldFunction in oldSchema.GetFunctions()) {
-            if (!newSchema.ContainsFunction(oldFunction.GetSignature())) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.WriteLine(oldFunction.GetDropSql());
-            }
-        }
-    }
 
-    
-    public static void AlterComments(TextWriter writer,
-            PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper) {
-        if (oldSchema == null) {
-            return;
-        }
+        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
+            SearchPathHelper searchPathHelper)
+        {
+            if (oldSchema == null)
+                return;
 
-        foreach (PgFunction oldfunction in oldSchema.GetFunctions()) {
-            PgFunction newFunction =
+            foreach (var oldfunction in oldSchema.GetFunctions())
+            {
+                var newFunction =
                     newSchema.GetFunction(oldfunction.GetSignature());
 
-            if (newFunction == null) {
-                continue;
-            }
+                if (newFunction == null)
+                    continue;
 
-            if (oldfunction.GetComment() == null
-                    && newFunction.GetComment() != null
-                    || oldfunction.GetComment() != null
-                    && newFunction.GetComment() != null
-                    && !oldfunction.GetComment().Equals(
-                    newFunction.GetComment())) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.Write("COMMENT ON FUNCTION ");
-                writer.Write(PgDiffUtils.GetQuotedName(newFunction.GetName()));
-                writer.Write('(');
+                if (oldfunction.Comment == null
+                    && newFunction.Comment != null
+                    || oldfunction.Comment != null
+                    && newFunction.Comment != null
+                    && !oldfunction.Comment.Equals(
+                        newFunction.Comment))
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.Write("COMMENT ON FUNCTION ");
+                    writer.Write(PgDiffUtils.GetQuotedName(newFunction.Name));
+                    writer.Write('(');
 
-                bool addComma = false;
+                    var addComma = false;
 
-                foreach (PgFunction.Argument argument in newFunction.GetArguments()) {
-                    if (addComma) {
-                        writer.Write(", ");
-                    } else {
-                        addComma = true;
+                    foreach (var argument in newFunction.GetArguments())
+                    {
+                        if (addComma)
+                            writer.Write(", ");
+                        else
+                            addComma = true;
+
+                        writer.Write(argument.GetDeclaration(false));
                     }
 
-                    writer.Write(argument.GetDeclaration(false));
+                    writer.Write(") IS ");
+                    writer.Write(newFunction.Comment);
+                    writer.WriteLine(';');
                 }
+                else if (oldfunction.Comment != null && newFunction.Comment == null)
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.Write("COMMENT ON FUNCTION ");
+                    writer.Write(PgDiffUtils.GetQuotedName(newFunction.Name));
+                    writer.Write('(');
 
-                writer.Write(") IS ");
-                writer.Write(newFunction.GetComment());
-                writer.WriteLine(';');
-            } else if (oldfunction.GetComment() != null
-                    && newFunction.GetComment() == null) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.Write("COMMENT ON FUNCTION ");
-                writer.Write(PgDiffUtils.GetQuotedName(newFunction.GetName()));
-                writer.Write('(');
+                    var addComma = false;
 
-                bool addComma = false;
+                    foreach (var argument in newFunction.GetArguments())
+                    {
+                        if (addComma)
+                            writer.Write(", ");
+                        else
+                            addComma = true;
 
-                foreach (PgFunction.Argument argument in newFunction.GetArguments()) {
-                    if (addComma) {
-                        writer.Write(", ");
-                    } else {
-                        addComma = true;
+                        writer.Write(argument.GetDeclaration(false));
                     }
 
-                    writer.Write(argument.GetDeclaration(false));
+                    writer.WriteLine(") IS NULL;");
                 }
-
-                writer.WriteLine(") IS NULL;");
             }
         }
     }
-
-    
-    private PgDiffFunctions() {
-    }
-}
 }

@@ -2,183 +2,181 @@ using System.Collections.Generic;
 using System.IO;
 using pgdiff.schema;
 
-namespace pgdiff {
+namespace pgdiff
+{
+    public class PgDiffConstraints
+    {
+        public static void CreateConstraints(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey, SearchPathHelper searchPathHelper)
+        {
+            foreach (var newTable in newSchema.GetTables())
+            {
+                var oldTable = oldSchema?.GetTable(newTable.Name);
 
-
-
-
-
-
-public class PgDiffConstraints {
-
-    
-    public static void CreateConstraints(TextWriter writer,
-            PgSchema oldSchema, PgSchema newSchema,
-            bool primaryKey, SearchPathHelper searchPathHelper) {
-        foreach (PgTable newTable in newSchema.GetTables()) {
-            PgTable oldTable;
-
-            if (oldSchema == null) {
-                oldTable = null;
-            } else {
-                oldTable = oldSchema.GetTable(newTable.GetName());
-            }
-
-            // Add new constraints
-            foreach (PgConstraint constraint in GetNewConstraints(oldTable, newTable, primaryKey)) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.WriteLine(constraint.GetCreationSql());
-            }
-        }
-    }
-
-    public static void DropConstraints(TextWriter writer,
-            PgSchema oldSchema, PgSchema newSchema,
-            bool primaryKey, SearchPathHelper searchPathHelper) {
-        foreach (PgTable newTable in newSchema.GetTables()) {
-            PgTable oldTable;
-
-            if (oldSchema == null) {
-                oldTable = null;
-            } else {
-                oldTable = oldSchema.GetTable(newTable.GetName());
-            }
-
-            // Drop constraints that no more exist or are modified
-            foreach (PgConstraint constraint in GetDropConstraints(oldTable, newTable, primaryKey)) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.WriteLine(constraint.GetDropSql());
-            }
-        }
-    }
-
-    
-    private static List<PgConstraint> GetDropConstraints(PgTable oldTable,
-            PgTable newTable, bool primaryKey) {
-        
-        List<PgConstraint> list = new List<PgConstraint>();
-
-        if (newTable != null && oldTable != null) {
-            foreach (PgConstraint constraint in oldTable.GetConstraints()) {
-                if (constraint.IsPrimaryKeyConstraint() == primaryKey
-                        && (!newTable.ContainsConstraint(constraint.GetName())
-                        || !newTable.GetConstraint(constraint.GetName()).Equals(
-                        constraint))) {
-                    list.Add(constraint);
+                // Add new constraints
+                foreach (var constraint in GetNewConstraints(oldTable, newTable, primaryKey))
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.WriteLine(constraint.GetCreationSql());
                 }
             }
         }
 
-        return list;
-    }
+        public static void DropConstraints(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey, SearchPathHelper searchPathHelper)
+        {
+            foreach (var newTable in newSchema.GetTables())
+            {
+                var oldTable = oldSchema?.GetTable(newTable.Name);
 
-    
-    private static List<PgConstraint> GetNewConstraints(PgTable oldTable,
-            PgTable newTable, bool primaryKey) {
-        
-        List<PgConstraint> list = new List<PgConstraint>();
+                // Drop constraints that no more exist or are modified
+                foreach (var constraint in GetDropConstraints(oldTable, newTable, primaryKey))
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.WriteLine(constraint.GetDropSql());
+                }
+            }
+        }
 
-        if (newTable != null) {
-            if (oldTable == null) {
-                foreach (PgConstraint constraint in newTable.GetConstraints()) {
-                    if (constraint.IsPrimaryKeyConstraint() == primaryKey) {
+
+        private static List<PgConstraint> GetDropConstraints(PgTable oldTable, PgTable newTable, bool primaryKey)
+        {
+            var list = new List<PgConstraint>();
+
+            if (newTable != null && oldTable != null)
+            {
+                foreach (var constraint in oldTable.Constraints)
+                {
+                    if (constraint.IsPrimaryKeyConstraint() == primaryKey
+                        && (!newTable.ContainsConstraint(constraint.Name)
+                            || !newTable.GetConstraint(constraint.Name).Equals(constraint)))
+                    {
                         list.Add(constraint);
                     }
                 }
-            } else {
-                foreach (PgConstraint constraint in newTable.GetConstraints()) {
-                    if ((constraint.IsPrimaryKeyConstraint() == primaryKey)
+            }
+
+            return list;
+        }
+
+
+        private static List<PgConstraint> GetNewConstraints(PgTable oldTable, PgTable newTable, bool primaryKey)
+        {
+            var list = new List<PgConstraint>();
+
+            if (newTable != null)
+            {
+                if (oldTable == null)
+                {
+                    foreach (var constraint in newTable.Constraints)
+                    {
+                        if (constraint.IsPrimaryKeyConstraint() == primaryKey)
+                        {
+                            list.Add(constraint);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var constraint in newTable.Constraints)
+                    {
+                        if ((constraint.IsPrimaryKeyConstraint() == primaryKey)
                             && (!oldTable.ContainsConstraint(
-                            constraint.GetName())
-                            || !oldTable.GetConstraint(constraint.GetName()).
-                            Equals(constraint))) {
-                        list.Add(constraint);
+                                    constraint.Name)
+                                || !oldTable.GetConstraint(constraint.Name).Equals(constraint)))
+                        {
+                            list.Add(constraint);
+                        }
                     }
                 }
             }
+
+            return list;
         }
 
-        return list;
-    }
 
-    
-    public static void AlterComments(TextWriter writer,
-            PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper) {
-        if (oldSchema == null) {
-            return;
-        }
-
-        foreach (PgTable oldTable in oldSchema.GetTables()) {
-            PgTable newTable = newSchema.GetTable(oldTable.GetName());
-
-            if (newTable == null) {
-                continue;
+        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        {
+            if (oldSchema == null)
+            {
+                return;
             }
 
-            foreach (PgConstraint oldConstraint in  oldTable.GetConstraints()) {
-                PgConstraint newConstraint =
-                        newTable.GetConstraint(oldConstraint.GetName());
+            foreach (var oldTable in oldSchema.GetTables())
+            {
+                var newTable = newSchema.GetTable(oldTable.Name);
 
-                if (newConstraint == null) {
+                if (newTable == null)
+                {
                     continue;
                 }
 
-                if (oldConstraint.GetComment() == null
-                        && newConstraint.GetComment() != null
-                        || oldConstraint.GetComment() != null
-                        && newConstraint.GetComment() != null
-                        && !oldConstraint.GetComment().Equals(
-                        newConstraint.GetComment())) {
-                    searchPathHelper.OutputSearchPath(writer);
-                    writer.WriteLine();
-                    writer.Write("COMMENT ON ");
+                foreach (var oldConstraint in oldTable.Constraints)
+                {
+                    var newConstraint =
+                        newTable.GetConstraint(oldConstraint.Name);
 
-                    if (newConstraint.IsPrimaryKeyConstraint()) {
-                        writer.Write("INDEX ");
-                        writer.Write(PgDiffUtils.GetQuotedName(
-                                newConstraint.GetName()));
-                    } else {
-                        writer.Write("CONSTRAINT ");
-                        writer.Write(PgDiffUtils.GetQuotedName(
-                                newConstraint.GetName()));
-                        writer.Write(" ON ");
-                        writer.Write(PgDiffUtils.GetQuotedName(
-                                newConstraint.GetTableName()));
+                    if (newConstraint == null)
+                    {
+                        continue;
                     }
 
-                    writer.Write(" IS ");
-                    writer.Write(newConstraint.GetComment());
-                    writer.WriteLine(';');
-                } else if (oldConstraint.GetComment() != null
-                        && newConstraint.GetComment() == null) {
-                    searchPathHelper.OutputSearchPath(writer);
-                    writer.WriteLine();
-                    writer.Write("COMMENT ON ");
+                    if (oldConstraint.Comment == null
+                        && newConstraint.Comment != null
+                        || oldConstraint.Comment != null
+                        && newConstraint.Comment != null
+                        && !oldConstraint.Comment.Equals(
+                            newConstraint.Comment))
+                    {
+                        searchPathHelper.OutputSearchPath(writer);
+                        writer.WriteLine();
+                        writer.Write("COMMENT ON ");
 
-                    if (newConstraint.IsPrimaryKeyConstraint()) {
-                        writer.Write("INDEX ");
-                        writer.Write(PgDiffUtils.GetQuotedName(
-                                newConstraint.GetName()));
-                    } else {
-                        writer.Write("CONSTRAINT ");
-                        writer.Write(PgDiffUtils.GetQuotedName(
-                                newConstraint.GetName()));
-                        writer.Write(" ON ");
-                        writer.Write(PgDiffUtils.GetQuotedName(
-                                newConstraint.GetTableName()));
+                        if (newConstraint.IsPrimaryKeyConstraint())
+                        {
+                            writer.Write("INDEX ");
+                            writer.Write(PgDiffUtils.GetQuotedName(newConstraint.Name));
+                        }
+                        else
+                        {
+                            writer.Write("CONSTRAINT ");
+                            writer.Write(PgDiffUtils.GetQuotedName(newConstraint.Name));
+                            writer.Write(" ON ");
+                            writer.Write(PgDiffUtils.GetQuotedName(newConstraint.TableName));
+                        }
+
+                        writer.Write(" IS ");
+                        writer.Write(newConstraint.Comment);
+                        writer.WriteLine(';');
                     }
+                    else if (oldConstraint.Comment != null && newConstraint.Comment == null)
+                    {
+                        searchPathHelper.OutputSearchPath(writer);
+                        writer.WriteLine();
+                        writer.Write("COMMENT ON ");
 
-                    writer.WriteLine(" IS NULL;");
+                        if (newConstraint.IsPrimaryKeyConstraint())
+                        {
+                            writer.Write("INDEX ");
+                            writer.Write(PgDiffUtils.GetQuotedName(newConstraint.Name));
+                        }
+                        else
+                        {
+                            writer.Write("CONSTRAINT ");
+                            writer.Write(PgDiffUtils.GetQuotedName(newConstraint.Name));
+                            writer.Write(" ON ");
+                            writer.Write(PgDiffUtils.GetQuotedName(newConstraint.TableName));
+                        }
+
+                        writer.WriteLine(" IS NULL;");
+                    }
                 }
             }
         }
-    }
 
-    
-    private PgDiffConstraints() {
+
+        private PgDiffConstraints()
+        {
+        }
     }
-}
 }

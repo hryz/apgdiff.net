@@ -2,52 +2,39 @@ using System;
 using pgdiff.Properties;
 using pgdiff.schema;
 
-namespace pgdiff.parsers {
-
-
-
-
-public class AlterSequenceParser {
-
-    
-    public static void Parse(PgDatabase database,
-            String statement, bool outputIgnoredStatements) {
-        Parser parser = new Parser(statement);
-
-        parser.Expect("ALTER", "SEQUENCE");
-
-        String sequenceName = parser.ParseIdentifier();
-        String schemaName =
-                ParserUtils.GetSchemaName(sequenceName, database);
-        PgSchema schema = database.GetSchema(schemaName);
-
-        if (schema == null) {
-            throw new Exception(String.Format(Resources.CannotFindSchema, schemaName,statement));
+namespace pgdiff.parsers
+{
+    public class AlterSequenceParser
+    {
+        private AlterSequenceParser()
+        {
         }
 
-        String objectName = ParserUtils.GetObjectName(sequenceName);
-        PgSequence sequence = schema.GetSequence(objectName);
+        public static void Parse(PgDatabase database, string statement, bool outputIgnoredStatements)
+        {
+            var parser = new Parser(statement);
 
-        if (sequence == null) {
-            throw new Exception(String.Format(Resources.CannotFindSequence, sequenceName,statement));
-        }
+            parser.Expect("ALTER", "SEQUENCE");
 
-        while (!parser.ExpectOptional(";")) {
+            var sequenceName = parser.ParseIdentifier();
+            var schemaName = ParserUtils.GetSchemaName(sequenceName, database);
+            var schema = database.GetSchema(schemaName);
 
-            if (parser.ExpectOptional("OWNED", "BY")) {
-                if (parser.ExpectOptional("NONE")) {
-                    sequence.SetOwnedBy(null);
-                } else {
-                    sequence.SetOwnedBy(parser.GetExpression());
-                }
-            } else {
-                parser.ThrowUnsupportedCommand();
-            }
+            if (schema == null)
+                throw new Exception(string.Format(Resources.CannotFindSchema, schemaName, statement));
+
+            var objectName = ParserUtils.GetObjectName(sequenceName);
+            var sequence = schema.GetSequence(objectName);
+
+            if (sequence == null)
+                throw new Exception(string.Format(Resources.CannotFindSequence, sequenceName, statement));
+
+
+            while (!parser.ExpectOptional(";"))
+                if (parser.ExpectOptional("OWNED", "BY"))
+                    sequence.OwnedBy = parser.ExpectOptional("NONE") ? null : parser.GetExpression();
+                else
+                    parser.ThrowUnsupportedCommand();
         }
     }
-
-    
-    private AlterSequenceParser() {
-    }
-}
 }

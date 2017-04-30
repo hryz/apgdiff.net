@@ -1,19 +1,18 @@
+namespace pgdiff.schema
+{
+    public class PgColumnUtils
+    {
+        private PgColumnUtils()
+        {
+        }
 
-using System;
 
-namespace pgdiff.schema {
+        public static string GetDefaultValue(string type)
+        {
+            string defaultValue;
+            var adjType = type.ToLower();
 
-
-
-
-public class PgColumnUtils {
-
-    
-    public static String GetDefaultValue(String type) {
-        String defaultValue;
-        String adjType = type.ToLower();
-
-        if ("smallint".Equals(adjType)
+            if ("smallint".Equals(adjType)
                 || "integer".Equals(adjType)
                 || "bigint".Equals(adjType)
                 || adjType.StartsWith("decimal")
@@ -25,25 +24,20 @@ public class PgColumnUtils {
                 || "int8".Equals(adjType)
                 || adjType.StartsWith("float")
                 || "double".Equals(adjType)
-                || "money".Equals(adjType)) {
-            defaultValue = "0";
-        } else if (adjType.StartsWith("character varying")
-                || adjType.StartsWith("varchar")
-                || adjType.StartsWith("character")
-                || adjType.StartsWith("char")
-                || "text".Equals(adjType)) {
-            defaultValue = "''";
-        } else if ("boolean".Equals(adjType)) {
-            defaultValue = "false";
-        } else {
-            defaultValue = null;
+                || "money".Equals(adjType))
+                defaultValue = "0";
+            else if (adjType.StartsWith("character varying")
+                     || adjType.StartsWith("varchar")
+                     || adjType.StartsWith("character")
+                     || adjType.StartsWith("char")
+                     || "text".Equals(adjType))
+                defaultValue = "''";
+            else if ("boolean".Equals(adjType))
+                defaultValue = "false";
+            else
+                defaultValue = null;
+
+            return defaultValue;
         }
-
-        return defaultValue;
     }
-
-    
-    private PgColumnUtils() {
-    }
-}
 }

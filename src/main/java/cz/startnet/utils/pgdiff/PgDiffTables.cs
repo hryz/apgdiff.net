@@ -4,476 +4,421 @@ using System.IO;
 using pgdiff.Properties;
 using pgdiff.schema;
 
-namespace pgdiff {
+namespace pgdiff
+{
+    public class PgDiffTables
+    {
+        private PgDiffTables()
+        {
+        }
 
 
+        public static void DropClusters(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        {
+            foreach (var newTable in newSchema.GetTables())
+            {
+                var oldTable = oldSchema?.GetTable(newTable.Name);
 
+                var oldCluster = oldTable?.ClusterIndexName;
 
+                var newCluster = newTable.ClusterIndexName;
 
-
-
-
-
-public class PgDiffTables {
-
-    
-    public static void DropClusters(TextWriter writer,
-            PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper) {
-        foreach (PgTable newTable in newSchema.GetTables()) {
-            PgTable oldTable;
-
-            if (oldSchema == null) {
-                oldTable = null;
-            } else {
-                oldTable = oldSchema.GetTable(newTable.GetName());
-            }
-
-            String oldCluster;
-
-            if (oldTable == null) {
-                oldCluster = null;
-            } else {
-                oldCluster = oldTable.GetClusterIndexName();
-            }
-
-            String newCluster = newTable.GetClusterIndexName();
-
-            if (oldCluster != null && newCluster == null
-                    && newTable.ContainsIndex(oldCluster)) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.Write("ALTER TABLE ");
-                writer.Write(PgDiffUtils.GetQuotedName(newTable.GetName()));
-                writer.WriteLine(" SET WITHOUT CLUSTER;");
+                if (oldCluster != null && newCluster == null
+                    && newTable.ContainsIndex(oldCluster))
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.Write("ALTER TABLE ");
+                    writer.Write(PgDiffUtils.GetQuotedName(newTable.Name));
+                    writer.WriteLine(" SET WITHOUT CLUSTER;");
+                }
             }
         }
-    }
 
-    
-    public static void CreateClusters(TextWriter writer,
-            PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper) {
-        foreach (PgTable newTable in newSchema.GetTables()) {
-            PgTable oldTable;
 
-            if (oldSchema == null) {
-                oldTable = null;
-            } else {
-                oldTable = oldSchema.GetTable(newTable.GetName());
+        public static void CreateClusters(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        {
+            foreach (var newTable in newSchema.GetTables())
+            {
+                var oldTable = oldSchema?.GetTable(newTable.Name);
+                var oldCluster = oldTable?.ClusterIndexName;
+
+                var newCluster = newTable.ClusterIndexName;
+
+                if (oldCluster == null && newCluster != null
+                    || oldCluster != null && newCluster != null
+                    && newCluster.CompareTo(oldCluster) != 0)
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.Write("ALTER TABLE ");
+                    writer.Write(PgDiffUtils.GetQuotedName(newTable.Name));
+                    writer.Write(" CLUSTER ON ");
+                    writer.Write(PgDiffUtils.GetQuotedName(newCluster));
+                    writer.WriteLine(';');
+                }
+            }
+        }
+
+
+        public static void AlterTables(TextWriter writer, PgDiffArguments arguments, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        {
+            foreach (var newTable in newSchema.GetTables())
+            {
+                if (oldSchema == null
+                    || !oldSchema.ContainsTable(newTable.Name)) continue;
+
+                var oldTable = oldSchema.GetTable(newTable.Name);
+                UpdateTableColumns(
+                    writer, arguments, oldTable, newTable, searchPathHelper);
+                CheckWithOids(writer, oldTable, newTable, searchPathHelper);
+                CheckInherits(writer, oldTable, newTable, searchPathHelper);
+                CheckTablespace(writer, oldTable, newTable, searchPathHelper);
+                AddAlterStatistics(writer, oldTable, newTable, searchPathHelper);
+                AddAlterStorage(writer, oldTable, newTable, searchPathHelper);
+                AlterComments(writer, oldTable, newTable, searchPathHelper);
+            }
+        }
+
+
+        private static void AddAlterStatistics(TextWriter writer, PgTable oldTable, PgTable newTable, SearchPathHelper searchPathHelper)
+        {
+            var stats = new Dictionary<string, int?>();
+
+            foreach (var newColumn in newTable.Columns)
+            {
+                var oldColumn = oldTable.GetColumn(newColumn.Name);
+
+                if (oldColumn != null)
+                {
+                    var oldStat = oldColumn.Statistics;
+                    var newStat = newColumn.Statistics;
+                    int? newStatValue = null;
+
+                    if (newStat != null && (oldStat == null || !newStat.Equals(oldStat))) newStatValue = newStat;
+                    else if (oldStat != null && newStat == null)
+                        newStatValue = -1;
+
+                    if (newStatValue != null) stats.Add(newColumn.Name, newStatValue);
+                }
             }
 
-            String oldCluster;
-
-            if (oldTable == null) {
-                oldCluster = null;
-            } else {
-                oldCluster = oldTable.GetClusterIndexName();
-            }
-
-            String newCluster = newTable.GetClusterIndexName();
-
-            if ((oldCluster == null && newCluster != null)
-                    || (oldCluster != null && newCluster != null
-                    && newCluster.CompareTo(oldCluster) != 0)) {
+            foreach (var entry in stats)
+            {
                 searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
-                writer.Write("ALTER TABLE ");
-                writer.Write(PgDiffUtils.GetQuotedName(newTable.GetName()));
-                writer.Write(" CLUSTER ON ");
-                writer.Write(PgDiffUtils.GetQuotedName(newCluster));
+                writer.Write("ALTER TABLE ONLY ");
+                writer.Write(PgDiffUtils.GetQuotedName(newTable.Name));
+                writer.Write(" ALTER COLUMN ");
+                writer.Write(PgDiffUtils.GetQuotedName(entry.Key));
+                writer.Write(" SET STATISTICS ");
+                writer.Write(entry.Value);
                 writer.WriteLine(';');
             }
         }
-    }
 
-    
-    public static void AlterTables(TextWriter writer,
-            PgDiffArguments arguments, PgSchema oldSchema,
-            PgSchema newSchema, SearchPathHelper searchPathHelper) {
-        foreach (PgTable newTable in newSchema.GetTables()) {
-            if (oldSchema == null
-                    || !oldSchema.ContainsTable(newTable.GetName())) {
-                continue;
-            }
 
-            PgTable oldTable = oldSchema.GetTable(newTable.GetName());
-            UpdateTableColumns(
-                    writer, arguments, oldTable, newTable, searchPathHelper);
-            CheckWithOids(writer, oldTable, newTable, searchPathHelper);
-            CheckInherits(writer, oldTable, newTable, searchPathHelper);
-            CheckTablespace(writer, oldTable, newTable, searchPathHelper);
-            AddAlterStatistics(writer, oldTable, newTable, searchPathHelper);
-            AddAlterStorage(writer, oldTable, newTable, searchPathHelper);
-            AlterComments(writer, oldTable, newTable, searchPathHelper);
-        }
-    }
+        private static void AddAlterStorage(TextWriter writer, PgTable oldTable, PgTable newTable, SearchPathHelper searchPathHelper)
+        {
+            foreach (var newColumn in newTable.Columns)
+            {
+                var oldColumn = oldTable.GetColumn(newColumn.Name);
+                var oldStorage = string.IsNullOrEmpty(oldColumn?.Storage)
+                    ? null
+                    : oldColumn.Storage;
+                var newStorage = string.IsNullOrEmpty(newColumn.Storage)
+                    ? null
+                    : newColumn.Storage;
 
-    
-    private static void AddAlterStatistics(TextWriter writer,
-            PgTable oldTable, PgTable newTable,
-            SearchPathHelper searchPathHelper) {
-        
-        Dictionary<string,int?> stats = new Dictionary<string, int?>();
-
-        foreach (PgColumn newColumn in newTable.GetColumns()) {
-            PgColumn oldColumn = oldTable.GetColumn(newColumn.GetName());
-
-            if (oldColumn != null) {
-                int? oldStat = oldColumn.GetStatistics();
-                int? newStat = newColumn.GetStatistics();
-                int? newStatValue = null;
-
-                if (newStat != null && (oldStat == null || !newStat.Equals(oldStat))) {
-                    newStatValue = newStat;
-                } else if (oldStat != null && newStat == null)
+                if (newStorage == null && oldStorage != null)
                 {
-                    newStatValue = -1;
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.WriteLine(Resources.WarningUnableToDetermineStorageType,
+                        newTable.Name + '.' + newColumn.Name);
+
+                    continue;
                 }
 
-                if (newStatValue != null) {
-                    stats.Add(newColumn.GetName(), newStatValue);
-                }
-            }
-        }
+                if (newStorage == null || newStorage.Equals(oldStorage, StringComparison.InvariantCultureIgnoreCase))
+                    continue;
 
-        foreach (var entry in stats) {
-            searchPathHelper.OutputSearchPath(writer);
-            writer.WriteLine();
-            writer.Write("ALTER TABLE ONLY ");
-            writer.Write(PgDiffUtils.GetQuotedName(newTable.GetName()));
-            writer.Write(" ALTER COLUMN ");
-            writer.Write(PgDiffUtils.GetQuotedName(entry.Key));
-            writer.Write(" SET STATISTICS ");
-            writer.Write(entry.Value);
-            writer.WriteLine(';');
-        }
-    }
-
-    
-    private static void AddAlterStorage(TextWriter writer,
-            PgTable oldTable, PgTable newTable,
-            SearchPathHelper searchPathHelper) {
-        foreach (PgColumn newColumn in newTable.GetColumns()) {
-            PgColumn oldColumn = oldTable.GetColumn(newColumn.GetName());
-            String oldStorage = (oldColumn == null
-                    || oldColumn.GetStorage() == null
-                    || String.IsNullOrEmpty(oldColumn.GetStorage())) ? null
-                    : oldColumn.GetStorage();
-            String newStorage = (newColumn.GetStorage() == null
-                    || String.IsNullOrEmpty(newColumn.GetStorage())) ? null
-                    : newColumn.GetStorage();
-
-            if (newStorage == null && oldStorage != null) {
                 searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
-                writer.WriteLine(Resources.WarningUnableToDetermineStorageType, newTable.GetName() + '.' + newColumn.GetName());
-
-                continue;
+                writer.Write("ALTER TABLE ONLY ");
+                writer.Write(PgDiffUtils.GetQuotedName(newTable.Name));
+                writer.Write(" ALTER COLUMN ");
+                writer.Write(PgDiffUtils.GetQuotedName(newColumn.Name));
+                writer.Write(" SET STORAGE ");
+                writer.Write(newStorage);
+                writer.Write(';');
             }
-
-            if (newStorage == null || newStorage.Equals(oldStorage,StringComparison.InvariantCultureIgnoreCase)) {
-                continue;
-            }
-
-            searchPathHelper.OutputSearchPath(writer);
-            writer.WriteLine();
-            writer.Write("ALTER TABLE ONLY ");
-            writer.Write(PgDiffUtils.GetQuotedName(newTable.GetName()));
-            writer.Write(" ALTER COLUMN ");
-            writer.Write(PgDiffUtils.GetQuotedName(newColumn.GetName()));
-            writer.Write(" SET STORAGE ");
-            writer.Write(newStorage);
-            writer.Write(';');
         }
-    }
 
-    
-    private static void AddCreateTableColumns(List<String> statements,
-            PgDiffArguments arguments, PgTable oldTable,
-            PgTable newTable, List<PgColumn> dropDefaultsColumns) {
-        foreach (PgColumn column in newTable.GetColumns()) {
-            if (!oldTable.ContainsColumn(column.GetName())) {
-                statements.Add("\tADD COLUMN " + column.GetFullDefinition(arguments.IsAddDefaults()));
 
-                if (arguments.IsAddDefaults() && !column.GetNullValue()
-                        && (column.GetDefaultValue() == null
-                        || String.IsNullOrEmpty(column.GetDefaultValue()))) {
-                    dropDefaultsColumns.Add(column);
+        private static void AddCreateTableColumns(List<string> statements, PgDiffArguments arguments, 
+            PgTable oldTable, PgTable newTable, List<PgColumn> dropDefaultsColumns)
+        {
+            foreach (var column in newTable.Columns)
+                if (!oldTable.ContainsColumn(column.Name))
+                {
+                    statements.Add("\tADD COLUMN " + column.GetFullDefinition(arguments.AddDefaults));
+
+                    if (arguments.AddDefaults && !column.NullValue
+                        && string.IsNullOrEmpty(column.DefaultValue)) dropDefaultsColumns.Add(column);
                 }
-            }
         }
-    }
 
-    
-    private static void AddDropTableColumns(List<String> statements,
-            PgTable oldTable, PgTable newTable) {
-        foreach (PgColumn column in oldTable.GetColumns()) {
-            if (!newTable.ContainsColumn(column.GetName())) {
-                statements.Add("\tDROP COLUMN " + PgDiffUtils.GetQuotedName(column.GetName()));
-            }
+
+        private static void AddDropTableColumns(List<string> statements, PgTable oldTable, PgTable newTable)
+        {
+            foreach (var column in oldTable.Columns)
+                if (!newTable.ContainsColumn(column.Name))
+                    statements.Add("\tDROP COLUMN " + PgDiffUtils.GetQuotedName(column.Name));
         }
-    }
 
-    
-    private static void AddModifyTableColumns(List<String> statements,
-            PgDiffArguments arguments, PgTable oldTable,
-            PgTable newTable, List<PgColumn> dropDefaultsColumns) {
-        foreach (PgColumn newColumn in newTable.GetColumns()) {
-            if (!oldTable.ContainsColumn(newColumn.GetName())) {
-                continue;
-            }
 
-            PgColumn oldColumn = oldTable.GetColumn(newColumn.GetName());
-            String newColumnName =
-                    PgDiffUtils.GetQuotedName(newColumn.GetName());
+        private static void AddModifyTableColumns(List<string> statements, PgDiffArguments arguments, 
+            PgTable oldTable, PgTable newTable, List<PgColumn> dropDefaultsColumns)
+        {
+            foreach (var newColumn in newTable.Columns)
+            {
+                if (!oldTable.ContainsColumn(newColumn.Name)) continue;
 
-            if (!oldColumn.getType().Equals(newColumn.getType())) {
-                statements.Add("\tALTER COLUMN " + newColumnName + " TYPE "
-                        + newColumn.getType() + " /* "
-                        + String.Format(
-                        Resources.TypeParameterChange,
-                        newTable.GetName(), oldColumn.getType(),
-                        newColumn.getType()) + " */");
-            }
+                var oldColumn = oldTable.GetColumn(newColumn.Name);
+                var newColumnName = PgDiffUtils.GetQuotedName(newColumn.Name);
 
-            String oldDefault = (oldColumn.GetDefaultValue() == null) ? ""
-                    : oldColumn.GetDefaultValue();
-            String newDefault = (newColumn.GetDefaultValue() == null) ? ""
-                    : newColumn.GetDefaultValue();
+                if (!oldColumn.Type.Equals(newColumn.Type))
+                    statements.Add("\tALTER COLUMN " + newColumnName + " TYPE "
+                                   + newColumn.Type + " /* "
+                                   + string.Format(
+                                       Resources.TypeParameterChange,
+                                       newTable.Name, oldColumn.Type,
+                                       newColumn.Type) + " */");
 
-            if (!oldDefault.Equals(newDefault)) {
-                if (newDefault.Length == 0) {
-                    statements.Add("\tALTER COLUMN " + newColumnName
-                            + " DROP DEFAULT");
-                } else {
-                    statements.Add("\tALTER COLUMN " + newColumnName
-                            + " SET DEFAULT " + newDefault);
-                }
-            }
+                var oldDefault = oldColumn.DefaultValue ?? "";
+                var newDefault = newColumn.DefaultValue ?? "";
 
-            if (oldColumn.GetNullValue() != newColumn.GetNullValue()) {
-                if (newColumn.GetNullValue()) {
-                    statements.Add("\tALTER COLUMN " + newColumnName
-                            + " DROP NOT NULL");
-                } else {
-                    if (arguments.IsAddDefaults()) {
-                        String defaultValue =
-                                PgColumnUtils.GetDefaultValue(
-                                newColumn.getType());
+                if (!oldDefault.Equals(newDefault))
+                    if (newDefault.Length == 0)
+                        statements.Add("\tALTER COLUMN " + newColumnName
+                                       + " DROP DEFAULT");
+                    else
+                        statements.Add("\tALTER COLUMN " + newColumnName
+                                       + " SET DEFAULT " + newDefault);
 
-                        if (defaultValue != null) {
-                            statements.Add("\tALTER COLUMN " + newColumnName
-                                    + " SET DEFAULT " + defaultValue);
-                            dropDefaultsColumns.Add(newColumn);
-                        }
+                if (oldColumn.NullValue != newColumn.NullValue)
+                    if (newColumn.NullValue)
+                    {
+                        statements.Add("\tALTER COLUMN " + newColumnName
+                                       + " DROP NOT NULL");
                     }
+                    else
+                    {
+                        if (arguments.AddDefaults)
+                        {
+                            var defaultValue = PgColumnUtils.GetDefaultValue( newColumn.Type);
 
-                    statements.Add("\tALTER COLUMN " + newColumnName
-                            + " SET NOT NULL");
+                            if (defaultValue != null)
+                            {
+                                statements.Add("\tALTER COLUMN " + newColumnName
+                                               + " SET DEFAULT " + defaultValue);
+                                dropDefaultsColumns.Add(newColumn);
+                            }
+                        }
+
+                        statements.Add("\tALTER COLUMN " + newColumnName
+                                       + " SET NOT NULL");
+                    }
+            }
+        }
+
+
+        private static void CheckInherits(TextWriter writer, PgTable oldTable, PgTable newTable, SearchPathHelper searchPathHelper)
+        {
+            foreach (var tableName in oldTable.GetInherits())
+                if (!newTable.GetInherits().Contains(tableName))
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.WriteLine("ALTER TABLE "
+                                     + PgDiffUtils.GetQuotedName(newTable.Name));
+                    writer.WriteLine("\tNO INHERIT "
+                                     + PgDiffUtils.GetQuotedName(tableName) + ';');
                 }
-            }
-        }
-    }
 
-    
-    private static void CheckInherits(TextWriter writer,
-            PgTable oldTable, PgTable newTable,
-            SearchPathHelper searchPathHelper) {
-        foreach (String tableName in oldTable.GetInherits()) {
-            if (!newTable.GetInherits().Contains(tableName)) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.WriteLine("ALTER TABLE "
-                        + PgDiffUtils.GetQuotedName(newTable.GetName()));
-                writer.WriteLine("\tNO INHERIT "
-                        + PgDiffUtils.GetQuotedName(tableName) + ';');
-            }
+            foreach (var tableName in newTable.GetInherits())
+                if (!oldTable.GetInherits().Contains(tableName))
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.WriteLine("ALTER TABLE "
+                                     + PgDiffUtils.GetQuotedName(newTable.Name));
+                    writer.WriteLine("\tINHERIT "
+                                     + PgDiffUtils.GetQuotedName(tableName) + ';');
+                }
         }
 
-        foreach (String tableName in newTable.GetInherits()) {
-            if (!oldTable.GetInherits().Contains(tableName)) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.WriteLine("ALTER TABLE "
-                        + PgDiffUtils.GetQuotedName(newTable.GetName()));
-                writer.WriteLine("\tINHERIT "
-                        + PgDiffUtils.GetQuotedName(tableName) + ';');
-            }
-        }
-    }
 
-    
-    private static void CheckWithOids(TextWriter writer,
-            PgTable oldTable, PgTable newTable,
-            SearchPathHelper searchPathHelper) {
-        if (oldTable.GetWith() == null && newTable.GetWith() == null
-                || oldTable.GetWith() != null
-                && oldTable.GetWith().Equals(newTable.GetWith())) {
-            return;
-        }
+        private static void CheckWithOids(TextWriter writer, PgTable oldTable, PgTable newTable, SearchPathHelper searchPathHelper)
+        {
+            if (oldTable.With == null && newTable.With == null
+                || oldTable.With != null
+                && oldTable.With.Equals(newTable.With)) return;
 
-        searchPathHelper.OutputSearchPath(writer);
-        writer.WriteLine();
-        writer.WriteLine("ALTER TABLE "
-                + PgDiffUtils.GetQuotedName(newTable.GetName()));
-
-        if (newTable.GetWith() == null
-                || "OIDS=false".Equals(newTable.GetWith(),StringComparison.InvariantCultureIgnoreCase)) {
-            writer.WriteLine("\tSET WITHOUT OIDS;");
-        } else if ("OIDS".Equals(newTable.GetWith(),StringComparison.InvariantCultureIgnoreCase)
-                || "OIDS=true".Equals(newTable.GetWith(),StringComparison.InvariantCultureIgnoreCase)) {
-            writer.WriteLine("\tSET WITH OIDS;");
-        } else {
-            writer.WriteLine("\tSET " + newTable.GetWith() + ";");
-        }
-    }
-
-    
-    private static void CheckTablespace(TextWriter writer,
-            PgTable oldTable, PgTable newTable,
-            SearchPathHelper searchPathHelper) {
-        if (oldTable.GetTablespace() == null && newTable.GetTablespace() == null
-                || oldTable.GetTablespace() != null
-                && oldTable.GetTablespace().Equals(newTable.GetTablespace())) {
-            return;
-        }
-
-        searchPathHelper.OutputSearchPath(writer);
-        writer.WriteLine();
-        writer.WriteLine("ALTER TABLE "
-                + PgDiffUtils.GetQuotedName(newTable.GetName()));
-        writer.WriteLine("\tTABLESPACE " + newTable.GetTablespace() + ';');
-    }
-
-    
-    public static void CreateTables(TextWriter writer,
-            PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper) {
-        foreach (PgTable table in newSchema.GetTables()) {
-            if (oldSchema == null
-                    || !oldSchema.ContainsTable(table.GetName())) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.WriteLine(table.GetCreationSql());
-            }
-        }
-    }
-
-    
-    public static void DropTables(TextWriter writer,
-            PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper) {
-        if (oldSchema == null) {
-            return;
-        }
-
-        foreach (PgTable table in oldSchema.GetTables()) {
-            if (!newSchema.ContainsTable(table.GetName())) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.WriteLine(table.GetDropSql());
-            }
-        }
-    }
-
-    
-    private static void UpdateTableColumns(TextWriter writer,
-            PgDiffArguments arguments, PgTable oldTable,
-            PgTable newTable, SearchPathHelper searchPathHelper) {
-        
-        List<String> statements = new List<string>();
-        
-        List<PgColumn> dropDefaultsColumns = new List<PgColumn>();
-        AddDropTableColumns(statements, oldTable, newTable);
-        AddCreateTableColumns(
-                statements, arguments, oldTable, newTable, dropDefaultsColumns);
-        AddModifyTableColumns(
-                statements, arguments, oldTable, newTable, dropDefaultsColumns);
-
-        if (statements.Count > 0) {
-            String quotedTableName =
-                    PgDiffUtils.GetQuotedName(newTable.GetName());
             searchPathHelper.OutputSearchPath(writer);
             writer.WriteLine();
-            writer.WriteLine("ALTER TABLE " + quotedTableName);
+            writer.WriteLine("ALTER TABLE "
+                             + PgDiffUtils.GetQuotedName(newTable.Name));
 
-            for (int i = 0; i < statements.Count; i++) {
-                writer.Write(statements[i]);
-                writer.WriteLine((i + 1) < statements.Count ? "," : ";");
-            }
+            if (newTable.With == null
+                || "OIDS=false".Equals(newTable.With, StringComparison.InvariantCultureIgnoreCase))
+                writer.WriteLine("\tSET WITHOUT OIDS;");
+            else if ("OIDS".Equals(newTable.With, StringComparison.InvariantCultureIgnoreCase)
+                     || "OIDS=true".Equals(newTable.With, StringComparison.InvariantCultureIgnoreCase))
+                writer.WriteLine("\tSET WITH OIDS;");
+            else writer.WriteLine("\tSET " + newTable.With + ";");
+        }
 
-            if (dropDefaultsColumns.Count > 0) {
+
+        private static void CheckTablespace(TextWriter writer, PgTable oldTable, PgTable newTable, SearchPathHelper searchPathHelper)
+        {
+            if (oldTable.Tablespace == null && newTable.Tablespace == null
+                || oldTable.Tablespace != null
+                && oldTable.Tablespace.Equals(newTable.Tablespace)) return;
+
+            searchPathHelper.OutputSearchPath(writer);
+            writer.WriteLine();
+            writer.WriteLine("ALTER TABLE " + PgDiffUtils.GetQuotedName(newTable.Name));
+            writer.WriteLine("\tTABLESPACE " + newTable.Tablespace + ';');
+        }
+
+
+        public static void CreateTables(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        {
+            foreach (var table in newSchema.GetTables())
+                if (oldSchema == null
+                    || !oldSchema.ContainsTable(table.Name))
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.WriteLine(table.GetCreationSql());
+                }
+        }
+
+
+        public static void DropTables(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        {
+            if (oldSchema == null) return;
+
+            foreach (var table in oldSchema.GetTables())
+                if (!newSchema.ContainsTable(table.Name))
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.WriteLine(table.GetDropSql());
+                }
+        }
+
+
+        private static void UpdateTableColumns(TextWriter writer, PgDiffArguments arguments, PgTable oldTable, PgTable newTable, SearchPathHelper searchPathHelper)
+        {
+            var statements = new List<string>();
+
+            var dropDefaultsColumns = new List<PgColumn>();
+            AddDropTableColumns(statements, oldTable, newTable);
+            AddCreateTableColumns(
+                statements, arguments, oldTable, newTable, dropDefaultsColumns);
+            AddModifyTableColumns(
+                statements, arguments, oldTable, newTable, dropDefaultsColumns);
+
+            if (statements.Count > 0)
+            {
+                var quotedTableName =
+                    PgDiffUtils.GetQuotedName(newTable.Name);
+                searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
                 writer.WriteLine("ALTER TABLE " + quotedTableName);
 
-                for (int i = 0; i < dropDefaultsColumns.Count; i++) {
-                    writer.Write("\tALTER COLUMN ");
-                    writer.Write(PgDiffUtils.GetQuotedName(
-                            dropDefaultsColumns[i].GetName()));
-                    writer.Write(" DROP DEFAULT");
-                    writer.WriteLine((i + 1) < dropDefaultsColumns.Count ? "," : ";");
+                for (var i = 0; i < statements.Count; i++)
+                {
+                    writer.Write(statements[i]);
+                    writer.WriteLine(i + 1 < statements.Count ? "," : ";");
+                }
+
+                if (dropDefaultsColumns.Count > 0)
+                {
+                    writer.WriteLine();
+                    writer.WriteLine("ALTER TABLE " + quotedTableName);
+
+                    for (var i = 0; i < dropDefaultsColumns.Count; i++)
+                    {
+                        writer.Write("\tALTER COLUMN ");
+                        writer.Write(PgDiffUtils.GetQuotedName(dropDefaultsColumns[i].Name));
+                        writer.Write(" DROP DEFAULT");
+                        writer.WriteLine(i + 1 < dropDefaultsColumns.Count ? "," : ";");
+                    }
+                }
+            }
+        }
+
+
+        private static void AlterComments(TextWriter writer, PgTable oldTable, PgTable newTable, SearchPathHelper searchPathHelper)
+        {
+            if (oldTable.Comment == null
+                && newTable.Comment != null
+                || oldTable.Comment != null
+                && newTable.Comment != null
+                && !oldTable.Comment.Equals(newTable.Comment))
+            {
+                searchPathHelper.OutputSearchPath(writer);
+                writer.WriteLine();
+                writer.Write("COMMENT ON TABLE ");
+                writer.Write(PgDiffUtils.GetQuotedName(newTable.Name));
+                writer.Write(" IS ");
+                writer.Write(newTable.Comment);
+                writer.WriteLine(';');
+            }
+            else if (oldTable.Comment != null
+                     && newTable.Comment == null)
+            {
+                searchPathHelper.OutputSearchPath(writer);
+                writer.WriteLine();
+                writer.Write("COMMENT ON TABLE ");
+                writer.Write(PgDiffUtils.GetQuotedName(newTable.Name));
+                writer.WriteLine(" IS NULL;");
+            }
+
+            foreach (var newColumn in newTable.Columns)
+            {
+                var oldColumn = oldTable.GetColumn(newColumn.Name);
+                var oldComment =
+                    oldColumn?.Comment;
+                var newComment = newColumn.Comment;
+
+                if (newComment != null && (!oldComment?.Equals(newComment) ?? newComment != null))
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.Write("COMMENT ON COLUMN ");
+                    writer.Write(PgDiffUtils.GetQuotedName(newTable.Name));
+                    writer.Write('.');
+                    writer.Write(PgDiffUtils.GetQuotedName(newColumn.Name));
+                    writer.Write(" IS ");
+                    writer.Write(newColumn.Comment);
+                    writer.WriteLine(';');
+                }
+                else if (oldComment != null && newComment == null)
+                {
+                    searchPathHelper.OutputSearchPath(writer);
+                    writer.WriteLine();
+                    writer.Write("COMMENT ON COLUMN ");
+                    writer.Write(PgDiffUtils.GetQuotedName(newTable.Name));
+                    writer.Write('.');
+                    writer.Write(PgDiffUtils.GetQuotedName(newColumn.Name));
+                    writer.WriteLine(" IS NULL;");
                 }
             }
         }
     }
-
-    
-    private static void AlterComments(TextWriter writer,
-            PgTable oldTable, PgTable newTable,
-            SearchPathHelper searchPathHelper) {
-        if (oldTable.GetComment() == null
-                && newTable.GetComment() != null
-                || oldTable.GetComment() != null
-                && newTable.GetComment() != null
-                && !oldTable.GetComment().Equals(newTable.GetComment())) {
-            searchPathHelper.OutputSearchPath(writer);
-            writer.WriteLine();
-            writer.Write("COMMENT ON TABLE ");
-            writer.Write(PgDiffUtils.GetQuotedName(newTable.GetName()));
-            writer.Write(" IS ");
-            writer.Write(newTable.GetComment());
-            writer.WriteLine(';');
-        } else if (oldTable.GetComment() != null
-                && newTable.GetComment() == null) {
-            searchPathHelper.OutputSearchPath(writer);
-            writer.WriteLine();
-            writer.Write("COMMENT ON TABLE ");
-            writer.Write(PgDiffUtils.GetQuotedName(newTable.GetName()));
-            writer.WriteLine(" IS NULL;");
-        }
-
-        foreach (PgColumn newColumn in newTable.GetColumns()) {
-            PgColumn oldColumn = oldTable.GetColumn(newColumn.GetName());
-            String oldComment =
-                    oldColumn == null ? null : oldColumn.GetComment();
-            String newComment = newColumn.GetComment();
-
-            if (newComment != null && (oldComment == null ? newComment != null
-                    : !oldComment.Equals(newComment))) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.Write("COMMENT ON COLUMN ");
-                writer.Write(PgDiffUtils.GetQuotedName(newTable.GetName()));
-                writer.Write('.');
-                writer.Write(PgDiffUtils.GetQuotedName(newColumn.GetName()));
-                writer.Write(" IS ");
-                writer.Write(newColumn.GetComment());
-                writer.WriteLine(';');
-            } else if (oldComment != null && newComment == null) {
-                searchPathHelper.OutputSearchPath(writer);
-                writer.WriteLine();
-                writer.Write("COMMENT ON COLUMN ");
-                writer.Write(PgDiffUtils.GetQuotedName(newTable.GetName()));
-                writer.Write('.');
-                writer.Write(PgDiffUtils.GetQuotedName(newColumn.GetName()));
-                writer.WriteLine(" IS NULL;");
-            }
-        }
-    }
-
-    
-    private PgDiffTables() {
-    }
-}
 }

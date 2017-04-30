@@ -1,133 +1,81 @@
-using System;
 using System.Text;
 
-namespace pgdiff.schema {
+namespace pgdiff.schema
+{
+    public class PgIndex
+    {
+        public string Comment { get; set; }
+
+        public string Definition { get; set; }
+
+        public string Name { get; set; }
+
+        public string TableName { get; set; }
+
+        public bool Unique { get; set; }
 
 
-
-public class PgIndex {
-
-    
-    private String _definition;
-    
-    private String _name;
-    
-    private String _tableName;
-    
-    private bool _unique;
-    
-    private String _comment;
-
-    
-    public PgIndex(String name) {
-        this._name = name;
-    }
-
-    
-    public String GetComment() {
-        return _comment;
-    }
-
-    
-    public void SetComment(String comment) {
-        this._comment = comment;
-    }
-
-    
-    public String GetCreationSql() {
-        StringBuilder sbSql = new StringBuilder(100);
-        sbSql.Append("CREATE ");
-
-        if (IsUnique()) {
-            sbSql.Append("UNIQUE ");
+        public PgIndex(string name)
+        {
+            Name = name;
         }
 
-        sbSql.Append("INDEX ");
-        sbSql.Append(PgDiffUtils.GetQuotedName(GetName()));
-        sbSql.Append(" ON ");
-        sbSql.Append(PgDiffUtils.GetQuotedName(GetTableName()));
-        sbSql.Append(' ');
-        sbSql.Append(GetDefinition());
-        sbSql.Append(';');
+        public string GetCreationSql()
+        {
+            var sbSql = new StringBuilder(100);
+            sbSql.Append("CREATE ");
 
-        if ( !String.IsNullOrEmpty(_comment)) {
-            sbSql.Append("\n\nCOMMENT ON INDEX ");
-            sbSql.Append(PgDiffUtils.GetQuotedName(_name));
-            sbSql.Append(" IS ");
-            sbSql.Append(_comment);
+            if (Unique) sbSql.Append("UNIQUE ");
+
+            sbSql.Append("INDEX ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(Name));
+            sbSql.Append(" ON ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(TableName));
+            sbSql.Append(' ');
+            sbSql.Append(Definition);
             sbSql.Append(';');
+
+            if (!string.IsNullOrEmpty(Comment))
+            {
+                sbSql.Append("\n\nCOMMENT ON INDEX ");
+                sbSql.Append(PgDiffUtils.GetQuotedName(Name));
+                sbSql.Append(" IS ");
+                sbSql.Append(Comment);
+                sbSql.Append(';');
+            }
+
+            return sbSql.ToString();
         }
 
-        return sbSql.ToString();
-    }
-
-    
-    public void SetDefinition(String definition) {
-        this._definition = definition;
-    }
-
-    
-    public String GetDefinition() {
-        return _definition;
-    }
-
-    
-    public String GetDropSql() {
-        return "DROP INDEX " + PgDiffUtils.GetQuotedName(GetName()) + ";";
-    }
-
-    
-    public void SetName(String name) {
-        this._name = name;
-    }
-
-    
-    public String GetName() {
-        return _name;
-    }
-
-    
-    public void SetTableName(String tableName) {
-        this._tableName = tableName;
-    }
-
-    
-    public String GetTableName() {
-        return _tableName;
-    }
-
-    
-    
-    public override bool Equals(Object @object) {
-        bool equals = false;
-
-        if (this == @object) {
-            equals = true;
-        } else if (@object is PgIndex) {
-            PgIndex index = (PgIndex) @object;
-            equals = _definition.Equals(index.GetDefinition())
-                    && _name.Equals(index.GetName())
-                    && _tableName.Equals(index.GetTableName())
-                    && _unique == index.IsUnique();
+        public string GetDropSql()
+        {
+            return "DROP INDEX " + PgDiffUtils.GetQuotedName(Name) + ";";
         }
 
-        return equals;
-    }
+        public override bool Equals(object @object)
+        {
+            var equals = false;
 
-    
-    
-    public override int GetHashCode() {
-        return (GetType().Name + "|" + _definition + "|" + _name + "|" + _tableName + "|" + _unique).GetHashCode();
-    }
+            if (this == @object)
+            {
+                equals = true;
+            }
+            else if (@object is PgIndex)
+            {
+                var index = (PgIndex) @object;
+                equals = Definition.Equals(index.Definition)
+                         && Name.Equals(index.Name)
+                         && TableName.Equals(index.TableName)
+                         && Unique == index.Unique;
+            }
 
-    
-    public bool IsUnique() {
-        return _unique;
-    }
+            return equals;
+        }
 
-    
-    public void SetUnique(bool unique) {
-        this._unique = unique;
+
+        public override int GetHashCode()
+        {
+            return (GetType().Name + "|" + Definition + "|" + Name + "|" + TableName + "|" + Unique).GetHashCode();
+        }
     }
-}
 }

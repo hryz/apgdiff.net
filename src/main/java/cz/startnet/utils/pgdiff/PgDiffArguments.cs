@@ -1,245 +1,140 @@
-using System;
 using System.IO;
 using System.Text;
 using pgdiff.Properties;
 
-namespace pgdiff {
+namespace pgdiff
+{
+    public class PgDiffArguments
+    {
+        public bool AddDefaults { get; set; }
 
+        public bool AddTransaction { get; set; }
 
+        public bool IgnoreFunctionWhitespace { get; set; }
 
+        public bool IgnoreSlonyTriggers { get; set; }
 
+        public bool IgnoreStartWith { get; set; }
 
+        public string InCharsetName { get; set; } = "UTF-8";
 
-public class PgDiffArguments {
+        public bool ListCharsets { get; set; }
 
-    
-    private String _inCharsetName = "UTF-8";
-    
-    private String _newDumpFile;
-    
-    private String _oldDumpFile;
-    
-    private String _outCharsetName = "UTF-8";
-    
-    private bool _addDefaults;
-    
-    private bool _addTransaction;
-    
-    private bool _ignoreFunctionWhitespace;
-    
-    private bool _ignoreStartWith;
-    
-    private bool _version;
-    
-    private bool _outputIgnoredStatements;
-    
-    private bool _listCharsets;
-    
-    private bool _ignoreSlonyTriggers;
+        public string NewDumpFile { get; set; }
 
-    
-    public void SetAddDefaults(bool addDefaults) {
-        this._addDefaults = addDefaults;
-    }
+        public string OldDumpFile { get; set; }
 
-    
-    public bool IsAddDefaults() {
-        return _addDefaults;
-    }
+        public string OutCharsetName { get; set; } = "UTF-8";
 
-    
-    public void SetAddTransaction(bool addTransaction) {
-        this._addTransaction = addTransaction;
-    }
+        public bool OutputIgnoredStatements { get; set; }
 
-    
-    public bool IsAddTransaction() {
-        return _addTransaction;
-    }
+        public bool Version { get; set; }
 
-    
-    public void SetIgnoreFunctionWhitespace(
-            bool ignoreFunctionWhitespace) {
-        this._ignoreFunctionWhitespace = ignoreFunctionWhitespace;
-    }
+        public bool Parse(TextReader reader, TextWriter writer, string[] args)
+        {
+            var success = true;
+            int argsLength;
 
-    
-    public bool IsIgnoreFunctionWhitespace() {
-        return _ignoreFunctionWhitespace;
-    }
+            if (args.Length >= 2) argsLength = args.Length - 2;
+            else argsLength = args.Length;
 
-    
-    public void SetIgnoreStartWith(bool ignoreStartWith) {
-        this._ignoreStartWith = ignoreStartWith;
-    }
+            for (var i = 0; i < argsLength; i++)
+                if ("--add-defaults".Equals(args[i]))
+                {
+                    AddDefaults = true;
+                }
+                else if ("--add-transaction".Equals(args[i]))
+                {
+                    AddTransaction = true;
+                }
+                else if ("--ignore-function-whitespace".Equals(args[i]))
+                {
+                    IgnoreFunctionWhitespace = true;
+                }
+                else if ("--ignore-slony-triggers".Equals(args[i]))
+                {
+                    IgnoreSlonyTriggers = true;
+                }
+                else if ("--ignore-start-with".Equals(args[i]))
+                {
+                    IgnoreStartWith = true;
+                }
+                else if ("--in-charset-name".Equals(args[i]))
+                {
+                    InCharsetName = args[i + 1];
+                    i++;
+                }
+                else if ("--list-charsets".Equals(args[i]))
+                {
+                    ListCharsets = true;
+                }
+                else if ("--out-charset-name".Equals(args[i]))
+                {
+                    OutCharsetName = args[i + 1];
+                    i++;
+                }
+                else if ("--output-ignored-statements".Equals(args[i]))
+                {
+                    OutputIgnoredStatements = true;
+                }
+                else if ("--version".Equals(args[i]))
+                {
+                    Version = true;
+                }
+                else
+                {
+                    writer.Write(Resources.ErrorUnknownOption);
+                    writer.Write(": ");
+                    writer.WriteLine(args[i]);
+                    success = false;
 
-    
-    public bool IsIgnoreStartWith() {
-        return _ignoreStartWith;
-    }
+                    break;
+                }
 
-    
-    public void SetNewDumpFile(String newDumpFile) {
-        this._newDumpFile = newDumpFile;
-    }
-
-    
-    public String GetNewDumpFile() {
-        return _newDumpFile;
-    }
-
-    
-    public void SetOldDumpFile(String oldDumpFile) {
-        this._oldDumpFile = oldDumpFile;
-    }
-
-    
-    public String GetOldDumpFile() {
-        return _oldDumpFile;
-    }
-
-    
-    public bool IsOutputIgnoredStatements() {
-        return _outputIgnoredStatements;
-    }
-
-    
-    public void SetOutputIgnoredStatements(
-            bool outputIgnoredStatements) {
-        this._outputIgnoredStatements = outputIgnoredStatements;
-    }
-
-    
-    public void SetVersion(bool version) {
-        this._version = version;
-    }
-
-    
-    public bool IsVersion() {
-        return _version;
-    }
-
-    
-    
-    public bool Parse(TextReader reader, TextWriter writer, String[] args) {
-        bool success = true;
-        int argsLength;
-
-        if (args.Length >= 2) {
-            argsLength = args.Length - 2;
-        } else {
-            argsLength = args.Length;
-        }
-
-        for (int i = 0; i < argsLength; i++) {
-            if ("--add-defaults".Equals(args[i])) {
-                SetAddDefaults(true);
-            } else if ("--add-transaction".Equals(args[i])) {
-                SetAddTransaction(true);
-            } else if ("--ignore-function-whitespace".Equals(args[i])) {
-                SetIgnoreFunctionWhitespace(true);
-            } else if ("--ignore-slony-triggers".Equals(args[i])) {
-                SetIgnoreSlonyTriggers(true);
-            } else if ("--ignore-start-with".Equals(args[i])) {
-                SetIgnoreStartWith(true);
-            } else if ("--in-charset-name".Equals(args[i])) {
-                SetInCharsetName(args[i + 1]);
-                i++;
-            } else if ("--list-charsets".Equals(args[i])) {
-                SetListCharsets(true);
-            } else if ("--out-charset-name".Equals(args[i])) {
-                SetOutCharsetName(args[i + 1]);
-                i++;
-            } else if ("--output-ignored-statements".Equals(args[i])) {
-                SetOutputIgnoredStatements(true);
-            } else if ("--version".Equals(args[i])) {
-                SetVersion(true);
-            } else {
-                writer.Write(Resources.ErrorUnknownOption);
-                writer.Write(": ");
-                writer.WriteLine(args[i]);
+            if (args.Length == 1 && Version)
+            {
+                PrintVersion(writer);
                 success = false;
-
-                break;
             }
+            else if (args.Length == 1 && ListCharsets)
+            {
+                _ListCharsets(writer);
+                success = false;
+            }
+            else if (args.Length < 2)
+            {
+                PrintUsage(writer);
+                success = false;
+            }
+            else if (success)
+            {
+                OldDumpFile = args[args.Length - 2];
+                NewDumpFile = args[args.Length - 1];
+            }
+
+            return success;
         }
 
-        if (args.Length == 1 && IsVersion()) {
-            PrintVersion(writer);
-            success = false;
-        } else if (args.Length == 1 && IsListCharsets()) {
-            ListCharsets(writer);
-            success = false;
-        } else if (args.Length < 2) {
-            PrintUsage(writer);
-            success = false;
-        } else if (success) {
-            SetOldDumpFile(args[args.Length - 2]);
-            SetNewDumpFile(args[args.Length - 1]);
+
+        private void PrintUsage(TextWriter writer)
+        {
+            writer.WriteLine(Resources.UsageHelp);
         }
 
-        return success;
-    }
 
-    
-    private void PrintUsage(TextWriter writer) {
-        writer.WriteLine(Resources.UsageHelp);
-    }
+        private void PrintVersion(TextWriter writer)
+        {
+            writer.Write(Resources.Version);
+            writer.Write(": ");
+            writer.WriteLine(Resources.VersionNumber);
+        }
 
-    
-    private void PrintVersion(TextWriter writer) {
-        writer.Write(Resources.Version);
-        writer.Write(": ");
-        writer.WriteLine(Resources.VersionNumber);
-    }
+        private void _ListCharsets(TextWriter writer)
+        {
+            var charsets = Encoding.GetEncodings();
 
-    
-    public String GetInCharsetName() {
-        return _inCharsetName;
-    }
-
-    
-    public void SetInCharsetName(String inCharsetName) {
-        this._inCharsetName = inCharsetName;
-    }
-
-    
-    public String GetOutCharsetName() {
-        return _outCharsetName;
-    }
-
-    
-    public void SetOutCharsetName(String outCharsetName) {
-        this._outCharsetName = outCharsetName;
-    }
-
-    
-    public bool IsListCharsets() {
-        return _listCharsets;
-    }
-
-    
-    public void SetListCharsets(bool listCharsets) {
-        this._listCharsets = listCharsets;
-    }
-
-    
-    private void ListCharsets(TextWriter writer) {
-        var charsets = Encoding.GetEncodings();
-
-        foreach (var name in charsets) {
-            writer.WriteLine(name.Name);
+            foreach (var name in charsets)
+                writer.WriteLine(name.Name);
         }
     }
-
-    
-    public bool IsIgnoreSlonyTriggers() {
-        return _ignoreSlonyTriggers;
-    }
-
-    
-    public void SetIgnoreSlonyTriggers(bool ignoreSlonyTriggers) {
-        this._ignoreSlonyTriggers = ignoreSlonyTriggers;
-    }
-}
 }

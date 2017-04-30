@@ -1,224 +1,154 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace pgdiff.schema {
+namespace pgdiff.schema
+{
+    public class PgView
+    {
+        public List<ColumnComment> ColumnComments = new List<ColumnComment>();
+
+        public List<string> ColumnNames;
+
+        public string Comment;
+
+        public readonly List<DefaultValue> DefaultValues = new List<DefaultValue>();
+
+        public readonly string Name;
+
+        public string Query;
 
 
+        public PgView(string name)
+        {
+            Name = name;
+        }
 
+        public string GetCreationSql()
+        {
+            var sbSql = new StringBuilder(Query.Length * 2);
+            sbSql.Append("CREATE VIEW ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(Name));
 
+            if (ColumnNames != null && ColumnNames.Count > 0)
+            {
+                sbSql.Append(" (");
 
+                for (var i = 0; i < ColumnNames.Count; i++)
+                {
+                    if (i > 0) sbSql.Append(", ");
 
-public class PgView {
-
-    
-    private List<String> _columnNames;
-    
-    private String _name;
-    
-    private String _query;
-    
-    private List<DefaultValue> _defaultValues = new List<DefaultValue>();
-    
-    private List<ColumnComment> _columnComments = new List<ColumnComment>();
-    
-    private String _comment;
-
-    
-    public PgView(String name) {
-        this._name = name;
-    }
-
-    
-    
-    public void SetColumnNames(List<String> columnNames) {
-        this._columnNames = columnNames;
-    }
-
-    
-    public List<String> GetColumnNames() {
-        return new List<string>(_columnNames);
-    }
-
-    
-    public String GetComment() {
-        return _comment;
-    }
-
-    
-    public void SetComment(String comment) {
-        this._comment = comment;
-    }
-
-    
-    public String GetCreationSql() {
-        StringBuilder sbSql = new StringBuilder(_query.Length * 2);
-        sbSql.Append("CREATE VIEW ");
-        sbSql.Append(PgDiffUtils.GetQuotedName(_name));
-
-        if (_columnNames != null && _columnNames.Count >0) {
-            sbSql.Append(" (");
-
-            for (int i = 0; i < _columnNames.Count; i++) {
-                if (i > 0) {
-                    sbSql.Append(", ");
+                    sbSql.Append(PgDiffUtils.GetQuotedName(ColumnNames[i]));
                 }
-
-                sbSql.Append(PgDiffUtils.GetQuotedName(_columnNames[i]));
+                sbSql.Append(')');
             }
-            sbSql.Append(')');
-        }
 
-        sbSql.Append(" AS\n\t");
-        sbSql.Append(_query);
-        sbSql.Append(';');
-
-        foreach(DefaultValue defaultValue in _defaultValues) {
-            sbSql.Append("\n\nALTER VIEW ");
-            sbSql.Append(PgDiffUtils.GetQuotedName(_name));
-            sbSql.Append(" ALTER COLUMN ");
-            sbSql.Append(
-                    PgDiffUtils.GetQuotedName(defaultValue.GetColumnName()));
-            sbSql.Append(" SET DEFAULT ");
-            sbSql.Append(defaultValue.GetDefaultValue());
+            sbSql.Append(" AS\n\t");
+            sbSql.Append(Query);
             sbSql.Append(';');
-        }
 
-        if (!String.IsNullOrEmpty(_comment)) {
-            sbSql.Append("\n\nCOMMENT ON VIEW ");
-            sbSql.Append(PgDiffUtils.GetQuotedName(_name));
-            sbSql.Append(" IS ");
-            sbSql.Append(_comment);
-            sbSql.Append(';');
-        }
-
-        foreach(ColumnComment columnComment in _columnComments) {
-            if (!String.IsNullOrEmpty(columnComment.GetComment())) {
-                sbSql.Append("\n\nCOMMENT ON COLUMN ");
-                sbSql.Append(PgDiffUtils.GetQuotedName(columnComment.GetColumnName()));
-                sbSql.Append(" IS ");
-                sbSql.Append(columnComment.GetComment());
+            foreach (var defaultValue in DefaultValues)
+            {
+                sbSql.Append("\n\nALTER VIEW ");
+                sbSql.Append(PgDiffUtils.GetQuotedName(Name));
+                sbSql.Append(" ALTER COLUMN ");
+                sbSql.Append(
+                    PgDiffUtils.GetQuotedName(defaultValue.ColumnName));
+                sbSql.Append(" SET DEFAULT ");
+                sbSql.Append(defaultValue._DefaultValue);
                 sbSql.Append(';');
             }
+
+            if (!string.IsNullOrEmpty(Comment))
+            {
+                sbSql.Append("\n\nCOMMENT ON VIEW ");
+                sbSql.Append(PgDiffUtils.GetQuotedName(Name));
+                sbSql.Append(" IS ");
+                sbSql.Append(Comment);
+                sbSql.Append(';');
+            }
+
+            foreach (var columnComment in ColumnComments)
+                if (!string.IsNullOrEmpty(columnComment.Comment))
+                {
+                    sbSql.Append("\n\nCOMMENT ON COLUMN ");
+                    sbSql.Append(PgDiffUtils.GetQuotedName(columnComment.ColumnName));
+                    sbSql.Append(" IS ");
+                    sbSql.Append(columnComment.Comment);
+                    sbSql.Append(';');
+                }
+
+            return sbSql.ToString();
         }
 
-        return sbSql.ToString();
-    }
 
-    
-    public String GetDropSql() {
-        return "DROP VIEW " + PgDiffUtils.GetQuotedName(GetName()) + ";";
-    }
+        public string GetDropSql()
+        {
+            return "DROP VIEW " + PgDiffUtils.GetQuotedName(Name) + ";";
+        }
 
-    
-    public String GetName() {
-        return _name;
-    }
+        public void AddColumnDefaultValue(string columnName,
+            string defaultValue)
+        {
+            RemoveColumnDefaultValue(columnName);
+            DefaultValues.Add(new DefaultValue(columnName, defaultValue));
+        }
 
-    
-    public void SetQuery(String query) {
-        this._query = query;
-    }
 
-    
-    public String GetQuery() {
-        return _query;
-    }
+        public void RemoveColumnDefaultValue(string columnName)
+        {
+            foreach (var item in DefaultValues)
+                if (item.ColumnName.Equals(columnName))
+                {
+                    DefaultValues.Remove(item);
+                    return;
+                }
+        }
 
-   
-    public void AddColumnDefaultValue(String columnName,
-            String defaultValue) {
-        RemoveColumnDefaultValue(columnName);
-        _defaultValues.Add(new DefaultValue(columnName, defaultValue));
-    }
+        public void AddColumnComment(string columnName, string comment)
+        {
+            RemoveColumnDefaultValue(columnName);
+            ColumnComments.Add(new ColumnComment(columnName, comment));
+        }
 
-    
-    public void RemoveColumnDefaultValue(String columnName) {
-        foreach(DefaultValue item in _defaultValues) {
-            if (item.GetColumnName().Equals(columnName)) {
-                _defaultValues.Remove(item);
-                return;
+
+        public void RemoveColumnComment(string columnName)
+        {
+            foreach (var item in ColumnComments)
+                if (item.ColumnName.Equals(columnName))
+                {
+                    ColumnComments.Remove(item);
+                    return;
+                }
+        }
+
+
+        public class DefaultValue
+        {
+            public string ColumnName { get; }
+
+            public string _DefaultValue { get; }
+
+
+            public DefaultValue(string columnName, string defaultValue)
+            {
+                ColumnName = columnName;
+                _DefaultValue = defaultValue;
+            }
+        }
+
+
+        public class ColumnComment
+        {
+            public string ColumnName { get; }
+
+            public string Comment { get; }
+
+
+            public ColumnComment(string columnName, string comment)
+            {
+                ColumnName = columnName;
+                Comment = comment;
             }
         }
     }
-
-    
-    public List<DefaultValue> GetDefaultValues() {
-        return new List<DefaultValue>(_defaultValues);
-    }
-
-    
-    public void AddColumnComment(String columnName,
-            String comment) {
-        RemoveColumnDefaultValue(columnName);
-        _columnComments.Add(new ColumnComment(columnName, comment));
-    }
-
-    
-    public void RemoveColumnComment(String columnName) {
-        foreach(ColumnComment item in _columnComments) {
-            if (item.GetColumnName().Equals(columnName)) {
-                _columnComments.Remove(item);
-                return;
-            }
-        }
-    }
-
-    
-    public List<ColumnComment> GetColumnComments() {
-        return new List<ColumnComment>(_columnComments);
-    }
-
-    
-    
-    public class DefaultValue {
-
-        
-        private String _columnName;
-        
-        private String _defaultValue;
-
-        
-        public DefaultValue(String columnName, String defaultValue) {
-            this._columnName = columnName;
-            this._defaultValue = defaultValue;
-        }
-
-        
-        public String GetColumnName() {
-            return _columnName;
-        }
-
-        
-        public String GetDefaultValue() {
-            return _defaultValue;
-        }
-    }
-
-    
-    
-    public class ColumnComment {
-
-        
-        private String _columnName;
-        
-        private String _comment;
-
-        
-        public ColumnComment(String columnName, String comment) {
-            this._columnName = columnName;
-            this._comment = comment;
-        }
-
-        
-        public String GetColumnName() {
-            return _columnName;
-        }
-
-        
-        public String GetComment() {
-            return _comment;
-        }
-    }
-}
 }

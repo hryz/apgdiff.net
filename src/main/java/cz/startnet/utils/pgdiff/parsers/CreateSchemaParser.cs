@@ -1,49 +1,43 @@
-using System;
 using pgdiff.schema;
 
-namespace pgdiff.parsers {
+namespace pgdiff.parsers
+{
+    public class CreateSchemaParser
+    {
+        private CreateSchemaParser()
+        {
+        }
 
 
+        public static void Parse(PgDatabase database, string statement)
+        {
+            var parser = new Parser(statement);
+            parser.Expect("CREATE", "SCHEMA");
 
-public class CreateSchemaParser {
+            if (parser.ExpectOptional("AUTHORIZATION"))
+            {
+                var schema = new PgSchema(ParserUtils.GetObjectName(parser.ParseIdentifier()));
+                database.Schemas.Add(schema);
+                schema.Authorization = schema.Name;
 
-    
-    public static void Parse(PgDatabase database,
-            String statement) {
-        Parser parser = new Parser(statement);
-        parser.Expect("CREATE", "SCHEMA");
+                var definition = parser.GetRest();
 
-        if (parser.ExpectOptional("AUTHORIZATION")) {
-            PgSchema schema = new PgSchema(
-                    ParserUtils.GetObjectName(parser.ParseIdentifier()));
-            database.AddSchema(schema);
-            schema.SetAuthorization(schema.GetName());
-
-            String definition = parser.GetRest();
-
-            if (!String.IsNullOrEmpty(definition)) {
-                schema.SetDefinition(definition);
+                if (!string.IsNullOrEmpty(definition))
+                    schema.Definition = definition;
             }
-        } else {
-            PgSchema schema = new PgSchema(
-                    ParserUtils.GetObjectName(parser.ParseIdentifier()));
-            database.AddSchema(schema);
+            else
+            {
+                var schema = new PgSchema(ParserUtils.GetObjectName(parser.ParseIdentifier()));
+                database.Schemas.Add(schema);
 
-            if (parser.ExpectOptional("AUTHORIZATION")) {
-                schema.SetAuthorization(
-                        ParserUtils.GetObjectName(parser.ParseIdentifier()));
-            }
+                if (parser.ExpectOptional("AUTHORIZATION"))
+                    schema.Authorization = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
-            String definition = parser.GetRest();
+                var definition = parser.GetRest();
 
-            if (!String.IsNullOrEmpty(definition)) {
-                schema.SetDefinition(definition);
+                if (!string.IsNullOrEmpty(definition))
+                    schema.Definition = definition;
             }
         }
     }
-
-    
-    private CreateSchemaParser() {
-    }
-}
 }

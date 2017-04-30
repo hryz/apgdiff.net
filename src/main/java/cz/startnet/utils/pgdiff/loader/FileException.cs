@@ -1,23 +1,24 @@
-
-
 using System;
 
-namespace pgdiff.loader {
+namespace pgdiff.loader
+{
+    public class FileException : Exception
+    {
+        private static long _serialVersionUid = 1L;
 
 
-public class FileException : Exception {
+        public FileException()
+        {
+        }
 
-    
-    private static long _serialVersionUid = 1L;
 
-    
-    public FileException() {
+        public FileException(string msg) : base(msg)
+        {
+        }
+
+
+        public FileException(string msg, Exception cause) : base(msg, cause)
+        {
+        }
     }
-
-    
-    public FileException(String msg): base(msg) { }
-
-    
-    public FileException(String msg, Exception cause) : base(msg, cause) { }
-}
 }

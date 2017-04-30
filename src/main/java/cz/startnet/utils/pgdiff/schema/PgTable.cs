@@ -2,343 +2,272 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace pgdiff.schema {
-
-
-
-
-
-
-public class PgTable
+namespace pgdiff.schema
 {
+    public class PgTable
+    {
+        public string ClusterIndexName { get; set; }
+
+        public string Comment { get; set; }
+
+        public string Name { get; set; }
+
+        public string Tablespace { get; set; }
+
+        public string With { get; set; }
+
+        public List<PgColumn> Columns { get; set; } = new List<PgColumn>();
+
+        public List<PgConstraint> Constraints { get; set; } = new List<PgConstraint>();
+
+        public List<PgIndex> Indexes { get; set; } = new List<PgIndex>();
+
+        public List<string> Inherits { get; set; } = new List<string>();
+
+        public List<PgTrigger> Triggers { get; set; } = new List<PgTrigger>();
 
 
-
-    private List<PgColumn> _columns = new List<PgColumn>();
-    
-    
-    private List<PgConstraint> _constraints = new List<PgConstraint>();
-    
-    
-    private List<PgIndex> _indexes = new List<PgIndex>();
-    
-    
-    private List<PgTrigger> _triggers = new List<PgTrigger>();
-    
-    private String _clusterIndexName;
-    
-    
-    private List<String> _inherits = new List<String>();
-    
-    private String _name;
-    
-    private String _with;
-    
-    private String _tablespace;
-    
-    private String _comment;
-
-    
-    public PgTable(String name) {
-        this._name = name;
-    }
-
-    
-    public void SetClusterIndexName(String name) {
-        _clusterIndexName = name;
-    }
-
-    
-    public String GetClusterIndexName() {
-        return _clusterIndexName;
-    }
-
-    
-    public PgColumn GetColumn(String name) {
-        foreach(PgColumn column in _columns) {
-            if (column.GetName().Equals(name)) {
-                return column;
-            }
+        public PgTable(string name)
+        {
+            Name = name;
         }
 
-        return null;
-    }
+        public PgColumn GetColumn(string name)
+        {
+            foreach (var column in Columns)
+                if (column.Name.Equals(name))
+                    return column;
 
-    
-    public List<PgColumn> GetColumns() {
-        return new List<PgColumn>(_columns);
-    }
-
-    
-    public String GetComment() {
-        return _comment;
-    }
-
-    
-    public void SetComment(String comment) {
-        this._comment = comment;
-    }
-
-    
-    public PgConstraint GetConstraint(String name) {
-        foreach(PgConstraint constraint in _constraints) {
-            if (constraint.GetName().Equals(name)) {
-                return constraint;
-            }
+            return null;
         }
 
-        return null;
-    }
+        public PgConstraint GetConstraint(string name)
+        {
+            foreach (var constraint in Constraints)
+                if (constraint.Name.Equals(name))
+                    return constraint;
 
-    
-    public List<PgConstraint> GetConstraints() {
-        return new List<PgConstraint>(_constraints);
-    }
+            return null;
+        }
 
-    
-    public String GetCreationSql() {
-        StringBuilder sbSql = new StringBuilder(1000);
-        sbSql.Append("CREATE TABLE ");
-        sbSql.Append(PgDiffUtils.GetQuotedName(_name));
-        sbSql.Append(" (\n");
 
-        bool first = true;
+        public string GetCreationSql()
+        {
+            var sbSql = new StringBuilder(1000);
+            sbSql.Append("CREATE TABLE ");
+            sbSql.Append(PgDiffUtils.GetQuotedName(Name));
+            sbSql.Append(" (\n");
 
-        if (_columns.Count == 0) {
-            sbSql.Append(')');
-        } else {
-            foreach(PgColumn column in _columns) {
-                if (first) {
-                    first = false;
-                } else {
-                    sbSql.Append(",\n");
+            var first = true;
+
+            if (Columns.Count == 0)
+            {
+                sbSql.Append(')');
+            }
+            else
+            {
+                foreach (var column in Columns)
+                {
+                    if (first) first = false;
+                    else sbSql.Append(",\n");
+
+                    sbSql.Append("\t");
+                    sbSql.Append(column.GetFullDefinition(false));
                 }
 
-                sbSql.Append("\t");
-                sbSql.Append(column.GetFullDefinition(false));
+                sbSql.Append("\n)");
             }
 
-            sbSql.Append("\n)");
-        }
+            if (Inherits != null && Inherits.Count != 0)
+            {
+                sbSql.Append("\nINHERITS (");
 
-        if (_inherits != null && _inherits.Count != 0) {
-            sbSql.Append("\nINHERITS (");
+                first = true;
 
-            first = true;
+                foreach (var tableName in Inherits)
+                {
+                    if (first) first = false;
+                    else sbSql.Append(", ");
 
-            foreach(String tableName in _inherits) {
-                if (first) {
-                    first = false;
-                } else {
-                    sbSql.Append(", ");
+                    sbSql.Append(tableName);
                 }
 
-                sbSql.Append(tableName);
+                sbSql.Append(")");
             }
 
-            sbSql.Append(")");
-        }
+            if (!string.IsNullOrEmpty(With))
+            {
+                sbSql.Append("\n");
 
-        if (!string.IsNullOrEmpty(_with)) {
-            sbSql.Append("\n");
+                if ("OIDS=false".Equals(With, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    sbSql.Append("WITHOUT OIDS");
+                }
+                else
+                {
+                    sbSql.Append("WITH ");
 
-            if ("OIDS=false".Equals(_with,StringComparison.InvariantCultureIgnoreCase)) {
-                sbSql.Append("WITHOUT OIDS");
-            } else {
-                sbSql.Append("WITH ");
-
-                if ("OIDS".Equals(_with,StringComparison.InvariantCultureIgnoreCase)
-                        || "OIDS=true".Equals(_with,StringComparison.InvariantCultureIgnoreCase)) {
-                    sbSql.Append("OIDS");
-                } else {
-                    sbSql.Append(_with);
+                    if ("OIDS".Equals(With, StringComparison.InvariantCultureIgnoreCase)
+                        || "OIDS=true".Equals(With, StringComparison.InvariantCultureIgnoreCase)) sbSql.Append("OIDS");
+                    else sbSql.Append(With);
                 }
             }
-        }
 
-        if (!String.IsNullOrEmpty(_tablespace)) {
-            sbSql.Append("\nTABLESPACE ");
-            sbSql.Append(_tablespace);
-        }
+            if (!string.IsNullOrEmpty(Tablespace))
+            {
+                sbSql.Append("\nTABLESPACE ");
+                sbSql.Append(Tablespace);
+            }
 
-        sbSql.Append(';');
-
-        foreach (PgColumn column in GetColumnsWithStatistics()) {
-            sbSql.Append("\nALTER TABLE ONLY ");
-            sbSql.Append(PgDiffUtils.GetQuotedName(_name));
-            sbSql.Append(" ALTER COLUMN ");
-            sbSql.Append(
-                    PgDiffUtils.GetQuotedName(column.GetName()));
-            sbSql.Append(" SET STATISTICS ");
-            sbSql.Append(column.GetStatistics());
             sbSql.Append(';');
-        }
 
-        if (String.IsNullOrEmpty(_comment)) {
-            sbSql.Append("\n\nCOMMENT ON TABLE ");
-            sbSql.Append(PgDiffUtils.GetQuotedName(_name));
-            sbSql.Append(" IS ");
-            sbSql.Append(_comment);
-            sbSql.Append(';');
-        }
-
-        foreach(PgColumn column in _columns) {
-            if ( !String.IsNullOrEmpty(column.GetComment())) {
-                sbSql.Append("\n\nCOMMENT ON COLUMN ");
-                sbSql.Append(PgDiffUtils.GetQuotedName(_name));
-                sbSql.Append('.');
-                sbSql.Append(PgDiffUtils.GetQuotedName(column.GetName()));
-                sbSql.Append(" IS ");
-                sbSql.Append(column.GetComment());
+            foreach (var column in GetColumnsWithStatistics())
+            {
+                sbSql.Append("\nALTER TABLE ONLY ");
+                sbSql.Append(PgDiffUtils.GetQuotedName(Name));
+                sbSql.Append(" ALTER COLUMN ");
+                sbSql.Append(PgDiffUtils.GetQuotedName(column.Name));
+                sbSql.Append(" SET STATISTICS ");
+                sbSql.Append(column.Statistics);
                 sbSql.Append(';');
             }
-        }
 
-        return sbSql.ToString();
-    }
-
-    
-    public String GetDropSql() {
-        return "DROP TABLE " + PgDiffUtils.GetQuotedName(GetName()) + ";";
-    }
-
-    
-    public PgIndex GetIndex(String name) {
-        foreach(PgIndex index in _indexes) {
-            if (index.GetName().Equals(name)) {
-                return index;
+            if (string.IsNullOrEmpty(Comment))
+            {
+                sbSql.Append("\n\nCOMMENT ON TABLE ");
+                sbSql.Append(PgDiffUtils.GetQuotedName(Name));
+                sbSql.Append(" IS ");
+                sbSql.Append(Comment);
+                sbSql.Append(';');
             }
+
+            foreach (var column in Columns)
+                if (!string.IsNullOrEmpty(column.Comment))
+                {
+                    sbSql.Append("\n\nCOMMENT ON COLUMN ");
+                    sbSql.Append(PgDiffUtils.GetQuotedName(Name));
+                    sbSql.Append('.');
+                    sbSql.Append(PgDiffUtils.GetQuotedName(column.Name));
+                    sbSql.Append(" IS ");
+                    sbSql.Append(column.Comment);
+                    sbSql.Append(';');
+                }
+
+            return sbSql.ToString();
         }
 
-        return null;
-    }
 
-    
-    public PgTrigger GetTrigger(String name) {
-        foreach(PgTrigger trigger in _triggers) {
-            if (trigger.Name.Equals(name)) {
-                return trigger;
-            }
+        public string GetDropSql()
+        {
+            return "DROP TABLE " + PgDiffUtils.GetQuotedName(Name) + ";";
         }
 
-        return null;
-    }
 
-    
-    public List<PgIndex> GetIndexes() {
-        return new List<PgIndex>(_indexes);
-    }
+        public PgIndex GetIndex(string name)
+        {
+            foreach (var index in Indexes)
+                if (index.Name.Equals(name))
+                    return index;
 
-    
-    public void AddInherits(String tableName) {
-        _inherits.Add(tableName);
-    }
-
-    
-    public List<String> GetInherits() {
-        return new List<string>(_inherits);
-    }
-
-    
-    public void SetName(String name) {
-        this._name = name;
-    }
-
-    
-    public String GetName() {
-        return _name;
-    }
-
-    
-    public List<PgTrigger> GetTriggers() {
-        return new List<PgTrigger>(_triggers);
-    }
-
-    
-    public void SetWith(String with) {
-        this._with = with;
-    }
-
-    
-    public String GetWith() {
-        return _with;
-    }
-
-    
-    public String GetTablespace() {
-        return _tablespace;
-    }
-
-    
-    public void SetTablespace(String tablespace) {
-        this._tablespace = tablespace;
-    }
-
-    
-    public void AddColumn(PgColumn column) {
-        _columns.Add(column);
-    }
-
-    
-    public void AddConstraint(PgConstraint constraint) {
-        _constraints.Add(constraint);
-    }
-
-    
-    public void AddIndex(PgIndex index) {
-        _indexes.Add(index);
-    }
-
-    
-    public void AddTrigger(PgTrigger trigger) {
-        _triggers.Add(trigger);
-    }
-
-    
-    public bool ContainsColumn(String name) {
-        foreach(PgColumn column in _columns) {
-            if (column.GetName().Equals(name)) {
-                return true;
-            }
+            return null;
         }
 
-        return false;
-    }
 
-    
-    public bool ContainsConstraint(String name) {
-        foreach(PgConstraint constraint in _constraints) {
-            if (constraint.GetName().Equals(name)) {
-                return true;
-            }
+        public PgTrigger GetTrigger(string name)
+        {
+            foreach (var trigger in Triggers)
+                if (trigger.Name.Equals(name))
+                    return trigger;
+
+            return null;
         }
 
-        return false;
-    }
 
-    
-    public bool ContainsIndex(String name) {
-        foreach(PgIndex index in _indexes) {
-            if (index.GetName().Equals(name)) {
-                return true;
-            }
+        public List<PgIndex> GetIndexes()
+        {
+            return new List<PgIndex>(Indexes);
         }
 
-        return false;
-    }
 
-    
-    private List<PgColumn> GetColumnsWithStatistics() {
-        
-        List<PgColumn> list = new List<PgColumn>();
-
-        foreach(PgColumn column in _columns) {
-            if (column.GetStatistics() != null) {
-                list.Add(column);
-            }
+        public void AddInherits(string tableName)
+        {
+            Inherits.Add(tableName);
         }
 
-        return list;
+
+        public List<string> GetInherits()
+        {
+            return new List<string>(Inherits);
+        }
+
+        public List<PgTrigger> GetTriggers()
+        {
+            return new List<PgTrigger>(Triggers);
+        }
+
+        public void AddColumn(PgColumn column)
+        {
+            Columns.Add(column);
+        }
+
+
+        public void AddConstraint(PgConstraint constraint)
+        {
+            Constraints.Add(constraint);
+        }
+
+
+        public void AddIndex(PgIndex index)
+        {
+            Indexes.Add(index);
+        }
+
+
+        public void AddTrigger(PgTrigger trigger)
+        {
+            Triggers.Add(trigger);
+        }
+
+
+        public bool ContainsColumn(string name)
+        {
+            foreach (var column in Columns)
+                if (column.Name.Equals(name))
+                    return true;
+
+            return false;
+        }
+
+
+        public bool ContainsConstraint(string name)
+        {
+            foreach (var constraint in Constraints)
+                if (constraint.Name.Equals(name))
+                    return true;
+
+            return false;
+        }
+
+
+        public bool ContainsIndex(string name)
+        {
+            foreach (var index in Indexes)
+                if (index.Name.Equals(name))
+                    return true;
+
+            return false;
+        }
+
+
+        private List<PgColumn> GetColumnsWithStatistics()
+        {
+            var list = new List<PgColumn>();
+
+            foreach (var column in Columns)
+                if (column.Statistics != null)
+                    list.Add(column);
+
+            return list;
+        }
     }
-}
 }

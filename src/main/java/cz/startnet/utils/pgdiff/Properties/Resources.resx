@@ -121,7 +121,7 @@
     <value>Cannot find column '{0}' in table '{1}'</value>
   </data>
   <data name="CannotFindObject" xml:space="preserve">
-    <value>Cannot find object '{0}' for statement '{1}'.</value>
+    <value>Cannot find obj '{0}' for statement '{1}'.</value>
   </data>
   <data name="CannotFindSchema" xml:space="preserve">
     <value>Cannot find schema '{0}' for statement '{1}'. Missing CREATE SCHEMA statement?</value>

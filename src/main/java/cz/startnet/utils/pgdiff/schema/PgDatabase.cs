@@ -1,84 +1,42 @@
-using System;
 using System.Collections.Generic;
 
-namespace pgdiff.schema {
-
-
-
-
-
-
-public class PgDatabase {
-
-    
-    private List<PgSchema> _schemas = new List<PgSchema>();
-
-
-    private List<String> _ignoredStatements = new List<string>();
-    
-    private PgSchema _defaultSchema;
-    
-    private String _comment;
-
-    
-    public PgDatabase() {
-        _schemas.Add(new PgSchema("public"));
-        _defaultSchema = _schemas[0];
-    }
-
-    
-    public String GetComment() {
-        return _comment;
-    }
-
-    
-    public void SetComment(String comment) {
-        this._comment = comment;
-    }
-
-    
-    public void SetDefaultSchema(String name) {
-        _defaultSchema = GetSchema(name);
-    }
-
-    
-    public PgSchema GetDefaultSchema() {
-        return _defaultSchema;
-    }
-
-    
-    public List<String> GetIgnoredStatements() {
-        return new List<string>(_ignoredStatements);
-    }
-
-    
-    public void AddIgnoredStatement(String ignoredStatement) {
-        _ignoredStatements.Add(ignoredStatement);
-    }
-
-    
-    public PgSchema GetSchema(String name) {
-        if (name == null) {
-            return GetDefaultSchema();
+namespace pgdiff.schema
+{
+    public class PgDatabase
+    {
+        public PgDatabase()
+        {
+            Schemas.Add(new PgSchema("public"));
+            DefaultSchema = Schemas[0];
         }
 
-        foreach(PgSchema schema in _schemas) {
-            if (schema.GetName().Equals(name)) {
-                return schema;
-            }
+
+        public List<PgSchema> Schemas { get; set; } = new List<PgSchema>();
+
+        public List<string> IgnoredStatements { get; set; } = new List<string>();
+
+        public PgSchema DefaultSchema { get; set; }
+
+        public string Comment { get; set; }
+
+
+        public void SetDefaultSchema(string name)
+        {
+            DefaultSchema = GetSchema(name);
+        }
+        
+        public PgSchema GetSchema(string name)
+        {
+            if (name == null)
+                return DefaultSchema;
+
+            foreach (var schema in Schemas)
+                if (schema.Name.Equals(name))
+                    return schema;
+
+            return null;
         }
 
-        return null;
+        
     }
-
-    
-    public List<PgSchema> GetSchemas() {
-        return new List<PgSchema>(_schemas);
-    }
-
-    
-    public void AddSchema(PgSchema schema) {
-        _schemas.Add(schema);
-    }
-}
 }
