@@ -216,7 +216,7 @@ public class PgTable
     
     public PgTrigger getTrigger(String name) {
         foreach(PgTrigger trigger in triggers) {
-            if (trigger.getName().Equals(name)) {
+            if (trigger.name.Equals(name)) {
                 return trigger;
             }
         }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using pgdiff.schema;
 
 namespace pgdiff {
@@ -65,7 +66,7 @@ public class PgDiffTriggers {
             List<PgTrigger> newTriggers = newTable.getTriggers();
 
             foreach (PgTrigger oldTrigger in oldTable.getTriggers()) {
-                if (!newTriggers.Contains(oldTrigger)) {
+                if (newTriggers.All(t => !t.Equals(oldTrigger))) {
                     list.Add(oldTrigger);
                 }
             }
@@ -85,7 +86,7 @@ public class PgDiffTriggers {
                 list.AddRange(newTable.getTriggers());
             } else {
                 foreach (PgTrigger newTrigger in newTable.getTriggers()) {
-                    if (!oldTable.getTriggers().Contains(newTrigger)) {
+                    if (oldTable.getTriggers().All(t => !t.Equals(newTrigger))) {
                         list.Add(newTrigger);
                     }
                 }
@@ -112,39 +113,39 @@ public class PgDiffTriggers {
 
             foreach (PgTrigger oldTrigger in oldTable.getTriggers()) {
                 PgTrigger newTrigger =
-                        newTable.getTrigger(oldTrigger.getName());
+                        newTable.getTrigger(oldTrigger.name);
 
                 if (newTrigger == null) {
                     continue;
                 }
 
-                if (oldTrigger.getComment() == null
-                        && newTrigger.getComment() != null
-                        || oldTrigger.getComment() != null
-                        && newTrigger.getComment() != null
-                        && !oldTrigger.getComment().Equals(
-                        newTrigger.getComment())) {
+                if (oldTrigger.comment == null
+                        && newTrigger.comment != null
+                        || oldTrigger.comment != null
+                        && newTrigger.comment != null
+                        && !oldTrigger.comment.Equals(
+                        newTrigger.comment)) {
                     searchPathHelper.outputSearchPath(writer);
                     writer.WriteLine();
                     writer.Write("COMMENT ON TRIGGER ");
                     writer.Write(
-                            PgDiffUtils.getQuotedName(newTrigger.getName()));
+                            PgDiffUtils.getQuotedName(newTrigger.name));
                     writer.Write(" ON ");
                     writer.Write(PgDiffUtils.getQuotedName(
-                            newTrigger.getTableName()));
+                            newTrigger.tableName));
                     writer.Write(" IS ");
-                    writer.Write(newTrigger.getComment());
+                    writer.Write(newTrigger.comment);
                     writer.WriteLine(';');
-                } else if (oldTrigger.getComment() != null
-                        && newTrigger.getComment() == null) {
+                } else if (oldTrigger.comment != null
+                        && newTrigger.comment == null) {
                     searchPathHelper.outputSearchPath(writer);
                     writer.WriteLine();
                     writer.Write("COMMENT ON TRIGGER ");
                     writer.Write(
-                            PgDiffUtils.getQuotedName(newTrigger.getName()));
+                            PgDiffUtils.getQuotedName(newTrigger.name));
                     writer.Write(" ON ");
                     writer.Write(PgDiffUtils.getQuotedName(
-                            newTrigger.getTableName()));
+                            newTrigger.tableName));
                     writer.WriteLine(" IS NULL;");
                 }
             }

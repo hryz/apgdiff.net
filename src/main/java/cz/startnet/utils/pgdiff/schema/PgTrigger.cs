@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace pgdiff.schema {
@@ -12,67 +13,52 @@ namespace pgdiff.schema {
 public class PgTrigger {
 
     
-    private String function;
-    
-    private String name;
-    
-    private String tableName;
-    
-    private bool before = true;
-    
-    private bool forEachRow;
-    
-    private bool onDelete;
-    
-    private bool onInsert;
-    
-    private bool onUpdate;
-    
-    private bool onTruncate;
-    
-    
-    private List<String> updateColumns = new List<string>();
-    
-    private String when;
-    
-    private String comment;
+    public String function { get; set; }
 
-    
-    public void setBefore(bool before) {
-        this.before = before;
-    }
+    public String name { get; set; }
 
-    
-    public bool isBefore() {
-        return before;
-    }
+    public String tableName { get; set; }
 
-    
-    public String getComment() {
-        return comment;
-    }
+    public bool before { get; set; } = true;
 
-    
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+    public bool forEachRow { get; set; }
 
-    
-    public String getCreationSQL() {
+    public bool onDelete { get; set; }
+
+    public bool onInsert { get; set; }
+
+    public bool onUpdate { get; set; }
+
+    public bool onTruncate { get; set; }
+
+
+    public List<String> updateColumns { get; set; } = new List<string>();
+
+    public void addUpdateColumn(string item) => updateColumns.Add(item);
+
+    public String when { get; set; }
+
+    public String comment { get; set; }
+
+
+
+
+
+        public String getCreationSQL() {
         StringBuilder sbSQL = new StringBuilder(100);
         sbSQL.Append("CREATE TRIGGER ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(getName()));
+        sbSQL.Append(PgDiffUtils.getQuotedName(name));
         sbSQL.Append("\n\t");
-        sbSQL.Append(isBefore() ? "BEFORE" : "AFTER");
+        sbSQL.Append(before ? "BEFORE" : "AFTER");
 
         bool firstEvent = true;
 
-        if (isOnInsert()) {
+        if (onInsert) {
             sbSQL.Append(" INSERT");
             firstEvent = false;
         }
 
-        if (isOnUpdate()) {
+        if (onUpdate) {
             if (firstEvent) {
                 firstEvent = false;
             } else {
@@ -99,7 +85,7 @@ public class PgTrigger {
             }
         }
 
-        if (isOnDelete()) {
+        if (onDelete) {
             if (!firstEvent) {
                 sbSQL.Append(" OR");
             }
@@ -107,7 +93,7 @@ public class PgTrigger {
             sbSQL.Append(" DELETE");
         }
 
-        if (isOnTruncate()) {
+        if (onTruncate) {
             if (!firstEvent) {
                 sbSQL.Append(" OR");
             }
@@ -116,9 +102,9 @@ public class PgTrigger {
         }
 
         sbSQL.Append(" ON ");
-        sbSQL.Append(PgDiffUtils.getQuotedName(getTableName()));
+        sbSQL.Append(PgDiffUtils.getQuotedName(tableName));
         sbSQL.Append("\n\tFOR EACH ");
-        sbSQL.Append(isForEachRow() ? "ROW" : "STATEMENT");
+        sbSQL.Append(forEachRow ? "ROW" : "STATEMENT");
 
         if (!String.IsNullOrEmpty(when)) {
             sbSQL.Append("\n\tWHEN (");
@@ -127,7 +113,7 @@ public class PgTrigger {
         }
 
         sbSQL.Append("\n\tEXECUTE PROCEDURE ");
-        sbSQL.Append(getFunction());
+        sbSQL.Append(function);
         sbSQL.Append(';');
 
         if (!String.IsNullOrEmpty(comment)) {
@@ -145,109 +131,15 @@ public class PgTrigger {
 
     
     public String getDropSQL() {
-        return "DROP TRIGGER " + PgDiffUtils.getQuotedName(getName()) + " ON "
-                + PgDiffUtils.getQuotedName(getTableName()) + ";";
+        return "DROP TRIGGER " + PgDiffUtils.getQuotedName(name) + " ON "
+                + PgDiffUtils.getQuotedName(tableName) + ";";
     }
 
     
-    public void setForEachRow(bool forEachRow) {
-        this.forEachRow = forEachRow;
-    }
+    
 
     
-    public bool isForEachRow() {
-        return forEachRow;
-    }
-
     
-    public void setFunction(String function) {
-        this.function = function;
-    }
-
-    
-    public String getFunction() {
-        return function;
-    }
-
-    
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    
-    public String getName() {
-        return name;
-    }
-
-    
-    public void setOnDelete(bool onDelete) {
-        this.onDelete = onDelete;
-    }
-
-    
-    public bool isOnDelete() {
-        return onDelete;
-    }
-
-    
-    public void setOnInsert(bool onInsert) {
-        this.onInsert = onInsert;
-    }
-
-    
-    public bool isOnInsert() {
-        return onInsert;
-    }
-
-    
-    public void setOnUpdate(bool onUpdate) {
-        this.onUpdate = onUpdate;
-    }
-
-    
-    public bool isOnUpdate() {
-        return onUpdate;
-    }
-
-    
-    public bool isOnTruncate() {
-        return onTruncate;
-    }
-
-    
-    public void setOnTruncate(bool onTruncate) {
-        this.onTruncate = onTruncate;
-    }
-
-    
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    
-    public String getTableName() {
-        return tableName;
-    }
-
-    
-    public List<String> getUpdateColumns() {
-        return new List<string>(updateColumns);
-    }
-
-    
-    public void addUpdateColumn(String columnName) {
-        updateColumns.Add(columnName);
-    }
-
-    
-    public String getWhen() {
-        return when;
-    }
-
-    
-    public void setWhen(String when) {
-        this.when = when;
-    }
 
     public override bool Equals(Object @object) {
         bool equals = false;
@@ -256,23 +148,30 @@ public class PgTrigger {
             equals = true;
         } else if (@object is PgTrigger) {
             PgTrigger trigger = (PgTrigger) @object;
-            equals = (before == trigger.isBefore())
-                    && (forEachRow == trigger.isForEachRow())
-                    && function.Equals(trigger.getFunction())
-                    && name.Equals(trigger.getName())
-                    && (onDelete == trigger.isOnDelete())
-                    && (onInsert == trigger.isOnInsert())
-                    && (onUpdate == trigger.isOnUpdate())
-                    && (onTruncate == trigger.isOnTruncate())
-                    && tableName.Equals(trigger.getTableName());
+            equals = (before == trigger.before)
+                    && (forEachRow == trigger.forEachRow)
+                    && function.Equals(trigger.function)
+                    && name.Equals(trigger.name)
+                    && (onDelete == trigger.onDelete)
+                    && (onInsert == trigger.onInsert)
+                    && (onUpdate == trigger.onUpdate)
+                    && (onTruncate == trigger.onTruncate)
+                    && tableName.Equals(trigger.tableName);
 
             if (equals) {
-                List<String> sorted1 = new List<string>(updateColumns);
-                List<String> sorted2 = new List<String>(trigger.getUpdateColumns());
+
+                /*List<String> sorted1 = new List<string>(updateColumns);
+                List<String> sorted2 = new List<String>(trigger.updateColumns);
                 sorted1.Sort();
                 sorted2.Sort();
 
-                equals = sorted1.Equals(sorted2);
+                equals = sorted1.Equals(sorted2);*/
+                if (updateColumns.Count == 0 && trigger.updateColumns.Count == 0)
+                    equals = true;
+                else
+                    equals = updateColumns.All(
+                        t1 => trigger.updateColumns.Any(
+                            t2 => t1.Equals(t2, StringComparison.InvariantCultureIgnoreCase)));
             }
         }
 

@@ -154,7 +154,7 @@ public class CommentParser {
                 getTable(objectName).getTrigger(triggerName);
 
         parser.expect("IS");
-        trigger.setComment(getComment(parser));
+        trigger.comment = getComment(parser);
         parser.expect(";");
     }
 

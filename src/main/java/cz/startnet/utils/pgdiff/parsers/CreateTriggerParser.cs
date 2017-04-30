@@ -17,12 +17,12 @@ public class CreateTriggerParser {
         String objectName = ParserUtils.getObjectName(triggerName);
 
         PgTrigger trigger = new PgTrigger();
-        trigger.setName(objectName);
+        trigger.name = objectName;
 
         if (parser.expectOptional("BEFORE")) {
-            trigger.setBefore(true);
+            trigger.before =true;
         } else if (parser.expectOptional("AFTER")) {
-            trigger.setBefore(false);
+            trigger.before =false;
         }
 
         bool first = true;
@@ -31,9 +31,9 @@ public class CreateTriggerParser {
             if (!first && !parser.expectOptional("OR")) {
                 break;
             } else if (parser.expectOptional("INSERT")) {
-                trigger.setOnInsert(true);
+                trigger.onInsert =true;
             } else if (parser.expectOptional("UPDATE")) {
-                trigger.setOnUpdate(true);
+                trigger.onUpdate = true;
 
                 if (parser.expectOptional("OF")) {
                     do {
@@ -41,9 +41,9 @@ public class CreateTriggerParser {
                     } while (parser.expectOptional(","));
                 }
             } else if (parser.expectOptional("DELETE")) {
-                trigger.setOnDelete(true);
+                trigger.onDelete =true;
             } else if (parser.expectOptional("TRUNCATE")) {
-                trigger.setOnTruncate(true);
+                trigger.onTruncate = true;
             } else if (first) {
                 break;
             } else {
@@ -57,15 +57,16 @@ public class CreateTriggerParser {
 
         String tableName = parser.parseIdentifier();
 
-        trigger.setTableName(ParserUtils.getObjectName(tableName));
+        trigger.tableName = ParserUtils.getObjectName(tableName);
 
         if (parser.expectOptional("FOR")) {
             parser.expectOptional("EACH");
 
             if (parser.expectOptional("ROW")) {
-                trigger.setForEachRow(true);
-            } else if (parser.expectOptional("STATEMENT")) {
-                trigger.setForEachRow(false);
+                trigger.forEachRow = true;
+            } else if (parser.expectOptional("STATEMENT"))
+            {
+                trigger.forEachRow = false;
             } else {
                 parser.throwUnsupportedCommand();
             }
@@ -73,21 +74,21 @@ public class CreateTriggerParser {
 
         if (parser.expectOptional("WHEN")) {
             parser.expect("(");
-            trigger.setWhen(parser.getExpression());
+            trigger.when =parser.getExpression();
             parser.expect(")");
         }
 
         parser.expect("EXECUTE", "PROCEDURE");
-        trigger.setFunction(parser.getRest());
+        trigger.function = parser.getRest();
 
         bool ignoreSlonyTrigger = ignoreSlonyTriggers
-                && ("_slony_logtrigger".Equals(trigger.getName())
-                || "_slony_denyaccess".Equals(trigger.getName()));
+                && ("_slony_logtrigger".Equals(trigger.name)
+                || "_slony_denyaccess".Equals(trigger.name));
 
         if (!ignoreSlonyTrigger) {
             PgSchema tableSchema = database.getSchema(
                     ParserUtils.getSchemaName(tableName, database));
-            tableSchema.getTable(trigger.getTableName()).addTrigger(trigger);
+            tableSchema.getTable(trigger.tableName).addTrigger(trigger);
         }
     }
 
