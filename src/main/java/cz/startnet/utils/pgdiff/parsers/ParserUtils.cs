@@ -91,7 +91,7 @@ public class ParserUtils {
             while (true) {
                 if (@string[startPos] == '"') {
                     int endPos = @string.IndexOf('"', startPos + 1);
-                    strings.Add(@string.Substring(startPos + 1, endPos));
+                    strings.Add(@string.Substring(startPos + 1, endPos - startPos -1));
 
                     if (endPos + 1 == @string.Length) {
                         break;
@@ -107,7 +107,7 @@ public class ParserUtils {
                         strings.Add(@string.Substring(startPos));
                         break;
                     } else {
-                        strings.Add(@string.Substring(startPos, endPos));
+                        strings.Add(@string.Substring(startPos, endPos - startPos));
                         startPos = endPos + 1;
                     }
                 }

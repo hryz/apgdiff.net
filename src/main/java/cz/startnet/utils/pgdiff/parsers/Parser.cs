@@ -33,7 +33,7 @@ public class Parser {
         int wordEnd = position + word.Length;
 
         if (wordEnd <= _string.Length
-                && _string.Substring(position, wordEnd).Equals(word, StringComparison.InvariantCultureIgnoreCase)
+                && _string.Substring(position, wordEnd - position).Equals(word, StringComparison.InvariantCultureIgnoreCase)
                 && (wordEnd == _string.Length
                 || Char.IsWhiteSpace(_string[wordEnd])
                 || _string[wordEnd] == ';'
@@ -54,7 +54,7 @@ public class Parser {
 
         throw new ParserException(String.Format(
                 Resources.CannotParseStringExpectedWord, _string,
-                word, position + 1, _string.Substring(position, position + 20)));
+                word, position + 1, _string.Substring(position, 20)));
     }
 
     
@@ -102,7 +102,7 @@ public class Parser {
 
         if (quoted) {
             int endPos = _string.IndexOf('"', position + 1);
-            string result = _string.Substring(position, endPos + 1);
+            string result = _string.Substring(position, endPos + 1 - position);
             position = endPos + 1;
 
             return result;
@@ -119,7 +119,7 @@ public class Parser {
             }
 
             string result =
-                    _string.Substring(position, endPos).ToLower();
+                    _string.Substring(position, endPos - position).ToLower();
 
             position = endPos;
 
@@ -135,7 +135,7 @@ public class Parser {
             if (position == _string.Length - 1) {
                 return null;
             } else {
-                result = _string.Substring(position, _string.Length - 1);
+                result = _string.Substring(position, _string.Length - 1 - position);
             }
         } else {
             result = _string.Substring(position);
@@ -158,7 +158,7 @@ public class Parser {
 
         try {
             int result =
-                    Int32.Parse(_string.Substring(position, endPos));
+                    Int32.Parse(_string.Substring(position, endPos - position));
 
             position = endPos;
             skipWhitespace();
@@ -168,7 +168,7 @@ public class Parser {
             throw new ParserException(String.Format(
                     Resources.CannotParseStringExpectedInteger,
                     _string, position + 1,
-                    _string.Substring(position, position + 20)), ex);
+                    _string.Substring(position, 20)), ex);
         }
     }
 
@@ -198,7 +198,7 @@ public class Parser {
             string result;
 
             try {
-                result = _string.Substring(position, endPos + 1);
+                result = _string.Substring(position, endPos + 1 - position);
             } catch (Exception ex) {
                 throw new Exception("Failed to get sub_string: " + _string
                         + " start pos: " + position + " end pos: "
@@ -227,7 +227,7 @@ public class Parser {
                         _string, position + 1));
             }
 
-            string result = _string.Substring(position, endPos);
+            string result = _string.Substring(position, endPos - position);
 
             position = endPos;
             skipWhitespace();
@@ -244,10 +244,10 @@ public class Parser {
             throw new ParserException(String.Format(
                     Resources.CannotParseStringExpectedExpression,
                     _string, position + 1,
-                    _string.Substring(position, position + 20)));
+                    _string.Substring(position, 20)));
         }
 
-        string result = _string.Substring(position, endPos).Trim();
+        string result = _string.Substring(position, endPos - position).Trim();
 
         position = endPos;
 
@@ -298,7 +298,7 @@ public class Parser {
         throw new ParserException(String.Format(
                 Resources.CannotParseStringUnsupportedCommand,
                 _string, position + 1,
-                _string.Substring(position, position + 20)));
+                _string.Substring(position, 20)));
     }
 
   
@@ -314,7 +314,7 @@ public class Parser {
 
     
     public string getSub_string(int startPos, int endPos) {
-        return _string.Substring(startPos, endPos);
+        return _string.Substring(startPos, endPos - startPos);
     }
 
     
@@ -338,10 +338,10 @@ public class Parser {
             throw new ParserException(String.Format(
                     Resources.CannotParseStringExpectedDataType,
                     _string, position + 1,
-                    _string.Substring(position, position + 20)));
+                    _string.Substring(position, 20)));
         }
 
-        string dataType = _string.Substring(position, endPos);
+        string dataType = _string.Substring(position, endPos - position);
 
         position = endPos;
         skipWhitespace();

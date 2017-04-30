@@ -26,68 +26,68 @@ namespace pgdiff.loader {
 
 
         private static Regex PATTERN_CREATE_SCHEMA = new Regex(
-            "^CREATE[\\s]+SCHEMA[\\s]+.*$", RegexOptions.Compiled | RegexOptions.IgnoreCase); 
+            "^CREATE[\\s]+SCHEMA[\\s]+.*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline); 
     
 
     
 
     private static Regex PATTERN_DEFAULT_SCHEMA = new Regex(
             "^SET[\\s]+search_path[\\s]*=[\\s]*\"?([^,\\s\"]+)\"?"
-            + "(?:,[\\s]+.*)?;$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            + "(?:,[\\s]+.*)?;$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_CREATE_TABLE = new Regex(
             "^CREATE[\\s]+TABLE[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_CREATE_VIEW = new Regex(
             "^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?VIEW[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_ALTER_TABLE =
             new Regex("^ALTER[\\s]+TABLE[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_CREATE_SEQUENCE = new Regex(
             "^CREATE[\\s]+SEQUENCE[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_ALTER_SEQUENCE =
             new Regex("^ALTER[\\s]+SEQUENCE[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_CREATE_INDEX = new Regex(
             "^CREATE[\\s]+(?:UNIQUE[\\s]+)?INDEX[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_SELECT = new Regex(
-            "^SELECT[\\s]+.*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            "^SELECT[\\s]+.*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_INSERT_INTO = new Regex(
             "^INSERT[\\s]+INTO[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_UPDATE = new Regex(
-            "^UPDATE[\\s].*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            "^UPDATE[\\s].*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_DELETE_FROM = new Regex(
             "^DELETE[\\s]+FROM[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_CREATE_TRIGGER = new Regex(
             "^CREATE[\\s]+TRIGGER[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_CREATE_FUNCTION = new Regex(
             "^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?FUNCTION[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_ALTER_VIEW = new Regex(
             "^ALTER[\\s]+VIEW[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static Regex PATTERN_COMMENT = new Regex(
             "^COMMENT[\\s]+ON[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
     
     private static String lineBuffer;
 
@@ -254,7 +254,7 @@ namespace pgdiff.loader {
                     return true;
                 }
 
-                String tag = sbString.ToString().Substring(curPos, endPos + 1);
+                String tag = sbString.ToString().Substring(curPos, endPos + 1 - curPos);
                 int endTagPos = sbString.ToString().IndexOf(tag, endPos + 1, StringComparison.Ordinal);
 
                 // if end tag was not found or it was found after the checked

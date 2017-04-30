@@ -153,9 +153,11 @@ public class PgColumn {
 
         matcher = PATTERN_DEFAULT;
 
-        if (matcher.IsMatch(@string)) {
-            @string = matcher.Matches(@string)[0].Groups[1].Value.Trim(); 
-            setDefaultValue(matcher.Matches(@string)[0].Groups[2].Value.Trim());
+        if (matcher.IsMatch(@string))
+        {
+            var matches = matcher.Matches(@string);
+            @string = matches[0].Groups[1].Value.Trim(); 
+            setDefaultValue(matches[0].Groups[2].Value.Trim());
         }
 
         setType(@string);
