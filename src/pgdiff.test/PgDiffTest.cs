@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -168,11 +169,18 @@ namespace pgdiff.test
             RunDiff(fileNameTemplate, addDefaults, addTransaction, ignoreFunctionWhitespace, ignoreStartWith);
         }
 
+        private static readonly Assembly _assembly = Assembly.GetExecutingAssembly();
+        private static Stream GetScript(string fileName)
+        {
+            return _assembly.GetManifestResourceStream("pgdiff.test.scripts." + fileName) 
+                ?? throw new Exception($"Resource \"{fileName}\" not found");
+        }
+
         public void RunDiffSameOriginal(string fileNameTemplate, bool addDefaults, bool addTransaction, bool ignoreFunctionWhitespace, bool ignoreStartWith)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (var origRdr = new StreamReader(assembly.GetManifestResourceStream("pgdiff.test.scripts." + fileNameTemplate + "_original.sql")))
-            using (var modifRdr = new StreamReader(assembly.GetManifestResourceStream("pgdiff.test.scripts." + fileNameTemplate + "_original.sql")))
+            
+            using (var origRdr = new StreamReader(GetScript(fileNameTemplate + "_original.sql")))
+            using (var modifRdr = new StreamReader(GetScript(fileNameTemplate + "_original.sql")))
             using (var ms = new MemoryStream())
             using (var writer = new StreamWriter(ms))
             using (var diffReader = new StreamReader(ms))
@@ -189,9 +197,8 @@ namespace pgdiff.test
 
         public void RunDiffSameNew(string fileNameTemplate, bool addDefaults, bool addTransaction, bool ignoreFunctionWhitespace, bool ignoreStartWith)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (var origRdr = new StreamReader(assembly.GetManifestResourceStream("pgdiff.test.scripts." + fileNameTemplate + "_new.sql")))
-            using (var modifRdr = new StreamReader(assembly.GetManifestResourceStream("pgdiff.test.scripts." + fileNameTemplate + "_new.sql")))
+            using (var origRdr = new StreamReader(GetScript(fileNameTemplate + "_new.sql")))
+            using (var modifRdr = new StreamReader(GetScript(fileNameTemplate + "_new.sql")))
             using (var ms = new MemoryStream())
             using (var writer = new StreamWriter(ms))
             using (var diffReader = new StreamReader(ms))
@@ -208,10 +215,9 @@ namespace pgdiff.test
 
         public void RunDiff(string fileNameTemplate, bool addDefaults, bool addTransaction, bool ignoreFunctionWhitespace, bool ignoreStartWith)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (var origRdr = new StreamReader(assembly.GetManifestResourceStream("pgdiff.test.scripts." + fileNameTemplate + "_original.sql")))
-            using (var modifRdr = new StreamReader(assembly.GetManifestResourceStream("pgdiff.test.scripts." + fileNameTemplate + "_new.sql")))
-            using (var expectedDiffRdr = new StreamReader(assembly.GetManifestResourceStream("pgdiff.test.scripts." + fileNameTemplate + "_diff.sql")))
+            using (var origRdr = new StreamReader(GetScript(fileNameTemplate + "_original.sql")))
+            using (var modifRdr = new StreamReader(GetScript(fileNameTemplate + "_new.sql")))
+            using (var expectedDiffRdr = new StreamReader(GetScript(fileNameTemplate + "_diff.sql")))
             using (var ms = new MemoryStream())
             using (var writer = new StreamWriter(ms))
             using (var diffReader = new StreamReader(ms))
@@ -219,7 +225,7 @@ namespace pgdiff.test
                 var arguments = new PgDiffArguments
                 {
                     AddDefaults = addDefaults,
-                    //AddTransaction = addTransaction, //TODO: this is a bug of the Java version
+                    //AddTransaction = addTransaction, //TODO: this is a bug of the Java version. The transaction arg was ignored in it
                     IgnoreFunctionWhitespace = ignoreFunctionWhitespace,
                     IgnoreStartWith = ignoreStartWith
                 };
@@ -228,7 +234,9 @@ namespace pgdiff.test
                 writer.Flush();
                 ms.Seek(0, SeekOrigin.Begin);
                 
-                Assert.AreEqual(expectedDiffRdr.ReadToEnd().Replace("\r\n","\n").Trim(), diffReader.ReadToEnd().Replace("\r\n", "\n").Trim());
+                Assert.AreEqual(
+                    expectedDiffRdr.ReadToEnd().Replace("\r\n","\n").Trim(), 
+                    diffReader.ReadToEnd().Replace("\r\n", "\n").Trim());
             }
         }
     }
