@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.props" Condition="Exists('..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{89626EBB-8BFB-4075-9CEE-601FC5687623}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>pgdiff.test</RootNamespace>
+    <AssemblyName>pgdiff.test</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MSTest.TestFramework.1.1.11\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MSTest.TestFramework.1.1.11\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="loader\PgDumpLoaderTest.cs" />
+    <Compile Include="parsers\ParserUtilsTest.cs" />
+    <Compile Include="PgDiffTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="scripts\add_cluster_diff.sql" />
+    <EmbeddedResource Include="scripts\add_cluster_new.sql" />
+    <EmbeddedResource Include="scripts\add_cluster_original.sql" />
+    <EmbeddedResource Include="scripts\add_column_add_defaults_diff.sql" />
+    <EmbeddedResource Include="scripts\add_column_add_defaults_new.sql" />
+    <EmbeddedResource Include="scripts\add_column_add_defaults_original.sql" />
+    <EmbeddedResource Include="scripts\add_column_diff.sql" />
+    <EmbeddedResource Include="scripts\add_column_new.sql" />
+    <EmbeddedResource Include="scripts\add_column_original.sql" />
+    <EmbeddedResource Include="scripts\add_comments_diff.sql" />
+    <EmbeddedResource Include="scripts\add_comments_new.sql" />
+    <EmbeddedResource Include="scripts\add_comments_original.sql" />
+    <EmbeddedResource Include="scripts\add_comment_new_column_diff.sql" />
+    <EmbeddedResource Include="scripts\add_comment_new_column_new.sql" />
+    <EmbeddedResource Include="scripts\add_comment_new_column_original.sql" />
+    <EmbeddedResource Include="scripts\add_constraint_diff.sql" />
+    <EmbeddedResource Include="scripts\add_constraint_new.sql" />
+    <EmbeddedResource Include="scripts\add_constraint_original.sql" />
+    <EmbeddedResource Include="scripts\add_defaults_diff.sql" />
+    <EmbeddedResource Include="scripts\add_defaults_new.sql" />
+    <EmbeddedResource Include="scripts\add_defaults_original.sql" />
+    <EmbeddedResource Include="scripts\add_default_value_diff.sql" />
+    <EmbeddedResource Include="scripts\add_default_value_new.sql" />
+    <EmbeddedResource Include="scripts\add_default_value_original.sql" />
+    <EmbeddedResource Include="scripts\add_empty_table_diff.sql" />
+    <EmbeddedResource Include="scripts\add_empty_table_new.sql" />
+    <EmbeddedResource Include="scripts\add_empty_table_original.sql" />
+    <EmbeddedResource Include="scripts\add_function_args2_diff.sql" />
+    <EmbeddedResource Include="scripts\add_function_args2_new.sql" />
+    <EmbeddedResource Include="scripts\add_function_args2_original.sql" />
+    <EmbeddedResource Include="scripts\add_function_args_diff.sql" />
+    <EmbeddedResource Include="scripts\add_function_args_new.sql" />
+    <EmbeddedResource Include="scripts\add_function_args_original.sql" />
+    <EmbeddedResource Include="scripts\add_function_noargs_diff.sql" />
+    <EmbeddedResource Include="scripts\add_function_noargs_new.sql" />
+    <EmbeddedResource Include="scripts\add_function_noargs_original.sql" />
+    <EmbeddedResource Include="scripts\add_function_similar_diff.sql" />
+    <EmbeddedResource Include="scripts\add_function_similar_new.sql" />
+    <EmbeddedResource Include="scripts\add_function_similar_original.sql" />
+    <EmbeddedResource Include="scripts\add_index_diff.sql" />
+    <EmbeddedResource Include="scripts\add_index_new.sql" />
+    <EmbeddedResource Include="scripts\add_index_original.sql" />
+    <EmbeddedResource Include="scripts\add_inherits_diff.sql" />
+    <EmbeddedResource Include="scripts\add_inherits_new.sql" />
+    <EmbeddedResource Include="scripts\add_inherits_original.sql" />
+    <EmbeddedResource Include="scripts\add_not_null_diff.sql" />
+    <EmbeddedResource Include="scripts\add_not_null_new.sql" />
+    <EmbeddedResource Include="scripts\add_not_null_original.sql" />
+    <EmbeddedResource Include="scripts\add_owned_sequence_diff.sql" />
+    <EmbeddedResource Include="scripts\add_owned_sequence_new.sql" />
+    <EmbeddedResource Include="scripts\add_owned_sequence_original.sql" />
+    <EmbeddedResource Include="scripts\add_sequence_bug2100013_diff.sql" />
+    <EmbeddedResource Include="scripts\add_sequence_bug2100013_new.sql" />
+    <EmbeddedResource Include="scripts\add_sequence_bug2100013_original.sql" />
+    <EmbeddedResource Include="scripts\add_sequence_diff.sql" />
+    <EmbeddedResource Include="scripts\add_sequence_new.sql" />
+    <EmbeddedResource Include="scripts\add_sequence_original.sql" />
+    <EmbeddedResource Include="scripts\add_statistics_diff.sql" />
+    <EmbeddedResource Include="scripts\add_statistics_new.sql" />
+    <EmbeddedResource Include="scripts\add_statistics_original.sql" />
+    <EmbeddedResource Include="scripts\add_table_diff.sql" />
+    <EmbeddedResource Include="scripts\add_table_new.sql" />
+    <EmbeddedResource Include="scripts\add_table_original.sql" />
+    <EmbeddedResource Include="scripts\add_transaction_diff.sql" />
+    <EmbeddedResource Include="scripts\add_transaction_new.sql" />
+    <EmbeddedResource Include="scripts\add_transaction_original.sql" />
+    <EmbeddedResource Include="scripts\add_trigger_diff.sql" />
+    <EmbeddedResource Include="scripts\add_trigger_new.sql" />
+    <EmbeddedResource Include="scripts\add_trigger_original.sql" />
+    <EmbeddedResource Include="scripts\add_unique_constraint_diff.sql" />
+    <EmbeddedResource Include="scripts\add_unique_constraint_new.sql" />
+    <EmbeddedResource Include="scripts\add_unique_constraint_original.sql" />
+    <EmbeddedResource Include="scripts\add_view_diff.sql" />
+    <EmbeddedResource Include="scripts\add_view_new.sql" />
+    <EmbeddedResource Include="scripts\add_view_original.sql" />
+    <EmbeddedResource Include="scripts\alter_comments_diff.sql" />
+    <EmbeddedResource Include="scripts\alter_comments_new.sql" />
+    <EmbeddedResource Include="scripts\alter_comments_original.sql" />
+    <EmbeddedResource Include="scripts\alter_view_add_default_diff.sql" />
+    <EmbeddedResource Include="scripts\alter_view_add_default_new.sql" />
+    <EmbeddedResource Include="scripts\alter_view_add_default_original.sql" />
+    <EmbeddedResource Include="scripts\alter_view_change_default_diff.sql" />
+    <EmbeddedResource Include="scripts\alter_view_change_default_new.sql" />
+    <EmbeddedResource Include="scripts\alter_view_change_default_original.sql" />
+    <EmbeddedResource Include="scripts\alter_view_drop_default_diff.sql" />
+    <EmbeddedResource Include="scripts\alter_view_drop_default_new.sql" />
+    <EmbeddedResource Include="scripts\alter_view_drop_default_original.sql" />
+    <EmbeddedResource Include="scripts\drop_cluster_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_cluster_new.sql" />
+    <EmbeddedResource Include="scripts\drop_cluster_original.sql" />
+    <EmbeddedResource Include="scripts\drop_column_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_column_new.sql" />
+    <EmbeddedResource Include="scripts\drop_column_original.sql" />
+    <EmbeddedResource Include="scripts\drop_comments_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_comments_new.sql" />
+    <EmbeddedResource Include="scripts\drop_comments_original.sql" />
+    <EmbeddedResource Include="scripts\drop_constraint_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_constraint_new.sql" />
+    <EmbeddedResource Include="scripts\drop_constraint_original.sql" />
+    <EmbeddedResource Include="scripts\drop_default_value_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_default_value_new.sql" />
+    <EmbeddedResource Include="scripts\drop_default_value_original.sql" />
+    <EmbeddedResource Include="scripts\drop_function_args2_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_function_args2_new.sql" />
+    <EmbeddedResource Include="scripts\drop_function_args2_original.sql" />
+    <EmbeddedResource Include="scripts\drop_function_args_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_function_args_new.sql" />
+    <EmbeddedResource Include="scripts\drop_function_args_original.sql" />
+    <EmbeddedResource Include="scripts\drop_function_noargs_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_function_noargs_new.sql" />
+    <EmbeddedResource Include="scripts\drop_function_noargs_original.sql" />
+    <EmbeddedResource Include="scripts\drop_function_similar_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_function_similar_new.sql" />
+    <EmbeddedResource Include="scripts\drop_function_similar_original.sql" />
+    <EmbeddedResource Include="scripts\drop_index_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_index_new.sql" />
+    <EmbeddedResource Include="scripts\drop_index_original.sql" />
+    <EmbeddedResource Include="scripts\drop_index_with_cluster_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_index_with_cluster_new.sql" />
+    <EmbeddedResource Include="scripts\drop_index_with_cluster_original.sql" />
+    <EmbeddedResource Include="scripts\drop_not_null_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_not_null_new.sql" />
+    <EmbeddedResource Include="scripts\drop_not_null_original.sql" />
+    <EmbeddedResource Include="scripts\drop_sequence_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_sequence_new.sql" />
+    <EmbeddedResource Include="scripts\drop_sequence_original.sql" />
+    <EmbeddedResource Include="scripts\drop_statistics_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_statistics_new.sql" />
+    <EmbeddedResource Include="scripts\drop_statistics_original.sql" />
+    <EmbeddedResource Include="scripts\drop_table_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_table_new.sql" />
+    <EmbeddedResource Include="scripts\drop_table_original.sql" />
+    <EmbeddedResource Include="scripts\drop_trigger_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_trigger_new.sql" />
+    <EmbeddedResource Include="scripts\drop_trigger_original.sql" />
+    <EmbeddedResource Include="scripts\drop_view_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_view_new.sql" />
+    <EmbeddedResource Include="scripts\drop_view_original.sql" />
+    <EmbeddedResource Include="scripts\drop_with_oids_diff.sql" />
+    <EmbeddedResource Include="scripts\drop_with_oids_new.sql" />
+    <EmbeddedResource Include="scripts\drop_with_oids_original.sql" />
+    <EmbeddedResource Include="scripts\function_bug3084274_diff.sql" />
+    <EmbeddedResource Include="scripts\function_bug3084274_new.sql" />
+    <EmbeddedResource Include="scripts\function_bug3084274_original.sql" />
+    <EmbeddedResource Include="scripts\function_equal_whitespace_diff.sql" />
+    <EmbeddedResource Include="scripts\function_equal_whitespace_new.sql" />
+    <EmbeddedResource Include="scripts\function_equal_whitespace_original.sql" />
+    <EmbeddedResource Include="scripts\inherited_tables_diff.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_1.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_10.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_11.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_12.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_13.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_14.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_15.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_2.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_3.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_4.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_5.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_6.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_7.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_8.sql" />
+    <EmbeddedResource Include="scripts\loader\schema_9.sql" />
+    <EmbeddedResource Include="scripts\modify_cluster_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_cluster_new.sql" />
+    <EmbeddedResource Include="scripts\modify_cluster_original.sql" />
+    <EmbeddedResource Include="scripts\modify_column_type_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_column_type_new.sql" />
+    <EmbeddedResource Include="scripts\modify_column_type_original.sql" />
+    <EmbeddedResource Include="scripts\modify_constraint_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_constraint_new.sql" />
+    <EmbeddedResource Include="scripts\modify_constraint_original.sql" />
+    <EmbeddedResource Include="scripts\modify_default_value_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_default_value_new.sql" />
+    <EmbeddedResource Include="scripts\modify_default_value_original.sql" />
+    <EmbeddedResource Include="scripts\modify_function_args2_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_function_args2_new.sql" />
+    <EmbeddedResource Include="scripts\modify_function_args2_original.sql" />
+    <EmbeddedResource Include="scripts\modify_function_args_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_function_args_new.sql" />
+    <EmbeddedResource Include="scripts\modify_function_args_original.sql" />
+    <EmbeddedResource Include="scripts\modify_function_end_detection_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_function_end_detection_new.sql" />
+    <EmbeddedResource Include="scripts\modify_function_end_detection_original.sql" />
+    <EmbeddedResource Include="scripts\modify_function_noargs_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_function_noargs_new.sql" />
+    <EmbeddedResource Include="scripts\modify_function_noargs_original.sql" />
+    <EmbeddedResource Include="scripts\modify_function_similar_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_function_similar_new.sql" />
+    <EmbeddedResource Include="scripts\modify_function_similar_original.sql" />
+    <EmbeddedResource Include="scripts\modify_index_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_index_new.sql" />
+    <EmbeddedResource Include="scripts\modify_index_original.sql" />
+    <EmbeddedResource Include="scripts\modify_inherits_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_inherits_new.sql" />
+    <EmbeddedResource Include="scripts\modify_inherits_original.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_cache_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_cache_new.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_cache_original.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_cycle_off_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_cycle_off_new.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_cycle_off_original.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_cycle_on_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_cycle_on_new.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_cycle_on_original.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_increment_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_increment_new.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_increment_original.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_maxvalue_set_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_maxvalue_set_new.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_maxvalue_set_original.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_maxvalue_unset_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_maxvalue_unset_new.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_maxvalue_unset_original.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_minvalue_set_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_minvalue_set_new.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_minvalue_set_original.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_minvalue_unset_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_minvalue_unset_new.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_minvalue_unset_original.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_start_ignore_off_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_start_ignore_off_new.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_start_ignore_off_original.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_start_ignore_on_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_start_ignore_on_new.sql" />
+    <EmbeddedResource Include="scripts\modify_sequence_start_ignore_on_original.sql" />
+    <EmbeddedResource Include="scripts\modify_statistics_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_statistics_new.sql" />
+    <EmbeddedResource Include="scripts\modify_statistics_original.sql" />
+    <EmbeddedResource Include="scripts\modify_trigger_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_trigger_new.sql" />
+    <EmbeddedResource Include="scripts\modify_trigger_original.sql" />
+    <EmbeddedResource Include="scripts\modify_view_diff.sql" />
+    <EmbeddedResource Include="scripts\modify_view_new.sql" />
+    <EmbeddedResource Include="scripts\modify_view_original.sql" />
+    <EmbeddedResource Include="scripts\multiple_schemas_diff.sql" />
+    <EmbeddedResource Include="scripts\multiple_schemas_new.sql" />
+    <EmbeddedResource Include="scripts\multiple_schemas_original.sql" />
+    <EmbeddedResource Include="scripts\quoted_schema_diff.sql" />
+    <EmbeddedResource Include="scripts\quoted_schema_new.sql" />
+    <EmbeddedResource Include="scripts\quoted_schema_original.sql" />
+    <EmbeddedResource Include="scripts\read_inherits_diff.sql" />
+    <EmbeddedResource Include="scripts\read_inherits_new.sql" />
+    <EmbeddedResource Include="scripts\read_inherits_original.sql" />
+    <EmbeddedResource Include="scripts\view_bug3080388_diff.sql" />
+    <EmbeddedResource Include="scripts\view_bug3080388_new.sql" />
+    <EmbeddedResource Include="scripts\view_bug3080388_original.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\pgdiff\pgdiff.csproj">
+      <Project>{F615FAC6-1176-440F-895B-D1C994212CF6}</Project>
+      <Name>pgdiff</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.props'))" />
+    <Error Condition="!Exists('..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets'))" />
+  </Target>
+  <Import Project="..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets')" />
+</Project>
