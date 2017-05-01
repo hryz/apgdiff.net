@@ -123,7 +123,7 @@ namespace pgdiff.schema
                 sbSql.Append(';');
             }
 
-            if (string.IsNullOrEmpty(Comment))
+            if (!string.IsNullOrEmpty(Comment))
             {
                 sbSql.Append("\n\nCOMMENT ON TABLE ");
                 sbSql.Append(PgDiffUtils.GetQuotedName(Name));
