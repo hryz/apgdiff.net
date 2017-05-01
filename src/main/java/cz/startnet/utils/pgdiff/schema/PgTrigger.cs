@@ -136,34 +136,29 @@ namespace pgdiff.schema
 
         public override bool Equals(object obj)
         {
-            var equals = false;
-
             if (this == obj)
-            {
-                equals = true;
-            }
-            else if (obj is PgTrigger trigger)
-            {
-                equals = Before == trigger.Before
-                         && ForEachRow == trigger.ForEachRow
-                         && Function.Equals(trigger.Function)
-                         && Name.Equals(trigger.Name)
-                         && OnDelete == trigger.OnDelete
-                         && OnInsert == trigger.OnInsert
-                         && OnUpdate == trigger.OnUpdate
-                         && OnTruncate == trigger.OnTruncate
-                         && TableName.Equals(trigger.TableName);
+                return true;
 
-                if (equals)
-                    if (UpdateColumns.Count == 0 && trigger.UpdateColumns.Count == 0)
-                        equals = true;
-                    else
-                        equals = UpdateColumns.All(
-                            t1 => trigger.UpdateColumns.Any(
-                                t2 => t1.Equals(t2, StringComparison.InvariantCultureIgnoreCase)));
+            if (obj is PgTrigger trigger)
+            {
+                var equals = Before == trigger.Before
+                             && ForEachRow == trigger.ForEachRow
+                             && Function.Equals(trigger.Function)
+                             && Name.Equals(trigger.Name)
+                             && OnDelete == trigger.OnDelete
+                             && OnInsert == trigger.OnInsert
+                             && OnUpdate == trigger.OnUpdate
+                             && OnTruncate == trigger.OnTruncate
+                             && TableName.Equals(trigger.TableName);
+
+                if (!equals)
+                    return false;
+
+                return (UpdateColumns.Count == 0 && trigger.UpdateColumns.Count == 0)
+                       || UpdateColumns.All(t1 => trigger.UpdateColumns.Any(t1.EqualsIgnoreCase));
             }
 
-            return equals;
+            return false;
         }
 
         public override int GetHashCode()

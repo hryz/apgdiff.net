@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="loader\FileException.cs" />
     <Compile Include="loader\PgDumpLoader.cs" />
     <Compile Include="Main.cs" />

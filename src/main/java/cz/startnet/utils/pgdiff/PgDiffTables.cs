@@ -141,7 +141,7 @@ namespace pgdiff
                     continue;
                 }
 
-                if (newStorage == null || newStorage.Equals(oldStorage, StringComparison.InvariantCultureIgnoreCase))
+                if (newStorage == null || newStorage.EqualsIgnoreCase(oldStorage))
                     continue;
 
                 searchPathHelper.OutputSearchPath(writer);
@@ -258,10 +258,9 @@ namespace pgdiff
             writer.WriteLine();
             writer.WriteLine("ALTER TABLE " + PgDiffUtils.GetQuotedName(newTable.Name));
 
-            if (newTable.With == null || "OIDS=false".Equals(newTable.With, StringComparison.InvariantCultureIgnoreCase))
+            if (newTable.With == null || "OIDS=false".EqualsIgnoreCase(newTable.With))
                 writer.WriteLine("\tSET WITHOUT OIDS;");
-            else if ("OIDS".Equals(newTable.With, StringComparison.InvariantCultureIgnoreCase)
-                     || "OIDS=true".Equals(newTable.With, StringComparison.InvariantCultureIgnoreCase))
+            else if ("OIDS".EqualsIgnoreCase(newTable.With) || "OIDS=true".EqualsIgnoreCase(newTable.With))
                 writer.WriteLine("\tSET WITH OIDS;");
             else
                 writer.WriteLine("\tSET " + newTable.With + ";");

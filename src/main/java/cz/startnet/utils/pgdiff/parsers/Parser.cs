@@ -26,8 +26,7 @@ namespace pgdiff.parsers
             var wordEnd = _position + word.Length;
 
             if (wordEnd <= _string.Length
-                && _string.Substring(_position, wordEnd - _position)
-                    .Equals(word, StringComparison.InvariantCultureIgnoreCase)
+                && _string.Substring(_position, wordEnd - _position).EqualsIgnoreCase(word)
                 && (wordEnd == _string.Length
                     || char.IsWhiteSpace(_string[wordEnd])
                     || _string[wordEnd] == ';'
@@ -335,13 +334,12 @@ namespace pgdiff.parsers
             _position = endPos;
             SkipWhitespace();
 
-            if ("character".Equals(dataType, StringComparison.InvariantCultureIgnoreCase) && ExpectOptional("varying"))
+            if ("character".EqualsIgnoreCase(dataType) && ExpectOptional("varying"))
                 dataType = "character varying";
-            else if ("double".Equals(dataType, StringComparison.InvariantCultureIgnoreCase) && ExpectOptional("precision"))
+            else if ("double".EqualsIgnoreCase(dataType) && ExpectOptional("precision"))
                 dataType = "double precision";
 
-            var timestamp = "timestamp".Equals(dataType, StringComparison.InvariantCultureIgnoreCase)
-                            || "time".Equals(dataType, StringComparison.InvariantCultureIgnoreCase);
+            var timestamp = "timestamp".EqualsIgnoreCase(dataType) || "time".EqualsIgnoreCase(dataType);
 
             if (_string[_position] == '(')
                 dataType += GetExpression();

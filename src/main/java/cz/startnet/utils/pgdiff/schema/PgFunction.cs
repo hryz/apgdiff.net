@@ -76,7 +76,7 @@ namespace pgdiff.schema
 
             foreach (var argument in _arguments)
             {
-                if ("OUT".Equals(argument.Mode, StringComparison.InvariantCultureIgnoreCase))
+                if ("OUT".EqualsIgnoreCase(argument.Mode))
                     continue;
 
                 if (addComma)
@@ -114,7 +114,7 @@ namespace pgdiff.schema
 
             foreach (var argument in _arguments)
             {
-                if ("OUT".Equals(argument.Mode, StringComparison.InvariantCultureIgnoreCase))
+                if ("OUT".EqualsIgnoreCase(argument.Mode))
                     continue;
 
                 if (addComma)
@@ -221,7 +221,7 @@ namespace pgdiff.schema
             {
                 var sbString = new StringBuilder(50);
 
-                if (Mode != null && !"IN".Equals(Mode, StringComparison.InvariantCultureIgnoreCase))
+                if (Mode != null && !"IN".EqualsIgnoreCase(Mode))
                 {
                     sbString.Append(Mode);
                     sbString.Append(' ');
@@ -254,11 +254,9 @@ namespace pgdiff.schema
 
                 var argument = (Argument) obj;
 
-                return (DataType?.Equals(argument.DataType, StringComparison.InvariantCultureIgnoreCase) ??
-                        argument.DataType == null)
+                return (DataType?.EqualsIgnoreCase(argument.DataType) ?? argument.DataType == null)
                        && (DefaultExpression?.Equals(DefaultExpression) ?? argument.DefaultExpression == null)
-                       && (Mode?.Equals(argument.Mode, StringComparison.InvariantCultureIgnoreCase) ??
-                           argument.Mode == null)
+                       && (Mode?.EqualsIgnoreCase(argument.Mode) ?? argument.Mode == null)
                        && (Name?.Equals(argument.Name) ?? argument.Name == null);
             }
 

@@ -261,7 +261,7 @@ namespace pgdiff.parsers
         {
             var comment = parser.ParseString();
 
-            return "null".Equals(comment, StringComparison.InvariantCultureIgnoreCase)
+            return "null".EqualsIgnoreCase(comment)
                 ? null
                 : comment;
         }

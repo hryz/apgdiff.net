@@ -89,7 +89,7 @@ namespace pgdiff.schema
             {
                 sbSql.Append("\n");
 
-                if ("OIDS=false".Equals(With, StringComparison.InvariantCultureIgnoreCase))
+                if ("OIDS=false".EqualsIgnoreCase(With))
                 {
                     sbSql.Append("WITHOUT OIDS");
                 }
@@ -97,8 +97,7 @@ namespace pgdiff.schema
                 {
                     sbSql.Append("WITH ");
 
-                    if ("OIDS".Equals(With, StringComparison.InvariantCultureIgnoreCase)
-                        || "OIDS=true".Equals(With, StringComparison.InvariantCultureIgnoreCase))
+                    if ("OIDS".EqualsIgnoreCase(With) || "OIDS=true".EqualsIgnoreCase(With))
                         sbSql.Append("OIDS");
                     else
                         sbSql.Append(With);
