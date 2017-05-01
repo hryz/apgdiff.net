@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using pgdiff.schema;
 
 namespace pgdiff
@@ -42,12 +43,7 @@ namespace pgdiff
             foreach (var newTable in newSchema.GetTables())
             {
                 var newTableName = newTable.Name;
-                PgTable oldTable;
-
-                if (oldSchema == null)
-                    oldTable = null;
-                else
-                    oldTable = oldSchema.GetTable(newTableName);
+                var oldTable = oldSchema?.GetTable(newTableName);
 
                 // Drop indexes that do not exist in new schema or are modified
                 foreach (var index in GetDropIndexes(oldTable, newTable))
@@ -60,33 +56,33 @@ namespace pgdiff
         }
 
 
-        private static List<PgIndex> GetDropIndexes(PgTable oldTable, PgTable newTable)
+        private static IEnumerable<PgIndex> GetDropIndexes(PgTable oldTable, PgTable newTable)
         {
             var list = new List<PgIndex>();
 
-            if (newTable != null && oldTable != null)
-                foreach (var index in oldTable.GetIndexes())
-                    if (!newTable.ContainsIndex(index.Name)
-                        || !newTable.GetIndex(index.Name).Equals(index))
-                        list.Add(index);
+            if (newTable == null || oldTable == null)
+                return list;
+
+            list.AddRange(oldTable.GetIndexes()
+                .Where(i => !newTable.ContainsIndex(i.Name)
+                            || !newTable.GetIndex(i.Name).Equals(i)));
 
             return list;
         }
 
 
-        private static List<PgIndex> GetNewIndexes(PgTable oldTable, PgTable newTable)
+        private static IEnumerable<PgIndex> GetNewIndexes(PgTable oldTable, PgTable newTable)
         {
             var list = new List<PgIndex>();
 
-            if (newTable != null)
-                if (oldTable == null)
-                    foreach (var index in newTable.GetIndexes())
-                        list.Add(index);
-                else
-                    foreach (var index in newTable.GetIndexes())
-                        if (!oldTable.ContainsIndex(index.Name)
-                            || !oldTable.GetIndex(index.Name).Equals(index))
-                            list.Add(index);
+            if (newTable == null)
+                return list;
+
+            list.AddRange(oldTable == null
+                ? newTable.GetIndexes()
+                : newTable.GetIndexes()
+                    .Where(i => !oldTable.ContainsIndex(i.Name)
+                                || !oldTable.GetIndex(i.Name).Equals(i)));
 
             return list;
         }

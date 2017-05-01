@@ -9,8 +9,8 @@ namespace pgdiff
         {
         }
 
-        public static void CreateFunctions(TextWriter writer, PgDiffArguments arguments, PgSchema oldSchema,
-            PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void CreateFunctions(TextWriter writer, PgDiffArguments arguments, 
+            PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             // Add new functions and replace modified functions
             foreach (var newFunction in newSchema.GetFunctions())
@@ -27,8 +27,8 @@ namespace pgdiff
         }
 
 
-        public static void DropFunctions(TextWriter writer, PgDiffArguments arguments, PgSchema oldSchema,
-            PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void DropFunctions(TextWriter writer, PgDiffArguments arguments, 
+            PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
                 return;
@@ -44,25 +44,23 @@ namespace pgdiff
         }
 
 
-        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper)
+        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
                 return;
 
-            foreach (var oldfunction in oldSchema.GetFunctions())
+            foreach (var oldFun in oldSchema.GetFunctions())
             {
-                var newFunction =
-                    newSchema.GetFunction(oldfunction.GetSignature());
+                var newFunction = newSchema.GetFunction(oldFun.GetSignature());
 
                 if (newFunction == null)
                     continue;
 
-                if (oldfunction.Comment == null
+                if (oldFun.Comment == null
                     && newFunction.Comment != null
-                    || oldfunction.Comment != null
+                    || oldFun.Comment != null
                     && newFunction.Comment != null
-                    && !oldfunction.Comment.Equals(
+                    && !oldFun.Comment.Equals(
                         newFunction.Comment))
                 {
                     searchPathHelper.OutputSearchPath(writer);
@@ -87,7 +85,7 @@ namespace pgdiff
                     writer.Write(newFunction.Comment);
                     writer.WriteLine(';');
                 }
-                else if (oldfunction.Comment != null && newFunction.Comment == null)
+                else if (oldFun.Comment != null && newFunction.Comment == null)
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();

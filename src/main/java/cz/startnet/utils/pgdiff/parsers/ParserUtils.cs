@@ -37,7 +37,6 @@ namespace pgdiff.parsers
         public static string GetSchemaName(string name, PgDatabase database)
         {
             var names = SplitNames(name);
-
             return names.Length < 2
                 ? database.DefaultSchema.Name
                 : names[0];
@@ -47,7 +46,6 @@ namespace pgdiff.parsers
         public static string GenerateName(string prefix, List<string> names, string postfix)
         {
             string adjName;
-
             if (names.Count == 1)
             {
                 adjName = names[0];
@@ -55,14 +53,12 @@ namespace pgdiff.parsers
             else
             {
                 var sbString = new StringBuilder(names.Count * 15);
-
                 foreach (var name in names)
                 {
                     if (sbString.Length > 0)
                         sbString.Append(',');
                     sbString.Append(name);
                 }
-
                 adjName = sbString.ToString().GetHashCode().ToString("X4");
             }
 

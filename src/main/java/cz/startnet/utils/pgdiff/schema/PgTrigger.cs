@@ -25,7 +25,6 @@ namespace pgdiff.schema
 
         public bool OnTruncate { get; set; }
 
-
         public List<string> UpdateColumns { get; set; } = new List<string>();
 
         public string When { get; set; }
@@ -131,22 +130,20 @@ namespace pgdiff.schema
 
         public string GetDropSql()
         {
-            return "DROP TRIGGER " + PgDiffUtils.GetQuotedName(Name) + " ON "
-                   + PgDiffUtils.GetQuotedName(TableName) + ";";
+            return $"DROP TRIGGER {PgDiffUtils.GetQuotedName(Name)} ON {PgDiffUtils.GetQuotedName(TableName)};";
         }
 
 
-        public override bool Equals(object @object)
+        public override bool Equals(object obj)
         {
             var equals = false;
 
-            if (this == @object)
+            if (this == obj)
             {
                 equals = true;
             }
-            else if (@object is PgTrigger)
+            else if (obj is PgTrigger trigger)
             {
-                var trigger = (PgTrigger) @object;
                 equals = Before == trigger.Before
                          && ForEachRow == trigger.ForEachRow
                          && Function.Equals(trigger.Function)

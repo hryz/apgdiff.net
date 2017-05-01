@@ -5,26 +5,19 @@ namespace pgdiff.schema
 {
     public class PgColumn
     {
-        private static readonly Regex PatternNull =
-            new Regex("^(.+)[\\s]+NULL$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private const RegexOptions Options = RegexOptions.Compiled | RegexOptions.IgnoreCase;
 
+        private static readonly Regex PatternNull = new Regex("^(.+)[\\s]+NULL$", Options);
 
-        private static readonly Regex PatternNotNull =
-            new Regex("^(.+)[\\s]+NOT[\\s]+NULL$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex PatternNotNull = new Regex("^(.+)[\\s]+NOT[\\s]+NULL$", Options);
 
-        private static readonly Regex PatternDefault =
-            new Regex("^(.+)[\\s]+DEFAULT[\\s]+(.+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        public PgColumn(string name)
-        {
-            Name = name;
-        }
+        private static readonly Regex PatternDefault = new Regex("^(.+)[\\s]+DEFAULT[\\s]+(.+)$", Options);
 
         public string Comment { get; set; }
 
         public string DefaultValue { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
         public bool NullValue { get; set; } = true;
 
@@ -34,6 +27,7 @@ namespace pgdiff.schema
 
         public string Type { get; set; }
 
+        public PgColumn(string name) => Name = name;
 
         public string GetFullDefinition(bool addDefaults)
         {
@@ -42,7 +36,7 @@ namespace pgdiff.schema
             sbDefinition.Append(' ');
             sbDefinition.Append(Type);
 
-            if (DefaultValue != null && !string.IsNullOrEmpty(DefaultValue))
+            if (!string.IsNullOrEmpty(DefaultValue))
             {
                 sbDefinition.Append(" DEFAULT ");
                 sbDefinition.Append(DefaultValue);
@@ -68,7 +62,6 @@ namespace pgdiff.schema
         public void ParseDefinition(string definition)
         {
             var str = definition;
-
             var matcher = PatternNotNull;
 
             if (matcher.IsMatch(str))

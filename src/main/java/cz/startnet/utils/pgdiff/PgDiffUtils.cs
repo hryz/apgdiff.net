@@ -483,9 +483,10 @@ namespace pgdiff
 
             var upperName = name.ToUpper();
 
-            foreach (var keyword in Keywords)
-                if (keyword.Equals(upperName))
-                    return '"' + name + '"';
+            if (Keywords.Any(keyword => keyword.Equals(upperName)))
+            {
+                return '"' + name + '"';
+            }
 
             return name;
         }

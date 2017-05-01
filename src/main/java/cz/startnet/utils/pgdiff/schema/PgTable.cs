@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace pgdiff.schema
@@ -15,7 +16,7 @@ namespace pgdiff.schema
 
         public string Comment { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
         public string Tablespace { get; set; }
 
@@ -31,23 +32,9 @@ namespace pgdiff.schema
 
         public List<PgTrigger> Triggers { get; set; } = new List<PgTrigger>();
 
-        public PgColumn GetColumn(string name)
-        {
-            foreach (var column in Columns)
-                if (column.Name.Equals(name))
-                    return column;
+        public PgColumn GetColumn(string name) => Columns.FirstOrDefault(column => column.Name.Equals(name));
 
-            return null;
-        }
-
-        public PgConstraint GetConstraint(string name)
-        {
-            foreach (var constraint in Constraints)
-                if (constraint.Name.Equals(name))
-                    return constraint;
-
-            return null;
-        }
+        public PgConstraint GetConstraint(string name) => Constraints.FirstOrDefault(constraint => constraint.Name.Equals(name));
 
 
         public string GetCreationSql()
@@ -162,117 +149,34 @@ namespace pgdiff.schema
         }
 
 
-        public string GetDropSql()
-        {
-            return "DROP TABLE " + PgDiffUtils.GetQuotedName(Name) + ";";
-        }
+        public string GetDropSql() => $"DROP TABLE {PgDiffUtils.GetQuotedName(Name)};";
+        
+        public PgIndex GetIndex(string name) => Indexes.FirstOrDefault(index => index.Name.Equals(name));
+        
+        public PgTrigger GetTrigger(string name) => Triggers.FirstOrDefault(trigger => trigger.Name.Equals(name));
+        
+        public List<PgIndex> GetIndexes() => Indexes;
+        
+        public void AddInherits(string tableName) => Inherits.Add(tableName);
+        
+        public List<string> GetInherits() => Inherits;
 
+        public List<PgTrigger> GetTriggers() => Triggers;
 
-        public PgIndex GetIndex(string name)
-        {
-            foreach (var index in Indexes)
-                if (index.Name.Equals(name))
-                    return index;
-
-            return null;
-        }
-
-
-        public PgTrigger GetTrigger(string name)
-        {
-            foreach (var trigger in Triggers)
-                if (trigger.Name.Equals(name))
-                    return trigger;
-
-            return null;
-        }
-
-
-        public List<PgIndex> GetIndexes()
-        {
-            return new List<PgIndex>(Indexes);
-        }
-
-
-        public void AddInherits(string tableName)
-        {
-            Inherits.Add(tableName);
-        }
-
-
-        public List<string> GetInherits()
-        {
-            return new List<string>(Inherits);
-        }
-
-        public List<PgTrigger> GetTriggers()
-        {
-            return new List<PgTrigger>(Triggers);
-        }
-
-        public void AddColumn(PgColumn column)
-        {
-            Columns.Add(column);
-        }
-
-
-        public void AddConstraint(PgConstraint constraint)
-        {
-            Constraints.Add(constraint);
-        }
-
-
-        public void AddIndex(PgIndex index)
-        {
-            Indexes.Add(index);
-        }
-
-
-        public void AddTrigger(PgTrigger trigger)
-        {
-            Triggers.Add(trigger);
-        }
-
-
-        public bool ContainsColumn(string name)
-        {
-            foreach (var column in Columns)
-                if (column.Name.Equals(name))
-                    return true;
-
-            return false;
-        }
-
-
-        public bool ContainsConstraint(string name)
-        {
-            foreach (var constraint in Constraints)
-                if (constraint.Name.Equals(name))
-                    return true;
-
-            return false;
-        }
-
-
-        public bool ContainsIndex(string name)
-        {
-            foreach (var index in Indexes)
-                if (index.Name.Equals(name))
-                    return true;
-
-            return false;
-        }
-
-
-        private List<PgColumn> GetColumnsWithStatistics()
-        {
-            var list = new List<PgColumn>();
-
-            foreach (var column in Columns)
-                if (column.Statistics != null)
-                    list.Add(column);
-
-            return list;
-        }
+        public void AddColumn(PgColumn column) => Columns.Add(column);
+        
+        public void AddConstraint(PgConstraint constraint) => Constraints.Add(constraint);
+        
+        public void AddIndex(PgIndex index) => Indexes.Add(index);
+        
+        public void AddTrigger(PgTrigger trigger) => Triggers.Add(trigger);
+        
+        public bool ContainsColumn(string name) => Columns.Any(column => column.Name.Equals(name));
+        
+        public bool ContainsConstraint(string name) => Constraints.Any(constraint => constraint.Name.Equals(name));
+        
+        public bool ContainsIndex(string name) => Indexes.Any(index => index.Name.Equals(name));
+        
+        private IEnumerable<PgColumn> GetColumnsWithStatistics() => Columns.Where(column => column.Statistics != null);
     }
 }

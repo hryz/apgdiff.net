@@ -13,7 +13,7 @@ namespace pgdiff.schema
 
         public string Definition { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
         public string TableName { get; set; }
 
@@ -52,17 +52,16 @@ namespace pgdiff.schema
             return "DROP INDEX " + PgDiffUtils.GetQuotedName(Name) + ";";
         }
 
-        public override bool Equals(object @object)
+        public override bool Equals(object obj)
         {
             var equals = false;
 
-            if (this == @object)
+            if (this == obj)
             {
                 equals = true;
             }
-            else if (@object is PgIndex)
+            else if (obj is PgIndex index)
             {
-                var index = (PgIndex) @object;
                 equals = Definition.Equals(index.Definition)
                          && Name.Equals(index.Name)
                          && TableName.Equals(index.TableName)

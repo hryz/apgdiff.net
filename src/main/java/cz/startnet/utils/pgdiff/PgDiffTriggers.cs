@@ -12,8 +12,7 @@ namespace pgdiff
         }
 
 
-        public static void CreateTriggers(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper)
+        public static void CreateTriggers(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             foreach (var newTable in newSchema.GetTables())
             {
@@ -30,8 +29,7 @@ namespace pgdiff
         }
 
 
-        public static void DropTriggers(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper)
+        public static void DropTriggers(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             foreach (var newTable in newSchema.GetTables())
             {
@@ -48,41 +46,36 @@ namespace pgdiff
         }
 
 
-        private static List<PgTrigger> GetDropTriggers(PgTable oldTable, PgTable newTable)
+        private static IEnumerable<PgTrigger> GetDropTriggers(PgTable oldTable, PgTable newTable)
         {
             var list = new List<PgTrigger>();
 
-            if (newTable != null && oldTable != null)
-            {
-                var newTriggers = newTable.GetTriggers();
+            if (newTable == null || oldTable == null)
+                return list;
 
-                foreach (var oldTrigger in oldTable.GetTriggers())
-                    if (newTriggers.All(t => !t.Equals(oldTrigger)))
-                        list.Add(oldTrigger);
-            }
+            var newTriggers = newTable.GetTriggers();
+            list.AddRange(oldTable.GetTriggers().Where(ot => newTriggers.All(t => !t.Equals(ot))));
 
             return list;
         }
 
 
-        private static List<PgTrigger> GetNewTriggers(PgTable oldTable, PgTable newTable)
+        private static IEnumerable<PgTrigger> GetNewTriggers(PgTable oldTable, PgTable newTable)
         {
             var list = new List<PgTrigger>();
 
-            if (newTable != null)
-                if (oldTable == null)
-                    list.AddRange(newTable.GetTriggers());
-                else
-                    foreach (var newTrigger in newTable.GetTriggers())
-                        if (oldTable.GetTriggers().All(t => !t.Equals(newTrigger)))
-                            list.Add(newTrigger);
+            if (newTable == null)
+                return list;
+
+            list.AddRange(oldTable == null
+                ? newTable.GetTriggers()
+                : newTable.GetTriggers().Where(nt => oldTable.GetTriggers().All(t => !t.Equals(nt))));
 
             return list;
         }
 
 
-        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper)
+        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
                 return;
@@ -112,26 +105,21 @@ namespace pgdiff
                         searchPathHelper.OutputSearchPath(writer);
                         writer.WriteLine();
                         writer.Write("COMMENT ON TRIGGER ");
-                        writer.Write(
-                            PgDiffUtils.GetQuotedName(newTrigger.Name));
+                        writer.Write(PgDiffUtils.GetQuotedName(newTrigger.Name));
                         writer.Write(" ON ");
-                        writer.Write(PgDiffUtils.GetQuotedName(
-                            newTrigger.TableName));
+                        writer.Write(PgDiffUtils.GetQuotedName(newTrigger.TableName));
                         writer.Write(" IS ");
                         writer.Write(newTrigger.Comment);
                         writer.WriteLine(';');
                     }
-                    else if (oldTrigger.Comment != null
-                             && newTrigger.Comment == null)
+                    else if (oldTrigger.Comment != null && newTrigger.Comment == null)
                     {
                         searchPathHelper.OutputSearchPath(writer);
                         writer.WriteLine();
                         writer.Write("COMMENT ON TRIGGER ");
-                        writer.Write(
-                            PgDiffUtils.GetQuotedName(newTrigger.Name));
+                        writer.Write(PgDiffUtils.GetQuotedName(newTrigger.Name));
                         writer.Write(" ON ");
-                        writer.Write(PgDiffUtils.GetQuotedName(
-                            newTrigger.TableName));
+                        writer.Write(PgDiffUtils.GetQuotedName(newTrigger.TableName));
                         writer.WriteLine(" IS NULL;");
                     }
                 }

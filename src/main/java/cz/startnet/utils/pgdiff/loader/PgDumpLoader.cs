@@ -11,69 +11,24 @@ namespace pgdiff.loader
     public class PgDumpLoader
     {
         //NOPMD
+        private const RegexOptions Options = RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline;
 
-
-        private static readonly Regex PatternCreateSchema = new Regex(
-            "^CREATE[\\s]+SCHEMA[\\s]+.*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-
-        private static readonly Regex PatternDefaultSchema = new Regex(
-            "^SET[\\s]+search_path[\\s]*=[\\s]*\"?([^,\\s\"]+)\"?(?:,[\\s]+.*)?;$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternCreateTable = new Regex(
-            "^CREATE[\\s]+TABLE[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternCreateView = new Regex(
-            "^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?VIEW[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternAlterTable =
-            new Regex("^ALTER[\\s]+TABLE[\\s]+.*$",
-                RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternCreateSequence = new Regex(
-            "^CREATE[\\s]+SEQUENCE[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternAlterSequence =
-            new Regex("^ALTER[\\s]+SEQUENCE[\\s]+.*$",
-                RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternCreateIndex = new Regex(
-            "^CREATE[\\s]+(?:UNIQUE[\\s]+)?INDEX[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternSelect = new Regex(
-            "^SELECT[\\s]+.*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternInsertInto = new Regex(
-            "^INSERT[\\s]+INTO[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternUpdate = new Regex(
-            "^UPDATE[\\s].*$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternDeleteFrom = new Regex(
-            "^DELETE[\\s]+FROM[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternCreateTrigger = new Regex(
-            "^CREATE[\\s]+TRIGGER[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternCreateFunction = new Regex(
-            "^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?FUNCTION[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternAlterView = new Regex(
-            "^ALTER[\\s]+VIEW[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-        private static readonly Regex PatternComment = new Regex(
-            "^COMMENT[\\s]+ON[\\s]+.*$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        private static readonly Regex PatternCreateSchema = new Regex("^CREATE[\\s]+SCHEMA[\\s]+.*$", Options);
+        private static readonly Regex PatternDefaultSchema = new Regex("^SET[\\s]+search_path[\\s]*=[\\s]*\"?([^,\\s\"]+)\"?(?:,[\\s]+.*)?;$", Options);
+        private static readonly Regex PatternCreateTable = new Regex("^CREATE[\\s]+TABLE[\\s]+.*$", Options);
+        private static readonly Regex PatternCreateView = new Regex("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?VIEW[\\s]+.*$",Options);
+        private static readonly Regex PatternAlterTable = new Regex("^ALTER[\\s]+TABLE[\\s]+.*$", Options);
+        private static readonly Regex PatternCreateSequence = new Regex("^CREATE[\\s]+SEQUENCE[\\s]+.*$",Options);
+        private static readonly Regex PatternAlterSequence = new Regex("^ALTER[\\s]+SEQUENCE[\\s]+.*$", Options);
+        private static readonly Regex PatternCreateIndex = new Regex("^CREATE[\\s]+(?:UNIQUE[\\s]+)?INDEX[\\s]+.*$",Options);
+        private static readonly Regex PatternSelect = new Regex("^SELECT[\\s]+.*$", Options);
+        private static readonly Regex PatternInsertInto = new Regex("^INSERT[\\s]+INTO[\\s]+.*$", Options);
+        private static readonly Regex PatternUpdate = new Regex("^UPDATE[\\s].*$", Options);
+        private static readonly Regex PatternDeleteFrom = new Regex("^DELETE[\\s]+FROM[\\s]+.*$", Options);
+        private static readonly Regex PatternCreateTrigger = new Regex("^CREATE[\\s]+TRIGGER[\\s]+.*$", Options);
+        private static readonly Regex PatternCreateFunction = new Regex("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?FUNCTION[\\s]+.*$", Options);
+        private static readonly Regex PatternAlterView = new Regex("^ALTER[\\s]+VIEW[\\s]+.*$", Options);
+        private static readonly Regex PatternComment = new Regex("^COMMENT[\\s]+ON[\\s]+.*$", Options);
 
         private static string _lineBuffer;
 
@@ -91,67 +46,23 @@ namespace pgdiff.loader
 
             while (statement != null)
             {
-                if (PatternCreateSchema.IsMatch(statement))
-                {
-                    CreateSchemaParser.Parse(database, statement);
-                }
-                else if (PatternDefaultSchema.IsMatch(statement))
-                {
-                    var matches = PatternDefaultSchema.Matches(statement);
-                    database.SetDefaultSchema(matches[0].Groups[1].Value);
-                }
-                else if (PatternCreateTable.IsMatch(statement))
-                {
-                    CreateTableParser.Parse(database, statement);
-                }
-                else if (PatternAlterTable.IsMatch(statement))
-                {
-                    AlterTableParser.Parse(database, statement, outputIgnoredStatements);
-                }
-                else if (PatternCreateSequence.IsMatch(statement))
-                {
-                    CreateSequenceParser.Parse(database, statement);
-                }
-                else if (PatternAlterSequence.IsMatch(statement))
-                {
-                    AlterSequenceParser.Parse(database, statement, outputIgnoredStatements);
-                }
-                else if (PatternCreateIndex.IsMatch(statement))
-                {
-                    CreateIndexParser.Parse(database, statement);
-                }
-                else if (PatternCreateView.IsMatch(statement))
-                {
-                    CreateViewParser.Parse(database, statement);
-                }
-                else if (PatternAlterView.IsMatch(statement))
-                {
-                    AlterViewParser.Parse(database, statement, outputIgnoredStatements);
-                }
-                else if (PatternCreateTrigger.IsMatch(statement))
-                {
-                    CreateTriggerParser.Parse(database, statement, ignoreSlonyTriggers);
-                }
-                else if (PatternCreateFunction.IsMatch(statement))
-                {
-                    CreateFunctionParser.Parse(database, statement);
-                }
-                else if (PatternComment.IsMatch(statement))
-                {
-                    CommentParser.Parse(database, statement, outputIgnoredStatements);
-                }
+                if (PatternCreateSchema.IsMatch(statement)) CreateSchemaParser.Parse(database, statement);
+                else if (PatternDefaultSchema.IsMatch(statement)) database.SetDefaultSchema(PatternDefaultSchema.Matches(statement)[0].Groups[1].Value);
+                else if (PatternCreateTable.IsMatch(statement)) CreateTableParser.Parse(database, statement);
+                else if (PatternAlterTable.IsMatch(statement)) AlterTableParser.Parse(database, statement, outputIgnoredStatements);
+                else if (PatternCreateSequence.IsMatch(statement)) CreateSequenceParser.Parse(database, statement);
+                else if (PatternAlterSequence.IsMatch(statement)) AlterSequenceParser.Parse(database, statement, outputIgnoredStatements);
+                else if (PatternCreateIndex.IsMatch(statement)) CreateIndexParser.Parse(database, statement);
+                else if (PatternCreateView.IsMatch(statement)) CreateViewParser.Parse(database, statement);
+                else if (PatternAlterView.IsMatch(statement)) AlterViewParser.Parse(database, statement, outputIgnoredStatements);
+                else if (PatternCreateTrigger.IsMatch(statement)) CreateTriggerParser.Parse(database, statement, ignoreSlonyTriggers);
+                else if (PatternCreateFunction.IsMatch(statement)) CreateFunctionParser.Parse(database, statement);
+                else if (PatternComment.IsMatch(statement)) CommentParser.Parse(database, statement, outputIgnoredStatements);
                 else if (PatternSelect.IsMatch(statement)
                          || PatternInsertInto.IsMatch(statement)
                          || PatternUpdate.IsMatch(statement)
-                         || PatternDeleteFrom.IsMatch(statement))
-                {
-                    // we just ignore these statements
-                }
-                else if (outputIgnoredStatements)
-                {
-                    database.IgnoredStatements.Add(statement);
-                }
-
+                         || PatternDeleteFrom.IsMatch(statement)) { /* we just ignore these statements*/ }
+                else if (outputIgnoredStatements) database.IgnoredStatements.Add(statement);
                 statement = GetWholeStatement(reader);
             }
 
@@ -163,8 +74,7 @@ namespace pgdiff.loader
         {
             try
             {
-                return LoadDatabaseSchema(File.OpenText(file), charsetName, outputIgnoredStatements,
-                    ignoreSlonyTriggers);
+                return LoadDatabaseSchema(File.OpenText(file), charsetName, outputIgnoredStatements, ignoreSlonyTriggers);
             }
             catch (FileNotFoundException ex)
             {

@@ -18,6 +18,7 @@ namespace pgdiff
                 arguments.OldDumpFile, arguments.InCharsetName,
                 arguments.OutputIgnoredStatements,
                 arguments.IgnoreSlonyTriggers);
+
             var newDatabase = PgDumpLoader.LoadDatabaseSchema(
                 arguments.NewDumpFile, arguments.InCharsetName,
                 arguments.OutputIgnoredStatements,
@@ -27,13 +28,13 @@ namespace pgdiff
         }
 
 
-        public static void CreateDiff(TextWriter writer, PgDiffArguments arguments, string oldInputStream,
-            string newInputStream)
+        public static void CreateDiff(TextWriter writer, PgDiffArguments arguments, string oldInputStream, string newInputStream)
         {
             var oldDatabase = PgDumpLoader.LoadDatabaseSchema(
                 oldInputStream, arguments.InCharsetName,
                 arguments.OutputIgnoredStatements,
                 arguments.IgnoreSlonyTriggers);
+
             var newDatabase = PgDumpLoader.LoadDatabaseSchema(
                 newInputStream, arguments.InCharsetName,
                 arguments.OutputIgnoredStatements,
@@ -54,8 +55,7 @@ namespace pgdiff
         }
 
 
-        private static void DiffDatabaseSchemas(TextWriter writer, PgDiffArguments arguments, PgDatabase oldDatabase,
-            PgDatabase newDatabase)
+        private static void DiffDatabaseSchemas(TextWriter writer, PgDiffArguments arguments, PgDatabase oldDatabase, PgDatabase newDatabase)
         {
             if (arguments.AddTransaction)
                 writer.WriteLine("START TRANSACTION;");
@@ -134,8 +134,7 @@ namespace pgdiff
         }
 
 
-        private static void UpdateSchemas(TextWriter writer, PgDiffArguments arguments, PgDatabase oldDatabase,
-            PgDatabase newDatabase)
+        private static void UpdateSchemas(TextWriter writer, PgDiffArguments arguments, PgDatabase oldDatabase, PgDatabase newDatabase)
         {
             var setSearchPath = newDatabase.Schemas.Count > 1
                                 || !newDatabase.Schemas[0].Name.Equals("public");

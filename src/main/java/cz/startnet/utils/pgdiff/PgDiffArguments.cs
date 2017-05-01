@@ -118,13 +118,9 @@ namespace pgdiff
         }
 
 
-        private void PrintUsage(TextWriter writer)
-        {
-            writer.WriteLine(Resources.UsageHelp);
-        }
-
-
-        private void PrintVersion(TextWriter writer)
+        private static void PrintUsage(TextWriter writer) => writer.WriteLine(Resources.UsageHelp);
+        
+        private static void PrintVersion(TextWriter writer)
         {
             writer.Write(Resources.Version);
             writer.Write(": ");

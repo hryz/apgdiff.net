@@ -12,8 +12,7 @@ namespace pgdiff
         }
 
 
-        public static void CreateViews(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper)
+        public static void CreateViews(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             foreach (var newView in newSchema.GetViews())
                 if (oldSchema == null
@@ -28,8 +27,7 @@ namespace pgdiff
         }
 
 
-        public static void DropViews(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper)
+        public static void DropViews(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
                 return;
@@ -70,8 +68,7 @@ namespace pgdiff
         }
 
 
-        public static void AlterViews(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper)
+        public static void AlterViews(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
                 return;
@@ -79,7 +76,6 @@ namespace pgdiff
             foreach (var oldView in oldSchema.GetViews())
             {
                 var newView = newSchema.GetView(oldView.Name);
-
                 if (newView == null)
                     continue;
 
@@ -95,14 +91,12 @@ namespace pgdiff
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
                     writer.Write("COMMENT ON VIEW ");
-                    writer.Write(
-                        PgDiffUtils.GetQuotedName(newView.Name));
+                    writer.Write(PgDiffUtils.GetQuotedName(newView.Name));
                     writer.Write(" IS ");
                     writer.Write(newView.Comment);
                     writer.WriteLine(';');
                 }
-                else if (oldView.Comment != null
-                         && newView.Comment == null)
+                else if (oldView.Comment != null && newView.Comment == null)
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
@@ -111,10 +105,7 @@ namespace pgdiff
                     writer.WriteLine(" IS NULL;");
                 }
 
-                var columnNames = new List<string>();
-
-                foreach (var columnComment in newView.ColumnComments)
-                    columnNames.Add(columnComment.ColumnName);
+                var columnNames = newView.ColumnComments.Select(c => c.ColumnName).ToList();
 
                 foreach (var columnComment in oldView.ColumnComments)
                     if (!columnNames.Contains(columnComment.ColumnName))
@@ -122,22 +113,8 @@ namespace pgdiff
 
                 foreach (var columnName in columnNames)
                 {
-                    PgView.ColumnComment oldColumnComment = null;
-                    PgView.ColumnComment newColumnComment = null;
-
-                    foreach (var columnComment in oldView.ColumnComments)
-                        if (columnName.Equals(columnComment.ColumnName))
-                        {
-                            oldColumnComment = columnComment;
-                            break;
-                        }
-
-                    foreach (var columnComment in newView.ColumnComments)
-                        if (columnName.Equals(columnComment.ColumnName))
-                        {
-                            newColumnComment = columnComment;
-                            break;
-                        }
+                    var oldColumnComment = oldView.ColumnComments.FirstOrDefault(cc => columnName.Equals(cc.ColumnName));
+                    var newColumnComment = newView.ColumnComments.FirstOrDefault(cc => columnName.Equals(cc.ColumnName));
 
                     if (oldColumnComment == null && newColumnComment != null
                         || oldColumnComment != null && newColumnComment != null
@@ -170,8 +147,7 @@ namespace pgdiff
         }
 
 
-        private static void DiffDefaultValues(TextWriter writer, PgView oldView, PgView newView,
-            SearchPathHelper searchPathHelper)
+        private static void DiffDefaultValues(TextWriter writer, PgView oldView, PgView newView, SearchPathHelper searchPathHelper)
         {
             var oldValues = oldView.DefaultValues;
             var newValues = newView.DefaultValues;
@@ -217,14 +193,7 @@ namespace pgdiff
             // add new defaults
             foreach (var newValue in newValues)
             {
-                var found = false;
-
-                foreach (var oldValue in oldValues)
-                    if (newValue.ColumnName.Equals(oldValue.ColumnName))
-                    {
-                        found = true;
-                        break;
-                    }
+                var found = oldValues.Any(ov => newValue.ColumnName.Equals(ov.ColumnName));
 
                 if (found)
                     continue;

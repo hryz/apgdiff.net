@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace pgdiff.schema
 {
@@ -19,7 +20,6 @@ namespace pgdiff.schema
 
         public string Comment { get; set; }
 
-
         public void SetDefaultSchema(string name)
         {
             DefaultSchema = GetSchema(name);
@@ -27,14 +27,9 @@ namespace pgdiff.schema
 
         public PgSchema GetSchema(string name)
         {
-            if (name == null)
-                return DefaultSchema;
-
-            foreach (var schema in Schemas)
-                if (schema.Name.Equals(name))
-                    return schema;
-
-            return null;
+            return name != null
+                ? Schemas.FirstOrDefault(schema => schema.Name.Equals(name))
+                : DefaultSchema;
         }
     }
 }

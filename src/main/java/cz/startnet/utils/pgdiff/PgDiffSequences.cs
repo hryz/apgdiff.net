@@ -15,8 +15,7 @@ namespace pgdiff
         {
             // Add new sequences
             foreach (var sequence in newSchema.GetSequences())
-                if (oldSchema == null
-                    || !oldSchema.ContainsSequence(sequence.Name))
+                if (oldSchema == null || !oldSchema.ContainsSequence(sequence.Name))
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
@@ -29,9 +28,7 @@ namespace pgdiff
         {
             // Alter created sequences
             foreach (var sequence in newSchema.GetSequences())
-                if ((oldSchema == null
-                     || !oldSchema.ContainsSequence(sequence.Name))
-                    && !string.IsNullOrEmpty(sequence.OwnedBy))
+                if ((oldSchema == null || !oldSchema.ContainsSequence(sequence.Name)) && !string.IsNullOrEmpty(sequence.OwnedBy))
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
@@ -66,8 +63,7 @@ namespace pgdiff
 
             foreach (var newSequence in newSchema.GetSequences())
             {
-                var oldSequence =
-                    oldSchema.GetSequence(newSequence.Name);
+                var oldSequence = oldSchema.GetSequence(newSequence.Name);
 
                 if (oldSequence == null)
                     continue;
@@ -77,8 +73,7 @@ namespace pgdiff
                 var oldIncrement = oldSequence.Increment;
                 var newIncrement = newSequence.Increment;
 
-                if (newIncrement != null
-                    && !newIncrement.Equals(oldIncrement))
+                if (newIncrement != null && !newIncrement.Equals(oldIncrement))
                 {
                     sbSql.Append("\n\tINCREMENT BY ");
                     sbSql.Append(newIncrement);
@@ -91,8 +86,7 @@ namespace pgdiff
                 {
                     sbSql.Append("\n\tNO MINVALUE");
                 }
-                else if (newMinValue != null
-                         && !newMinValue.Equals(oldMinValue))
+                else if (newMinValue != null && !newMinValue.Equals(oldMinValue))
                 {
                     sbSql.Append("\n\tMINVALUE ");
                     sbSql.Append(newMinValue);
@@ -175,8 +169,7 @@ namespace pgdiff
                     writer.Write(newSequence.Comment);
                     writer.WriteLine(';');
                 }
-                else if (oldSequence.Comment != null
-                         && newSequence.Comment == null)
+                else if (oldSequence.Comment != null && newSequence.Comment == null)
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();

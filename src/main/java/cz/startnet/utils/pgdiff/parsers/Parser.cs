@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using pgdiff.Properties;
 
 namespace pgdiff.parsers
@@ -298,11 +299,7 @@ namespace pgdiff.parsers
 
         public string ExpectOptionalOneOf(params string[] words)
         {
-            foreach (var word in words)
-                if (ExpectOptional(word))
-                    return word;
-
-            return null;
+            return words.FirstOrDefault(word => ExpectOptional(word));
         }
 
 

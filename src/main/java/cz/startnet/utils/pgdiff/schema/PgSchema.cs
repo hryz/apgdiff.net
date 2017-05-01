@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace pgdiff.schema
@@ -29,7 +30,7 @@ namespace pgdiff.schema
 
         public string Definition { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
         public string GetCreationSql()
         {
@@ -58,174 +59,48 @@ namespace pgdiff.schema
         }
 
 
-        public PgFunction GetFunction(string signature)
-        {
-            foreach (var function in _functions)
-                if (function.GetSignature().Equals(signature))
-                    return function;
+        public PgFunction GetFunction(string signature) => _functions.FirstOrDefault(function => function.GetSignature().Equals(signature));
 
-            return null;
-        }
+        public List<PgFunction> GetFunctions() => _functions;
 
+        public PgIndex GetIndex(string name) => _indexes.FirstOrDefault(index => index.Name.Equals(name));
 
-        public List<PgFunction> GetFunctions()
-        {
-            return new List<PgFunction>(_functions);
-        }
+        public PgConstraint GetPrimaryKey(string name) => _primaryKeys.FirstOrDefault(constraint => constraint.Name.Equals(name));
 
-        public PgIndex GetIndex(string name)
-        {
-            foreach (var index in _indexes)
-                if (index.Name.Equals(name))
-                    return index;
+        public PgSequence GetSequence(string name) => _sequences.FirstOrDefault(sequence => sequence.Name.Equals(name));
 
-            return null;
-        }
+        public List<PgIndex> GetIndexes() => _indexes;
 
+        public List<PgConstraint> GetPrimaryKeys() => _primaryKeys;
 
-        public PgConstraint GetPrimaryKey(string name)
-        {
-            foreach (var constraint in _primaryKeys)
-                if (constraint.Name.Equals(name))
-                    return constraint;
+        public List<PgSequence> GetSequences() => _sequences;
 
-            return null;
-        }
+        public PgTable GetTable(string name) => _tables.FirstOrDefault(table => table.Name.Equals(name));
 
+        public List<PgTable> GetTables() => _tables;
 
-        public PgSequence GetSequence(string name)
-        {
-            foreach (var sequence in _sequences)
-                if (sequence.Name.Equals(name))
-                    return sequence;
+        public PgView GetView(string name) => _views.FirstOrDefault(view => view.Name.Equals(name));
+        
+        public List<PgView> GetViews() => _views;
 
-            return null;
-        }
+        public void AddIndex(PgIndex index) => _indexes.Add(index);
 
+        public void AddPrimaryKey(PgConstraint primaryKey) => _primaryKeys.Add(primaryKey);
 
-        public List<PgIndex> GetIndexes()
-        {
-            return new List<PgIndex>(_indexes);
-        }
+        public void AddFunction(PgFunction function) => _functions.Add(function);
 
+        public void AddSequence(PgSequence sequence) => _sequences.Add(sequence);
+        
+        public void AddTable(PgTable table) => _tables.Add(table);
 
-        public List<PgConstraint> GetPrimaryKeys()
-        {
-            return new List<PgConstraint>(_primaryKeys);
-        }
+        public void AddView(PgView view) => _views.Add(view);
 
-
-        public List<PgSequence> GetSequences()
-        {
-            return new List<PgSequence>(_sequences);
-        }
-
-
-        public PgTable GetTable(string name)
-        {
-            foreach (var table in _tables)
-                if (table.Name.Equals(name))
-                    return table;
-
-            return null;
-        }
-
-
-        public List<PgTable> GetTables()
-        {
-            return new List<PgTable>(_tables);
-        }
-
-
-        public PgView GetView(string name)
-        {
-            foreach (var view in _views)
-                if (view.Name.Equals(name))
-                    return view;
-
-            return null;
-        }
-
-
-        public List<PgView> GetViews()
-        {
-            return new List<PgView>(_views);
-        }
-
-
-        public void AddIndex(PgIndex index)
-        {
-            _indexes.Add(index);
-        }
-
-
-        public void AddPrimaryKey(PgConstraint primaryKey)
-        {
-            _primaryKeys.Add(primaryKey);
-        }
-
-
-        public void AddFunction(PgFunction function)
-        {
-            _functions.Add(function);
-        }
-
-
-        public void AddSequence(PgSequence sequence)
-        {
-            _sequences.Add(sequence);
-        }
-
-
-        public void AddTable(PgTable table)
-        {
-            _tables.Add(table);
-        }
-
-
-        public void AddView(PgView view)
-        {
-            _views.Add(view);
-        }
-
-
-        public bool ContainsFunction(string signature)
-        {
-            foreach (var function in _functions)
-                if (function.GetSignature().Equals(signature))
-                    return true;
-
-            return false;
-        }
-
-
-        public bool ContainsSequence(string name)
-        {
-            foreach (var sequence in _sequences)
-                if (sequence.Name.Equals(name))
-                    return true;
-
-            return false;
-        }
-
-
-        public bool ContainsTable(string name)
-        {
-            foreach (var table in _tables)
-                if (table.Name.Equals(name))
-                    return true;
-
-            return false;
-        }
-
-
-        public bool ContainsView(string name)
-        {
-            foreach (var view in _views)
-                if (view.Name.Equals(name))
-                    return true;
-
-            return false;
-        }
+        public bool ContainsFunction(string signature) => _functions.Any(function => function.GetSignature().Equals(signature));
+        
+        public bool ContainsSequence(string name) => _sequences.Any(sequence => sequence.Name.Equals(name));
+        
+        public bool ContainsTable(string name) => _tables.Any(table => table.Name.Equals(name));
+        
+        public bool ContainsView(string name) => _views.Any(view => view.Name.Equals(name));
     }
 }

@@ -21,7 +21,7 @@ namespace pgdiff.schema
 
         public string MinValue { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
         public string OwnedBy { get; set; }
 
@@ -108,14 +108,13 @@ namespace pgdiff.schema
             }
 
             sbSql.Append(';');
-
             return sbSql.ToString();
         }
 
 
         public string GetDropSql()
         {
-            return "DROP SEQUENCE " + PgDiffUtils.GetQuotedName(Name) + ";";
+            return $"DROP SEQUENCE {PgDiffUtils.GetQuotedName(Name)};";
         }
     }
 }

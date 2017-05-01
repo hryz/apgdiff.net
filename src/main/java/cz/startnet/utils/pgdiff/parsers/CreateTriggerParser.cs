@@ -31,6 +31,7 @@ namespace pgdiff.parsers
             {
                 if (!first && !parser.ExpectOptional("OR"))
                     break;
+
                 if (parser.ExpectOptional("INSERT"))
                 {
                     trigger.OnInsert = true;
@@ -43,7 +44,8 @@ namespace pgdiff.parsers
                         do
                         {
                             trigger.AddUpdateColumn(parser.ParseIdentifier());
-                        } while (parser.ExpectOptional(","));
+                        }
+                        while (parser.ExpectOptional(","));
                 }
                 else if (parser.ExpectOptional("DELETE"))
                 {

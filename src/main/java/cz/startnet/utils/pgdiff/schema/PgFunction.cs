@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -53,7 +54,6 @@ namespace pgdiff.schema
                         sbSql.Append(", ");
 
                     sbSql.Append(argument.GetDeclaration(false));
-
                     addComma = true;
                 }
 
@@ -94,7 +94,7 @@ namespace pgdiff.schema
 
         public List<Argument> GetArguments()
         {
-            return new List<Argument>(_arguments);
+            return _arguments;
         }
 
 
@@ -131,29 +131,28 @@ namespace pgdiff.schema
         }
 
 
-        public override bool Equals(object @object)
+        public override bool Equals(object obj)
         {
-            if (!(@object is PgFunction))
+            if (!(obj is PgFunction))
                 return false;
-            if (@object == this)
+
+            if (obj == this)
                 return true;
 
-            return Equals(@object, false);
+            return Equals(obj, false);
         }
 
 
-        public bool Equals(object @object, bool ignoreFunctionWhitespace)
+        public bool Equals(object obj, bool ignoreFunctionWhitespace)
         {
             var equals = false;
 
-            if (this == @object)
+            if (obj == this)
             {
                 equals = true;
             }
-            else if (@object is PgFunction)
+            else if (obj is PgFunction function)
             {
-                var function = (PgFunction) @object;
-
                 if (Name == null && function.Name != null
                     || Name != null && !Name.Equals(function.Name))
                     return false;
@@ -178,11 +177,8 @@ namespace pgdiff.schema
 
                 if (_arguments.Count != function.GetArguments().Count)
                     return false;
-                for (var i = 0; i < _arguments.Count; i++)
-                    if (!_arguments[i].Equals(function.GetArguments()[i]))
-                        return false;
 
-                return true;
+                return !_arguments.Where((t, i) => !t.Equals(function.GetArguments()[i])).Any();
             }
 
             return equals;
@@ -252,6 +248,7 @@ namespace pgdiff.schema
             {
                 if (!(obj is Argument))
                     return false;
+
                 if (this == obj)
                     return true;
 

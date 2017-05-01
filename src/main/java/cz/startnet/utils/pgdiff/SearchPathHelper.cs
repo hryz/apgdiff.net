@@ -14,7 +14,6 @@ namespace pgdiff
             _searchPath = searchPath;
         }
 
-
         public void OutputSearchPath(TextWriter writer)
         {
             if (!_wasOutput && !string.IsNullOrEmpty(_searchPath))

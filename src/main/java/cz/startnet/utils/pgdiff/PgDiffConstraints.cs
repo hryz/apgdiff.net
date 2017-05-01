@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using pgdiff.schema;
 
 namespace pgdiff
@@ -10,8 +11,7 @@ namespace pgdiff
         {
         }
 
-        public static void CreateConstraints(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey,
-            SearchPathHelper searchPathHelper)
+        public static void CreateConstraints(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey, SearchPathHelper searchPathHelper)
         {
             foreach (var newTable in newSchema.GetTables())
             {
@@ -27,8 +27,7 @@ namespace pgdiff
             }
         }
 
-        public static void DropConstraints(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey,
-            SearchPathHelper searchPathHelper)
+        public static void DropConstraints(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey, SearchPathHelper searchPathHelper)
         {
             foreach (var newTable in newSchema.GetTables())
             {
@@ -45,16 +44,17 @@ namespace pgdiff
         }
 
 
-        private static List<PgConstraint> GetDropConstraints(PgTable oldTable, PgTable newTable, bool primaryKey)
+        private static IEnumerable<PgConstraint> GetDropConstraints(PgTable oldTable, PgTable newTable, bool primaryKey)
         {
             var list = new List<PgConstraint>();
 
-            if (newTable != null && oldTable != null)
-                foreach (var constraint in oldTable.Constraints)
-                    if (constraint.IsPrimaryKeyConstraint() == primaryKey
-                        && (!newTable.ContainsConstraint(constraint.Name)
-                            || !newTable.GetConstraint(constraint.Name).Equals(constraint)))
-                        list.Add(constraint);
+            if (newTable == null || oldTable == null)
+                return list;
+
+            list.AddRange(oldTable.Constraints
+                .Where(c => c.IsPrimaryKeyConstraint() == primaryKey
+                            && (!newTable.ContainsConstraint(c.Name)
+                                || !newTable.GetConstraint(c.Name).Equals(c))));
 
             return list;
         }
@@ -64,28 +64,26 @@ namespace pgdiff
         {
             var list = new List<PgConstraint>();
 
-            if (newTable != null)
-                if (oldTable == null)
-                {
-                    foreach (var constraint in newTable.Constraints)
-                        if (constraint.IsPrimaryKeyConstraint() == primaryKey)
-                            list.Add(constraint);
-                }
-                else
-                {
-                    foreach (var constraint in newTable.Constraints)
-                        if (constraint.IsPrimaryKeyConstraint() == primaryKey
-                            && (!oldTable.ContainsConstraint(constraint.Name)
-                                || !oldTable.GetConstraint(constraint.Name).Equals(constraint)))
-                            list.Add(constraint);
-                }
+            if (newTable == null)
+                return list;
+
+            if (oldTable == null)
+            {
+                list.AddRange(newTable.Constraints.Where(c => c.IsPrimaryKeyConstraint() == primaryKey));
+            }
+            else
+            {
+                list.AddRange(newTable.Constraints
+                    .Where(c => c.IsPrimaryKeyConstraint() == primaryKey
+                                && (!oldTable.ContainsConstraint(c.Name)
+                                    || !oldTable.GetConstraint(c.Name).Equals(c))));
+            }
 
             return list;
         }
 
 
-        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema,
-            SearchPathHelper searchPathHelper)
+        public static void AlterComments(TextWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
                 return;

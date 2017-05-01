@@ -5,20 +5,15 @@ namespace pgdiff.schema
 {
     public class PgConstraint
     {
-        private static readonly Regex PatternPrimaryKey = new Regex(".*PRIMARY[\\s]+KEY.*",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex PatternPrimaryKey = new Regex(".*PRIMARY[\\s]+KEY.*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-
-        public PgConstraint(string name)
-        {
-            Name = name;
-        }
+        public PgConstraint(string name) => Name = name;
 
         public string Comment { get; set; }
 
         public string Definition { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
         public string TableName { get; set; }
 
@@ -34,7 +29,7 @@ namespace pgdiff.schema
             sbSql.Append(Definition);
             sbSql.Append(';');
 
-            if (Comment != null && !string.IsNullOrEmpty(Comment))
+            if (!string.IsNullOrEmpty(Comment))
             {
                 sbSql.Append("\n\nCOMMENT ON CONSTRAINT ");
                 sbSql.Append(PgDiffUtils.GetQuotedName(Name));
@@ -68,17 +63,16 @@ namespace pgdiff.schema
         }
 
 
-        public override bool Equals(object @object)
+        public override bool Equals(object obj)
         {
             var equals = false;
 
-            if (this == @object)
+            if (this == obj)
             {
                 equals = true;
             }
-            else if (@object is PgConstraint)
+            else if (obj is PgConstraint constraint)
             {
-                var constraint = (PgConstraint) @object;
                 equals = Definition.Equals(constraint.Definition)
                          && Name.Equals(constraint.Name)
                          && TableName.Equals(constraint.TableName);

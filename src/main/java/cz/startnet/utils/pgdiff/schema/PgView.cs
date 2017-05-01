@@ -7,11 +7,11 @@ namespace pgdiff.schema
     {
         public readonly List<DefaultValue> DefaultValues = new List<DefaultValue>();
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public List<ColumnComment> ColumnComments = new List<ColumnComment>();
+        public List<ColumnComment> ColumnComments { get; set; } = new List<ColumnComment>();
 
-        public List<string> ColumnNames;
+        public List<string> ColumnNames { get; set; }
 
         public string Comment;
 
@@ -52,8 +52,7 @@ namespace pgdiff.schema
                 sbSql.Append("\n\nALTER VIEW ");
                 sbSql.Append(PgDiffUtils.GetQuotedName(Name));
                 sbSql.Append(" ALTER COLUMN ");
-                sbSql.Append(
-                    PgDiffUtils.GetQuotedName(defaultValue.ColumnName));
+                sbSql.Append(PgDiffUtils.GetQuotedName(defaultValue.ColumnName));
                 sbSql.Append(" SET DEFAULT ");
                 sbSql.Append(defaultValue._DefaultValue);
                 sbSql.Append(';');
@@ -84,11 +83,10 @@ namespace pgdiff.schema
 
         public string GetDropSql()
         {
-            return "DROP VIEW " + PgDiffUtils.GetQuotedName(Name) + ";";
+            return $"DROP VIEW {PgDiffUtils.GetQuotedName(Name)};";
         }
 
-        public void AddColumnDefaultValue(string columnName,
-            string defaultValue)
+        public void AddColumnDefaultValue(string columnName, string defaultValue)
         {
             RemoveColumnDefaultValue(columnName);
             DefaultValues.Add(new DefaultValue(columnName, defaultValue));
