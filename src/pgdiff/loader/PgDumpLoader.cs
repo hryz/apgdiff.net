@@ -121,6 +121,7 @@ namespace pgdiff.loader
                     pos = sbStatement.Length;
                     sbStatement.Append(newLine);
                     StripComment(sbStatement);
+                    StripCopyCmdTerminator(sbStatement);
 
                     pos = sbStatement.ToString().IndexOf(";", pos, StringComparison.Ordinal);
                 }
@@ -145,6 +146,13 @@ namespace pgdiff.loader
                 }
         }
 
+
+        private static void StripCopyCmdTerminator(StringBuilder sbStatement)
+        {
+            var pos = sbStatement.ToString().IndexOf("\\.", StringComparison.Ordinal);
+            if (pos == 0)
+                sbStatement.Length = 0;
+        }
 
         private static void StripComment(StringBuilder sbStatement)
         {
